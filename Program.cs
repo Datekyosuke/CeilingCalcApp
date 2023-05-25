@@ -1,0 +1,58 @@
+
+
+using Microsoft.EntityFrameworkCore;
+using System.Configuration;
+using WebApiDB;
+using WebApiDB.Data;
+using Microsoft.OpenApi.Models;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Ceiling API",
+        Description = "Stretch ceiling software",
+        //TermsOfService = new Uri("https://example.com/terms"),
+        Contact = new OpenApiContact
+        {
+            Name = "Yuri Kuzmin",
+            Url = new Uri("https://t.me/DateKyosuke")
+        }
+
+    }
+
+    );
+    var filePath = Path.Combine(System.AppContext.BaseDirectory, "WebApiDB.xml");
+    options.IncludeXmlComments(filePath);
+});
+builder.Services.AddControllers(options =>
+{
+options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
+});
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    
+}
+
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
