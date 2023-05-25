@@ -6,7 +6,7 @@ namespace WebApiDB.Data
    
     public class DealerContext :DbContext
     {
-        public DealerContext() 
+        public DealerContext()
         {
             Database.EnsureCreated();
         }
