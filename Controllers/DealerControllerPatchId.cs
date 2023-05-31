@@ -51,6 +51,7 @@ namespace WebApiDB.Controllers
             if (patchDoc != null)
             {
                 var customer = db.Dealers.SingleOrDefault(p => p.Id == id);
+                
 
                 patchDoc.ApplyTo(customer, ModelState);
                 await db.SaveChangesAsync();
