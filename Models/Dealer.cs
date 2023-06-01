@@ -16,13 +16,11 @@ namespace WebApiDB.Models
         /// <summary>
         /// LastName not null
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Last name is required!")]
         public string LastName { get; set; }
         /// <summary>
         /// only numbers
         /// </summary>
         
-        [Range(100000, 100000000000, ErrorMessage = "Phone does not exist")]
         public long? Telephone { get; set; }
         /// <summary>
         /// only numbers, may be negative  
@@ -31,7 +29,6 @@ namespace WebApiDB.Models
         /// <summary>
         /// City of residence
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "City is required!")]
         public string City { get; set; }
 
       

@@ -46,12 +46,11 @@ namespace WebApiDB.Controllers
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
         [HttpPatch("{id}")]
         public async Task<IActionResult> JsonPatchWithModelState(int id,
-             [FromBody] JsonPatchDocument<Dealer> patchDoc)
+        [FromBody] JsonPatchDocument<Dealer> patchDoc)
         {
             if (patchDoc != null)
             {
                 var customer = db.Dealers.SingleOrDefault(p => p.Id == id);
-                
 
                 patchDoc.ApplyTo(customer, ModelState);
                 await db.SaveChangesAsync();

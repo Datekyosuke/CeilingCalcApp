@@ -16,7 +16,7 @@ namespace WebApiDB.Controllers
     {
        DealerContext db = new DealerContext();
         /// <summary>
-        /// Кeturns a list of all dealers
+        /// Returns a list of all dealers
         /// </summary>
         /// <returns>list dealers</returns>
         /// <response code="200">Dealers retrieved</response>

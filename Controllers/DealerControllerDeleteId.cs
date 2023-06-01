@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Data;
+using WebApiDB.Models;
 
 namespace WebApiDB.Controllers
 {
@@ -28,7 +30,7 @@ namespace WebApiDB.Controllers
                 await db.SaveChangesAsync();
             }
             else return NotFound();
-            return Ok();
+            return Ok("Dealer deleted!");
         }
     }
 }
