@@ -6,6 +6,8 @@ using WebApiDB;
 using WebApiDB.Data;
 using Microsoft.OpenApi.Models;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -33,6 +35,17 @@ builder.Services.AddSwaggerGen(options =>
     var filePath = Path.Combine(System.AppContext.BaseDirectory, "WebApiDB.xml");
     options.IncludeXmlComments(filePath);
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("https://localhost:7021/swagger",
+                                              "https://localhost:5249/swagger",
+                                              "https://localhost:3000/swagger",
+                                              "https://localhost:8000/swagger");
+                      });
+});
 builder.Services.AddControllers(options =>
 {
 options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
@@ -50,6 +63,9 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
+
 
 app.UseAuthorization();
 
