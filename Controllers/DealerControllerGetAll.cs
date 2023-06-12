@@ -14,11 +14,11 @@ namespace WebApiDB.Controllers
     [Route("/api/[controller]")]
     public class DealerControllerGetAll : Controller
     {
-        IRepository repo;
+       /* IRepository repo;
         public DealerControllerGetAll(IRepository r)
         {
             repo = r;
-        }
+        }*/
         DealerContext db = new DealerContext();
         /// <summary>
         /// Returns a list of all dealers
