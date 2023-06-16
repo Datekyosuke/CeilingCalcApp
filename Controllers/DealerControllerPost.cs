@@ -11,13 +11,12 @@ namespace WebApiDB.Controllers
     [ApiController]
     public class DealerControllerPost : ControllerBase
     {
-        DealerContext db = new DealerContext();
-        /* private IRepository repo;
+        private readonly DealerContext db;
 
-         public DealerControllerPost(IRepository r)
-         {
-             repo = r;
-         }*/
+        public DealerControllerPost(DealerContext _db)
+        {
+            db = _db;
+        }
 
         /// <summary>
         /// Create new dealer

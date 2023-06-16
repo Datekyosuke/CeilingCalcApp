@@ -11,7 +11,12 @@ namespace WebApiDB.Controllers
     [ApiController]
     public class DealerControllerDeleteId : ControllerBase
     {
-        DealerContext db = new DealerContext();
+        private readonly DealerContext db;
+
+        public DealerControllerDeleteId(DealerContext _db)
+        {
+            db = _db;
+        }
         /// <summary>
         /// Removes dealer by id
         /// </summary>

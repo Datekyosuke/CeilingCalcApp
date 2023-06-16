@@ -8,13 +8,22 @@ using Microsoft.OpenApi.Models;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
+
+//"Database=u2028771_testbd;Data Source=server203.hosting.reg.ru;User Id=u2028771_datekyo;Password=m2jl2aoe;";
+
+var serverVersion = new MySqlServerVersion(new Version(5, 7, 27));
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DealerContext");
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddDbContext<DealerContext>(options =>
+                options.UseMySql(connectionString, serverVersion));
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo

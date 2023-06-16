@@ -11,7 +11,12 @@ namespace WebApiDB.Controllers
     [ApiController]
     public class DealerControllerPatchId : ControllerBase
     {
-        DealerContext db = new DealerContext();
+        private readonly DealerContext db;
+
+        public DealerControllerPatchId(DealerContext _db)
+        {
+            db = _db;
+        }
         /// <summary>
         /// Making changes to one or more dealer fields
         /// </summary>

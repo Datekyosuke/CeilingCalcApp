@@ -15,8 +15,13 @@ namespace WebApiDB.Controllers
     [Route("/api/[controller]")]
     public class DealerControllerGetAll : Controller
     {
-      
-        DealerContext db = new DealerContext();
+        private readonly DealerContext db;
+
+        public DealerControllerGetAll(DealerContext _db)
+        {
+            db = _db;
+        }
+
         /// <summary>
         /// Returns a list of all dealers
         /// </summary>

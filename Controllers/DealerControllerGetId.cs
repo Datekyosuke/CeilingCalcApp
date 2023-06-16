@@ -11,7 +11,12 @@ namespace WebApiDB.Controllers
     [ApiController]
     public class DealerControllerGetId : ControllerBase
     {
-        DealerContext db = new DealerContext();
+        private readonly DealerContext db;
+
+        public DealerControllerGetId(DealerContext _db)
+        {
+            db = _db;
+        }
         /// <summary>
         /// Returns dealer by Id
         /// </summary>

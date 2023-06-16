@@ -9,7 +9,12 @@ namespace WebApiDB.Controllers
     [ApiController]
     public class DealerControllerPutID : ControllerBase
     {
-        DealerContext db = new DealerContext();
+        private readonly DealerContext db;
+
+        public DealerControllerPutID(DealerContext _db)
+        {
+            db = _db;
+        }
         /// <summary>
         /// Making changes to one dealer record of a specific ID
         /// </summary>
