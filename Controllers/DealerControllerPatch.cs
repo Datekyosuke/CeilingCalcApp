@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Channels;
 using WebApiDB.Data;
@@ -32,7 +33,6 @@ namespace WebApiDB.Controllers
         /// <response code="400">Something went wrong. Possibly invalid request body.</response>
         /// <response code="404">There is no dealer for this id</response>
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
-
 
         [HttpPatch("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] Dealer dealer)

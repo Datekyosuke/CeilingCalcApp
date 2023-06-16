@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiDB.Data;
@@ -11,12 +12,12 @@ namespace WebApiDB.Controllers
     public class DealerControllerPost : ControllerBase
     {
         DealerContext db = new DealerContext();
-       /* private IRepository repo;
+        /* private IRepository repo;
 
-        public DealerControllerPost(IRepository r)
-        {
-            repo = r;
-        }*/
+         public DealerControllerPost(IRepository r)
+         {
+             repo = r;
+         }*/
 
         /// <summary>
         /// Create new dealer

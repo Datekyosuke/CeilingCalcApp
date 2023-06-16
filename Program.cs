@@ -42,8 +42,9 @@ builder.Services.AddCors(options =>
                       {
                           policy.WithOrigins("https://localhost:7021/swagger",
                                               "https://localhost:5249/swagger",
-                                              "https://localhost:3000/swagger",
-                                              "https://localhost:8000/swagger");
+                                              "http://localhost:3000",
+                                              "http://localhost:8000",
+                                              "http://localhost");
                       });
 });
 builder.Services.AddControllers(options =>
