@@ -9,11 +9,11 @@ namespace WebApiDB.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DealerControllerGetId : ControllerBase
+    public class DealerGetIdController : ControllerBase
     {
         private readonly DealerContext db;
 
-        public DealerControllerGetId(DealerContext _db)
+        public DealerGetIdController(DealerContext _db)
         {
             db = _db;
         }
