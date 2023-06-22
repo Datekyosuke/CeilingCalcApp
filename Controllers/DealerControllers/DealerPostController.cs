@@ -1,38 +1,38 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApiDB.Data;
 using WebApiDB.Models;
 
-namespace WebApiDB.Controllers
+namespace WebApiDB.Controllers.DealerControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DealerPutIDController : ControllerBase
+    public class DealerPostController : ControllerBase
     {
         private readonly DealerContext db;
 
-        public DealerPutIDController(DealerContext _db)
+        public DealerPostController(DealerContext _db)
         {
             db = _db;
         }
+
         /// <summary>
-        /// Making changes to one dealer record of a specific ID
+        /// Create new dealer
         /// </summary>
-        /// <param name="id">Dealer ID</param>
-        /// <param name="dealer"></param>
-        /// <response code="200">Dealer changed</response>
+        /// <param name="dealer">All fields of the dealer, except id. ID is generated automatically, leave 0.</param>
+        /// <returns>New dealer</returns>
+        /// <response code="200">Dealer created</response>
         /// <response code="400">Something went wrong. Possibly invalid request body.</response>
-        /// <response code="404">There is no dealer for this id</response>
-        /// <response code="500">Something went wrong. Possibly invalid request body.</response>
-
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] Dealer dealer)
+        /// <response code="500">Something went wrong.</response>
+        [HttpPost("AddDealer")]
+        public async Task<IActionResult> Post([FromBody] Dealer dealer)
         {
-            var oldClient = await db.Dealers.FindAsync(id);
-            if (oldClient == null)
-                return NotFound();
-
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             if (dealer.FirstName.Length > 50)
                 return BadRequest("FirstName cannot be more than 50 characters");
             if (dealer.Telephone < 10000000000 || dealer.Telephone > 99999999999)
@@ -45,10 +45,10 @@ namespace WebApiDB.Controllers
                 return BadRequest("Wrong debts! Too big (small) number");
             if (dealer.City.Length > 50 || dealer.City.Length < 2)
                 return BadRequest("City cannot be more than 50 and less than 2 characters");
-
-            db.Entry(oldClient).CurrentValues.SetValues(dealer);
+            db.Entry(dealer).State = EntityState.Added;
             await db.SaveChangesAsync();
-            return Ok("Dealer changed!");
+            return Ok("Dealer created!");
         }
+
     }
 }

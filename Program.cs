@@ -5,6 +5,8 @@ using System.Configuration;
 using WebApiDB;
 using WebApiDB.Data;
 using Microsoft.OpenApi.Models;
+using WebApiDB.Interfaces;
+using WebApiDB.Repository;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -23,6 +25,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<DealerContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
+builder.Services.AddTransient<IDealerRepository, DealerReposytory>();
 
 builder.Services.AddSwaggerGen(options =>
 {

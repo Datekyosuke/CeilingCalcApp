@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using WebApiDB.Data;
+using WebApiDB.Interfaces;
 using WebApiDB.Models;
 
-namespace WebApiDB.Controllers
+namespace WebApiDB.Controllers.DealerControllers
 {
     /// <summary>
     /// Controller for working with dealers
@@ -15,20 +16,23 @@ namespace WebApiDB.Controllers
     [Route("/api/[controller]")]
     public class DealerGetAllController : Controller
     {
-        private readonly DealerContext db;
+  
+        private IDealerRepository _dealerRepository;
 
-        public DealerGetAllController(DealerContext _db)
+        public DealerGetAllController(IDealerRepository dealerRepository)
         {
-            db = _db;
+            _dealerRepository = dealerRepository;
         }
- 
         /// <summary>
         /// Returns a list of all dealers
         /// </summary>
         /// <returns>list dealers</returns>
         /// <response code="200">Dealers retrieved</response>
         [HttpGet()]
-        public IEnumerable<Dealer> Get() => db.Dealers;
+        public IEnumerable<Dealer> GetAll()
+        {
+            return _dealerRepository.GetAll();
+        }
 
     }
 }

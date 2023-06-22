@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Data;
 using WebApiDB.Models;
 
-namespace WebApiDB.Controllers
+namespace WebApiDB.Controllers.DealerControllers
 {
     [Route("api/[controller]")]
     [ApiController]
