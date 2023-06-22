@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApiDB.Data;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
@@ -21,9 +23,10 @@ namespace WebApiDB.Repository
         }
 
 
-        public IActionResult Get(int id)
+        public Dealer Get(int id)
         {
-            throw new NotImplementedException();
+            return _context.Dealers.SingleOrDefault(p => p.Id == id);
+                        
         }
 
         public IEnumerable<Dealer> GetAll() => _context.Dealers;
@@ -34,9 +37,10 @@ namespace WebApiDB.Repository
             throw new NotImplementedException();
         }
 
-        public Task<IActionResult> Post(Dealer dealer)
+        public async Task Post(Dealer dealer)
         {
-            throw new NotImplementedException();
+            _context.Add(dealer);
+            await _context.SaveChangesAsync();
         }
 
         public Task<ActionResult> Put(int id, Dealer dealer)

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiDB.Data;
+using WebApiDB.Interfaces;
 using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
@@ -11,11 +12,11 @@ namespace WebApiDB.Controllers.DealerControllers
     [ApiController]
     public class DealerPostController : ControllerBase
     {
-        private readonly DealerContext db;
+        private IDealerRepository _dealerRepository;
 
-        public DealerPostController(DealerContext _db)
+        public DealerPostController(IDealerRepository dealerRepository)
         {
-            db = _db;
+            _dealerRepository = dealerRepository;
         }
 
         /// <summary>
@@ -45,8 +46,7 @@ namespace WebApiDB.Controllers.DealerControllers
                 return BadRequest("Wrong debts! Too big (small) number");
             if (dealer.City.Length > 50 || dealer.City.Length < 2)
                 return BadRequest("City cannot be more than 50 and less than 2 characters");
-            db.Entry(dealer).State = EntityState.Added;
-            await db.SaveChangesAsync();
+            await _dealerRepository.Post(dealer);
             return Ok("Dealer created!");
         }
 

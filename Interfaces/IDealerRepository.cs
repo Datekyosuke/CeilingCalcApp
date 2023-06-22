@@ -11,8 +11,8 @@ namespace WebApiDB.Interfaces
         public Task<ActionResult> Put(int id, Dealer dealer);
         public Task<IActionResult> JsonPatchWithModelState(int id,
          JsonPatchDocument<Dealer> patchDoc);
-        public Task<IActionResult> Post(Dealer dealer);
-        public IActionResult Get(int id);
+        public Task Post(Dealer dealer);
+        public Dealer Get(int id);
 
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Channels;
 using WebApiDB.Data;
+using WebApiDB.Interfaces;
 using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
@@ -11,11 +12,11 @@ namespace WebApiDB.Controllers.DealerControllers
     [ApiController]
     public class DealerGetIdController : ControllerBase
     {
-        private readonly DealerContext db;
+        private IDealerRepository _dealerRepository;
 
-        public DealerGetIdController(DealerContext _db)
+        public DealerGetIdController(IDealerRepository dealerRepository)
         {
-            db = _db;
+            _dealerRepository = dealerRepository;
         }
         /// <summary>
         /// Returns dealer by Id
@@ -31,7 +32,7 @@ namespace WebApiDB.Controllers.DealerControllers
         [ProducesResponseType(500)]
         public IActionResult Get(int id)
         {
-            var dealer = db.Dealers.SingleOrDefault(p => p.Id == id);
+            var dealer = _dealerRepository.Get(id);
 
             if (dealer == null)
             {
