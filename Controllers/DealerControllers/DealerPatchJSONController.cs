@@ -8,13 +8,13 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/DealerController")]
     [ApiController]
-    public class DealerPatchIdController : ControllerBase
+    public class DealerPatchJSONController : ControllerBase
     {
         private IDealerRepository _dealerRepository;
 
-        public DealerPatchIdController(IDealerRepository dealerRepository)
+        public DealerPatchJSONController(IDealerRepository dealerRepository)
         {
             _dealerRepository = dealerRepository;
         }
@@ -51,7 +51,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="400">Something went wrong. Possibly invalid request body.</response>
         /// <response code="404">There is no dealer for this id</response>
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
-        [HttpPatch("{id}")]
+        [HttpPatch("PatchJson")]
         public async Task<IActionResult> JsonPatchWithModelState(int id,
         [FromBody] JsonPatchDocument<Dealer> patchDoc)
         {

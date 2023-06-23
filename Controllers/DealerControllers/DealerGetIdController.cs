@@ -8,7 +8,7 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/DealerController")]
     [ApiController]
     public class DealerGetIdController : ControllerBase
     {

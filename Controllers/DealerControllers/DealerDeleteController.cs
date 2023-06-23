@@ -8,13 +8,13 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/DealerController")]
     [ApiController]
-    public class DealerDeleteIdController : ControllerBase
+    public class DealerDeleteController : ControllerBase
     {
         private IDealerRepository _dealerRepository;
 
-        public DealerDeleteIdController(IDealerRepository dealerRepository)
+        public DealerDeleteController(IDealerRepository dealerRepository)
         {
             _dealerRepository = dealerRepository;
         }
@@ -26,7 +26,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="200">Dealer removed</response>
         /// <response code="404">Dealer not found</response>
         /// <response code="500">Oops! Can't remove your Dealer right now</response>
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
             var dealer = _dealerRepository.Get(id);

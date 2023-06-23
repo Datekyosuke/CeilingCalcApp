@@ -13,13 +13,13 @@ namespace WebApiDB.Controllers.DealerControllers
     /// <summary>
     /// Controller for working with dealers
     /// </summary>
-    [Route("/api/[controller]")]
-    public class DealerGetAllController : Controller
+    [Route("/api/DealerController")]
+    public class DealerGetController : Controller
     {
   
         private IDealerRepository _dealerRepository;
 
-        public DealerGetAllController(IDealerRepository dealerRepository)
+        public DealerGetController(IDealerRepository dealerRepository)
         {
             _dealerRepository = dealerRepository;
         }

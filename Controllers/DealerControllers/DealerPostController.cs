@@ -8,7 +8,7 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/DealerController")]
     [ApiController]
     public class DealerPostController : ControllerBase
     {
@@ -27,7 +27,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="200">Dealer created</response>
         /// <response code="400">Something went wrong. Possibly invalid request body.</response>
         /// <response code="500">Something went wrong.</response>
-        [HttpPost("AddDealer")]
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] Dealer dealer)
         {
             if (!ModelState.IsValid)

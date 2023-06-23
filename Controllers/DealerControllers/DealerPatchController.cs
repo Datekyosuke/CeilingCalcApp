@@ -8,7 +8,7 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/DealerController")]
     [ApiController]
     public class DealerPatchController : ControllerBase
     {
@@ -40,7 +40,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="404">There is no dealer for this id</response>
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
 
-        [HttpPatch("{id}")]
+        [HttpPatch]
         public async Task<ActionResult> Put(int id, [FromBody] Dealer dealer)
         {
             var oldClient = _dealerRepository.Get(id);

@@ -6,13 +6,13 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/DealerController")]
     [ApiController]
-    public class DealerPutIDController : ControllerBase
+    public class DealerPutController : ControllerBase
     {
         private IDealerRepository _dealerRepository;
 
-        public DealerPutIDController(IDealerRepository dealerRepository)
+        public DealerPutController(IDealerRepository dealerRepository)
         {
             _dealerRepository = dealerRepository;
         }
@@ -27,7 +27,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
 
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<ActionResult> Put(int id, [FromBody] Dealer dealer)
         {
             var oldClient = _dealerRepository.Get(id);
