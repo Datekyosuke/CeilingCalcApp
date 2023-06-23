@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Data;
+using WebApiDB.Interfaces;
 using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
@@ -11,11 +12,11 @@ namespace WebApiDB.Controllers.DealerControllers
     [ApiController]
     public class DealerPatchIdController : ControllerBase
     {
-        private readonly DealerContext db;
+        private IDealerRepository _dealerRepository;
 
-        public DealerPatchIdController(DealerContext _db)
+        public DealerPatchIdController(IDealerRepository dealerRepository)
         {
-            db = _db;
+            _dealerRepository = dealerRepository;
         }
         /// <summary>
         /// Making changes to one or more dealer fields
@@ -56,10 +57,8 @@ namespace WebApiDB.Controllers.DealerControllers
         {
             if (patchDoc != null)
             {
-                var customer = db.Dealers.SingleOrDefault(p => p.Id == id);
-
-                patchDoc.ApplyTo(customer, ModelState);
-                await db.SaveChangesAsync();
+                var customer = _dealerRepository.Get(id);
+                _dealerRepository.JsonPatchWithModelState(customer, patchDoc, ModelState);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);

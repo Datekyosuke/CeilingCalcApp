@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Data;
+using WebApiDB.Interfaces;
 using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
@@ -9,11 +10,11 @@ namespace WebApiDB.Controllers.DealerControllers
     [ApiController]
     public class DealerPutIDController : ControllerBase
     {
-        private readonly DealerContext db;
+        private IDealerRepository _dealerRepository;
 
-        public DealerPutIDController(DealerContext _db)
+        public DealerPutIDController(IDealerRepository dealerRepository)
         {
-            db = _db;
+            _dealerRepository = dealerRepository;
         }
         /// <summary>
         /// Making changes to one dealer record of a specific ID
@@ -29,7 +30,7 @@ namespace WebApiDB.Controllers.DealerControllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] Dealer dealer)
         {
-            var oldClient = await db.Dealers.FindAsync(id);
+            var oldClient = _dealerRepository.Get(id);
             if (oldClient == null)
                 return NotFound();
 
@@ -46,8 +47,9 @@ namespace WebApiDB.Controllers.DealerControllers
             if (dealer.City.Length > 50 || dealer.City.Length < 2)
                 return BadRequest("City cannot be more than 50 and less than 2 characters");
 
-            db.Entry(oldClient).CurrentValues.SetValues(dealer);
-            await db.SaveChangesAsync();
+            await _dealerRepository.Put(oldClient, dealer);
+
+
             return Ok("Dealer changed!");
         }
     }

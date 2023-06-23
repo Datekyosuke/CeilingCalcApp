@@ -7,12 +7,14 @@ namespace WebApiDB.Interfaces
     public interface IDealerRepository 
     {
         public IEnumerable<Dealer> GetAll();
-        public Task<IActionResult> Delete();
-        public Task<ActionResult> Put(int id, Dealer dealer);
-        public Task<IActionResult> JsonPatchWithModelState(int id,
-         JsonPatchDocument<Dealer> patchDoc);
+        public Task Delete(Dealer dealer);
+        public Task Put(Dealer oldClient, Dealer dealer);
+        public Task JsonPatchWithModelState(Dealer dealer,
+         JsonPatchDocument<Dealer> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelStat);
         public Task Post(Dealer dealer);
         public Dealer Get(int id);
+
+        public Task Patch(Dealer oldClient, Dealer dealer);
 
     }
 }

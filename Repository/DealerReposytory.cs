@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Castle.Core.Resource;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Web.Mvc;
 using WebApiDB.Data;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
@@ -17,9 +19,10 @@ namespace WebApiDB.Repository
         {
             _context = context;
         }
-        public Task<IActionResult> Delete()
+        public async Task Delete(Dealer dealer)
         {
-            throw new NotImplementedException();
+            _context.Dealers.Remove(dealer);
+            await _context.SaveChangesAsync();
         }
 
 
@@ -32,9 +35,10 @@ namespace WebApiDB.Repository
         public IEnumerable<Dealer> GetAll() => _context.Dealers;
        
 
-        public Task<IActionResult> JsonPatchWithModelState(int id, JsonPatchDocument<Dealer> patchDoc)
+        public async Task JsonPatchWithModelState(Dealer dealer, JsonPatchDocument<Dealer> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelState)
         {
-            throw new NotImplementedException();
+            patchDoc.ApplyTo(dealer, modelState);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Post(Dealer dealer)
@@ -43,9 +47,16 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public Task<ActionResult> Put(int id, Dealer dealer)
+        public async Task Put(Dealer oldClient, Dealer dealer)
         {
-            throw new NotImplementedException();
+            _context.Entry(oldClient).CurrentValues.SetValues(dealer);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Patch(Dealer oldClient, Dealer dealer)
+        {
+            _context.Entry(oldClient).CurrentValues.SetValues(dealer);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Data;
+using WebApiDB.Interfaces;
 using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
@@ -11,11 +12,11 @@ namespace WebApiDB.Controllers.DealerControllers
     [ApiController]
     public class DealerDeleteIdController : ControllerBase
     {
-        private readonly DealerContext db;
+        private IDealerRepository _dealerRepository;
 
-        public DealerDeleteIdController(DealerContext _db)
+        public DealerDeleteIdController(IDealerRepository dealerRepository)
         {
-            db = _db;
+            _dealerRepository = dealerRepository;
         }
         /// <summary>
         /// Removes dealer by id
@@ -28,12 +29,11 @@ namespace WebApiDB.Controllers.DealerControllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var dealer = db.Dealers.SingleOrDefault(p => p.Id == id);
+            var dealer = _dealerRepository.Get(id);
 
             if (dealer != null)
             {
-                db.Dealers.Remove(db.Dealers.SingleOrDefault(p => p.Id == id));
-                await db.SaveChangesAsync();
+                _dealerRepository.Delete(dealer);
             }
             else return NotFound();
             return Ok("Dealer deleted!");
