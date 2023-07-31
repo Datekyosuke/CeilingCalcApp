@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Models;
+using WebApiDB.Pagination;
 
 namespace WebApiDB.Interfaces
 {
     public interface IDealerRepository 
     {
-        public IEnumerable<Dealer> GetAll();
+        public List<Dealer> GetAll(PaginationFilter filter);
         public Task Delete(Dealer dealer);
         public Task Put(Dealer oldClient, Dealer dealer);
         public Task JsonPatchWithModelState(Dealer dealer,

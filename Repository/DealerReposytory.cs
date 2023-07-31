@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Web.Mvc;
 using WebApiDB.Data;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
+using System;
+using WebApiDB.Pagination;
 
 namespace WebApiDB.Repository
 {
@@ -28,11 +31,18 @@ namespace WebApiDB.Repository
 
         public Dealer Get(int id)
         {
-            return _context.Dealers.SingleOrDefault(p => p.Id == id);
-                        
+            var customer = _context.Dealers.SingleOrDefault(p => p.Id == id);
+            return customer;
         }
 
-        public IEnumerable<Dealer> GetAll() => _context.Dealers;
+        public List<Dealer> GetAll(PaginationFilter validFilter)
+        {
+            var pagedData = _context.Dealers
+                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                        .Take(validFilter.PageSize)
+                        .ToList();
+            return pagedData;
+        }
        
 
         public async Task JsonPatchWithModelState(Dealer dealer, JsonPatchDocument<Dealer> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelState)

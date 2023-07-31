@@ -1,12 +1,17 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Castle.Core.Resource;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Core.Types;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Data;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
+using WebApiDB.Pagination;
+
 
 namespace WebApiDB.Controllers.DealerControllers
 {
@@ -29,9 +34,13 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <returns>list dealers</returns>
         /// <response code="200">Dealers retrieved</response>
         [HttpGet()]
-        public IEnumerable<Dealer> GetAll()
+        public IActionResult GetAll([FromQuery] PaginationFilter filter)
         {
-            return _dealerRepository.GetAll();
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+        
+            var entities =  _dealerRepository.GetAll(validFilter);
+
+            return Ok(new PagedResponse<List<Dealer>>(entities, validFilter.PageNumber, validFilter.PageSize));
         }
 
     }

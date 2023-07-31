@@ -73,7 +73,7 @@ namespace WebApiDB.Controllers.DealerControllers
             if (dealer.City.Length > 50 || dealer.City.Length < 2)
                 return BadRequest("City cannot be more than 50 and less than 2 characters");
 
-            _dealerRepository.Patch(oldClient, dealer);
+            await _dealerRepository.Patch(oldClient, dealer);
 
             return Ok("Dealer changed!");
         }

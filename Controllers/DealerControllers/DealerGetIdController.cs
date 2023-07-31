@@ -5,6 +5,7 @@ using System.Threading.Channels;
 using WebApiDB.Data;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
+using WebApiDB.Pagination;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
@@ -39,7 +40,7 @@ namespace WebApiDB.Controllers.DealerControllers
                 return NotFound();
             }
 
-            return Ok(dealer);
+            return Ok(new Response<Dealer>(dealer));
         }
     }
 }
