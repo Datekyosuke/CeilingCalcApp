@@ -34,7 +34,10 @@ namespace WebApiDB.Repository
             var customer = _context.Dealers.SingleOrDefault(p => p.Id == id);
             return customer;
         }
-
+        public int Count()
+        {
+            return _context.Dealers.Count();
+        }
         public List<Dealer> GetAll(PaginationFilter validFilter)
         {
             var pagedData = _context.Dealers

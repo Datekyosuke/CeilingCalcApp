@@ -7,6 +7,7 @@ using WebApiDB.Data;
 using Microsoft.OpenApi.Models;
 using WebApiDB.Interfaces;
 using WebApiDB.Repository;
+using WebApiDB.Servics;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -58,6 +59,14 @@ builder.Services.AddCors(options =>
                                               "http://localhost:8000",
                                               "http://localhost");
                       });
+});
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IUriService>(o =>
+{
+    var accessor = o.GetRequiredService<IHttpContextAccessor>();
+    var request = accessor.HttpContext.Request;
+    var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+    return new UriService(uri);
 });
 builder.Services.AddControllers(options =>
 {

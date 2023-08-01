@@ -11,7 +11,7 @@ using WebApiDB.Data;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
-
+using WebApiDB.Helpers;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
@@ -23,24 +23,31 @@ namespace WebApiDB.Controllers.DealerControllers
     {
   
         private IDealerRepository _dealerRepository;
+        private readonly IUriService uriService;
 
-        public DealerGetController(IDealerRepository dealerRepository)
+        public DealerGetController(IDealerRepository dealerRepository, IUriService uriService)
         {
             _dealerRepository = dealerRepository;
+            this.uriService = uriService;
         }
         /// <summary>
-        /// Returns a list of all dealers
+        /// Returns a paginated list of dealers. 
         /// </summary>
-        /// <returns>list dealers</returns>
+        /// <remarks>
+        /// Page number must be greater than or equal to 0 and PageSize greater than or equal to 1. 
+        /// If PageNumber = 0, displays the entire list of dealers.
+        /// </remarks>
+        /// <returns>Page list dealers</returns>
         /// <response code="200">Dealers retrieved</response>
-        [HttpGet()]
+        [HttpGet("Pagination")]
         public IActionResult GetAll([FromQuery] PaginationFilter filter)
         {
-            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-        
+            var route = Request.Path.Value;
+            var totalRecords = _dealerRepository.Count();
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, totalRecords);
             var entities =  _dealerRepository.GetAll(validFilter);
-
-            return Ok(new PagedResponse<List<Dealer>>(entities, validFilter.PageNumber, validFilter.PageSize));
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(entities, validFilter, totalRecords, uriService, route);
+            return Ok(pagedReponse);
         }
 
     }
