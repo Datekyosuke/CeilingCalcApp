@@ -12,6 +12,8 @@ using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
 using WebApiDB.Helpers;
+using System.Collections.Concurrent;
+using System.Linq.Expressions;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
@@ -19,13 +21,13 @@ namespace WebApiDB.Controllers.DealerControllers
     /// Controller for working with dealers
     /// </summary>
     [Route("/api/DealerController")]
-    public class DealerGetController : Controller
+    public class DealerGetSortController : Controller
     {
-  
+
         private IDealerRepository _dealerRepository;
         private readonly IUriService uriService;
 
-        public DealerGetController(IDealerRepository dealerRepository, IUriService uriService)
+        public DealerGetSortController(IDealerRepository dealerRepository, IUriService uriService)
         {
             _dealerRepository = dealerRepository;
             this.uriService = uriService;
@@ -39,13 +41,15 @@ namespace WebApiDB.Controllers.DealerControllers
         /// </remarks>
         /// <returns>Page list dealers</returns>
         /// <response code="200">Dealers retrieved</response>
-        [HttpGet("Pagination")]
-        public IActionResult GetAll([FromQuery] PaginationFilter filter)
+        [HttpGet("Pagination and Sort")]
+        public IActionResult GetAllSort([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable)
         {
             var route = Request.Path.Value;
             var totalRecords = _dealerRepository.Count();
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, totalRecords);
-            var entities =  _dealerRepository.GetAll(validFilter);
+            var expression = orderable.Property;
+            var sort = orderable.Sort;
+            var entities = _dealerRepository.GetAllSort(validFilter, expression, sort);
             var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(entities, validFilter, totalRecords, uriService, route);
             return Ok(pagedReponse);
         }

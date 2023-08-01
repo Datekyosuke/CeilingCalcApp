@@ -10,6 +10,8 @@ using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using System;
 using WebApiDB.Pagination;
+using System.Linq.Expressions;
+using WebApiDB.Helpers;
 
 namespace WebApiDB.Repository
 {
@@ -34,7 +36,10 @@ namespace WebApiDB.Repository
             var customer = _context.Dealers.SingleOrDefault(p => p.Id == id);
             return customer;
         }
-
+        public int Count()
+        {
+            return _context.Dealers.Count();
+        }
         public List<Dealer> GetAll(PaginationFilter validFilter)
         {
             var pagedData = _context.Dealers
@@ -67,6 +72,27 @@ namespace WebApiDB.Repository
         {
             _context.Entry(oldClient).CurrentValues.SetValues(dealer);
             await _context.SaveChangesAsync();
+        }
+
+        public List<Dealer> GetAllSort(PaginationFilter validFilter, string property, Sort sort)
+        {
+            if (sort == Sort.Asc)
+            {
+                return  _context.Dealers
+                            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                            .Take(validFilter.PageSize)
+                            .OrderBy(x => EF.Property<object>(x, property))
+                            .ToList();
+            }
+            else
+            {
+                 return  _context.Dealers
+                            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                            .Take(validFilter.PageSize)
+                            .OrderByDescending(x => EF.Property<object>(x, property))
+                            .ToList();
+            }
+        
         }
     }
 }

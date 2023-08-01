@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
+using WebApiDB.Helpers;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
 
@@ -17,5 +19,7 @@ namespace WebApiDB.Interfaces
 
         public Task Patch(Dealer oldClient, Dealer dealer);
 
+        public int Count();
+        public List<Dealer> GetAllSort(PaginationFilter validFilter, string expression, Sort sort);
     }
 }
