@@ -38,6 +38,19 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <remarks>
         /// Page number must be greater than or equal to 0 and PageSize greater than or equal to 1. 
         /// If PageNumber = 0, displays the entire list of dealers.
+        /// 
+        /// Properties can take Dealer field values:
+        /// 
+        ///     Id
+        ///     FirstName
+        ///     LastName
+        ///     Telephone
+        ///     Debts
+        ///     City
+        /// Sort is enum
+        /// 
+        ///     0 ASc
+        ///     1 Desc
         /// </remarks>
         /// <returns>Page list dealers</returns>
         /// <response code="200">Dealers retrieved</response>
