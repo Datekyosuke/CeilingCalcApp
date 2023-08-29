@@ -10,6 +10,7 @@ namespace WebApiDB.Interfaces
     public interface IDealerRepository 
     {
         public List<Dealer> GetAll(PaginationFilter filter);
+        public List<Dealer> GetAll();
         public Task Delete(Dealer dealer);
         public Task Put(Dealer oldClient, Dealer dealer);
         public Task JsonPatchWithModelState(Dealer dealer,

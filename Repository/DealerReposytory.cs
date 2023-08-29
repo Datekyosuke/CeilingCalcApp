@@ -48,7 +48,12 @@ namespace WebApiDB.Repository
                         .ToList();
             return pagedData;
         }
-       
+        public List<Dealer> GetAll()
+        {
+            var pagedData = _context.Dealers.ToList();
+            return pagedData;
+        }
+
 
         public async Task JsonPatchWithModelState(Dealer dealer, JsonPatchDocument<Dealer> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelState)
         {
