@@ -42,6 +42,10 @@ namespace WebApiDB.Controllers.DealerControllers
         [HttpGet("Pagination")]
         public IActionResult GetAll([FromQuery] PaginationFilter filter)
         {
+            if(filter.PageSize <= 0)
+            {
+                return BadRequest("Page size must be greater than 0");
+            }
             var route = Request.Path.Value;
             var totalRecords = _dealerRepository.Count();
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, totalRecords);
