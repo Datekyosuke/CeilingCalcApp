@@ -59,10 +59,11 @@ namespace WebApiDB.Controllers.DealerControllers
         /// </remarks>
         /// <returns>Page list dealers</returns>
         /// <response code="200">Dealers retrieved</response>
-        [HttpGet("Pagination and Sort")]
+        [HttpGet()]
         public IActionResult GetAllSort([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] float min, [FromQuery] float max)
         {
             if (max == 0) { max = float.MaxValue; }
+            if (max < min) return BadRequest("Maximum must be greater than or equal to the minimum"); 
             var route = Request.Path.Value;
             var totalRecords = _dealerRepository.Count();
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, totalRecords);
