@@ -29,7 +29,7 @@ namespace WebApiDB.Controllers.DealerControllers
         ///     "Id": can't be changed, integer
         ///     "FirstName": "string", required
         ///     "LastName": "string", may be null
-        ///     "Telephone": 100000000000, integer, must be between 1 and 100000000000
+        ///     "Telephone": 11 digit, integer
         ///     "Debts": 0, integer
         ///     "City": "string",  required
         /// </remarks>

@@ -52,13 +52,15 @@ namespace WebApiDB.Controllers.DealerControllers
         /// 
         ///     0 ASc
         ///     1 Desc
+        ///     null without sorting
+        ///     
+        ///  Min  - search for debts from
         /// 
-        /// min  - search for debts from
-        /// 
-        /// max - search for debts up
+        ///  Max - search for debts up
         /// </remarks>
         /// <returns>Page list dealers</returns>
         /// <response code="200">Dealers retrieved</response>
+        ///  <response code="400">Wrong request body</response>
         [HttpGet()]
         public IActionResult GetAllSort([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges)
         {

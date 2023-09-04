@@ -19,6 +19,24 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <summary>
         /// Making changes to one dealer record of a specific ID
         /// </summary>
+        /// <remarks>
+        /// 
+        ///  Warning! Unfilled fields will be assigned a default value, as in the scheme
+        /// 
+        /// Fields dealer:
+        /// 
+        ///    "Id": can't be changed, integer
+        ///    
+        ///     "FirstName": "string", required
+        ///     
+        ///     "LastName": "string", may be null
+        ///     
+        ///     "Telephone": 11 digit, integer
+        ///     
+        ///     "Debts": 0, integer
+        ///     
+        ///     "City": "string",  required
+        /// </remarks>
         /// <param name="id">Dealer ID</param>
         /// <param name="dealer"></param>
         /// <response code="200">Dealer changed</response>
