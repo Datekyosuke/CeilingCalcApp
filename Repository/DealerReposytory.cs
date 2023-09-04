@@ -79,22 +79,32 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public List<Dealer> GetAllSort(PaginationFilter validFilter, string property, Sort sort)
+        public List<Dealer> GetAllSort(PaginationFilter validFilter, string property, Sort sort, NumericRanges ranges)
         {
             if (sort == Sort.Asc)
             {
-                return  _context.Dealers
+                var sortDealers = _context.Dealers
+                            .Select(x => x)
+                            .OrderBy(x => EF.Property<object>(x, property));
+                var sortEntities = from Dealer entity in sortDealers
+                                   where entity.Debts >= ranges.Min && entity.Debts <= ranges.Max
+                                   select entity;
+                return sortEntities
                             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                             .Take(validFilter.PageSize)
-                            .OrderBy(x => EF.Property<object>(x, property))
                             .ToList();
             }
             else
             {
-                 return  _context.Dealers
+                var sortDealers = _context.Dealers
+                           .Select(x => x)
+                           .OrderByDescending(x => EF.Property<object>(x, property));
+                var sortEntities = from Dealer entity in sortDealers
+                                   where entity.Debts >= ranges.Min && entity.Debts <= ranges.Max
+                                   select entity;
+                return sortEntities
                             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                             .Take(validFilter.PageSize)
-                            .OrderByDescending(x => EF.Property<object>(x, property))
                             .ToList();
             }
         

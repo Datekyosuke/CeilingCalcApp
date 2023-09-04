@@ -60,20 +60,16 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <returns>Page list dealers</returns>
         /// <response code="200">Dealers retrieved</response>
         [HttpGet()]
-        public IActionResult GetAllSort([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] float min, [FromQuery] float max)
+        public IActionResult GetAllSort([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges)
         {
-            if (max == 0) { max = float.MaxValue; }
-            if (max < min) return BadRequest("Maximum must be greater than or equal to the minimum"); 
+            if (ranges.Max < ranges.Min) return BadRequest("Maximum must be greater than or equal to the minimum"); 
             var route = Request.Path.Value;
             var totalRecords = _dealerRepository.Count();
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, totalRecords);
             var expression = orderable.Property;
             var sort = orderable.Sort;
-            var entities = _dealerRepository.GetAllSort(validFilter, expression, sort);
-            var sortEntities = from Dealer entity in entities
-                               where entity.Debts >= min && entity.Debts <= max
-                               select entity;
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(sortEntities.ToList(), validFilter, totalRecords, uriService, route);
+            var entities = _dealerRepository.GetAllSort(validFilter, expression, sort, ranges);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(entities, validFilter, totalRecords, uriService, route);
             return Ok(pagedReponse);
         }
 

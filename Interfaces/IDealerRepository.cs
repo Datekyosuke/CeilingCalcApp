@@ -21,6 +21,6 @@ namespace WebApiDB.Interfaces
         public Task Patch(Dealer oldClient, Dealer dealer);
 
         public int Count();
-        public List<Dealer> GetAllSort(PaginationFilter validFilter, string expression, Sort sort);
+        public List<Dealer> GetAllSort(PaginationFilter validFilter, string expression, Sort sort, NumericRanges ranges);
     }
 }
