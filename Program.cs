@@ -55,6 +55,8 @@ builder.Services.AddCors(options =>
                       {
                           policy.WithOrigins("https://localhost:7021/swagger",
                                               "https://localhost:5249/swagger",
+                                              "http://localhost:7021/swagger",
+                                              "http://localhost:5249/swagger",
                                               "http://localhost:3000",
                                               "http://localhost:8000",
                                               "http://localhost");
