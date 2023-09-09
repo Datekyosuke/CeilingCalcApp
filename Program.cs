@@ -59,7 +59,7 @@ builder.Services.AddCors(options =>
                                               "http://localhost:5249/swagger",
                                               "http://localhost:3000",
                                               "http://localhost:8000",
-                                              "http://localhost");
+                                              "http://localhost").WithMethods("GET", "POST", "DELETE");
                       });
 });
 builder.Services.AddHttpContextAccessor();
