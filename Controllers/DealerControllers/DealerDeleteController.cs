@@ -33,7 +33,7 @@ namespace WebApiDB.Controllers.DealerControllers
 
             if (dealer != null)
             {
-                _dealerRepository.Delete(dealer);
+               await _dealerRepository.Delete(dealer);
             }
             else return NotFound();
             return Ok("Dealer deleted!");

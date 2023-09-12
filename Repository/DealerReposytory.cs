@@ -40,14 +40,7 @@ namespace WebApiDB.Repository
         {
             return _context.Dealers.Count();
         }
-        public List<Dealer> GetAll(PaginationFilter validFilter)
-        {
-            var pagedData = _context.Dealers
-                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                        .Take(validFilter.PageSize)
-                        .ToList();
-            return pagedData;
-        }
+
         public List<Dealer> GetAll()
         {
             var pagedData = _context.Dealers.ToList();
@@ -79,7 +72,7 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public List<Dealer> GetAllSort(PaginationFilter validFilter, string property, Sort sort, NumericRanges ranges)
+        public List<Dealer> GetAll(PaginationFilter validFilter, string property, Sort sort, NumericRanges ranges)
         {
             if (sort == Sort.Asc)
             {

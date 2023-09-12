@@ -26,7 +26,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<DealerContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
+builder.Services.AddDbContext<MaterialContext>(options =>
+                options.UseMySql(connectionString, serverVersion));
 builder.Services.AddTransient<IDealerRepository, DealerReposytory>();
+builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();
+
 
 builder.Services.AddSwaggerGen(options =>
 {

@@ -9,7 +9,6 @@ namespace WebApiDB.Interfaces
 {
     public interface IDealerRepository 
     {
-        public List<Dealer> GetAll(PaginationFilter filter);
         public List<Dealer> GetAll();
         public Task Delete(Dealer dealer);
         public Task Put(Dealer oldClient, Dealer dealer);
@@ -21,6 +20,6 @@ namespace WebApiDB.Interfaces
         public Task Patch(Dealer oldClient, Dealer dealer);
 
         public int Count();
-        public List<Dealer> GetAllSort(PaginationFilter validFilter, string expression, Sort sort, NumericRanges ranges);
+        public List<Dealer> GetAll(PaginationFilter validFilter, string expression, Sort sort, NumericRanges ranges);
     }
 }

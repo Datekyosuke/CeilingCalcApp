@@ -34,7 +34,7 @@ namespace WebApiDB.Controllers.DealerControllers
             this.uriService = uriService;
         }
         /// <summary>
-        /// Returns a paginated list of dealers. 
+        /// Returns a paginated, sorted and ranged list of dealers. 
         /// </summary>
         /// <remarks>
         /// Page number must be greater than or equal to 0 and PageSize greater than or equal to 1. 
@@ -62,7 +62,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="200">Dealers retrieved</response>
         ///  <response code="400">Wrong request body</response>
         [HttpGet()]
-        public IActionResult GetAllSort([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges)
+        public IActionResult GetAll([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges)
         {
             if (ranges.Max < ranges.Min) return BadRequest("Maximum must be greater than or equal to the minimum"); 
             var route = Request.Path.Value;
@@ -70,7 +70,7 @@ namespace WebApiDB.Controllers.DealerControllers
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, totalRecords);
             var expression = orderable.Property;
             var sort = orderable.Sort;
-            var entities = _dealerRepository.GetAllSort(validFilter, expression, sort, ranges);
+            var entities = _dealerRepository.GetAll(validFilter, expression, sort, ranges);
             var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(entities, validFilter, totalRecords, uriService, route);
             return Ok(pagedReponse);
         }

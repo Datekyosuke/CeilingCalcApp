@@ -44,8 +44,4 @@
     <PackageReference Include="SymSpell" Version="6.7.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\MaterialControllers\" />
-  </ItemGroup>
-
 </Project>
