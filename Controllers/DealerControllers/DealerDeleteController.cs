@@ -26,7 +26,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="200">Dealer removed</response>
         /// <response code="404">Dealer not found</response>
         /// <response code="500">Oops! Can't remove your Dealer right now</response>
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var dealer = _dealerRepository.Get(id);
