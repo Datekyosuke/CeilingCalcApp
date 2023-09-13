@@ -49,7 +49,7 @@ namespace WebApiDB.Repository
                             .Select(x => x)
                             .OrderBy(x => EF.Property<object>(x, property));
                 var sortEntities = from Material entity in sortDealers
-                                   where entity.Size >= ranges.Min && entity.Size <= ranges.Max
+                                   where entity.Price >= ranges.Min && entity.Price <= ranges.Max
                                    select entity;
                 return sortEntities
                             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
@@ -62,7 +62,7 @@ namespace WebApiDB.Repository
                            .Select(x => x)
                            .OrderByDescending(x => EF.Property<object>(x, property));
                 var sortEntities = from Material entity in sortDealers
-                                   where entity.Size >= ranges.Min && entity.Size <= ranges.Max
+                                   where entity.Price >= ranges.Min && entity.Price <= ranges.Max
                                    select entity;
                 return sortEntities
                             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)

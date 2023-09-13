@@ -11,12 +11,12 @@ namespace WebApiDB.Controllers.MaterialControllers
     public class MaterialGetController : Controller
     {
         private IMaterialRepository _materialRepository;
-        private readonly IUriService uriService;
+        private readonly IUriService _uriService;
 
         public MaterialGetController(IMaterialRepository materialRepository, IUriService uriService)
         {
             _materialRepository = materialRepository;
-            this.uriService = uriService;
+            _uriService = uriService;
         }
         /// <summary>
         /// Returns a paginated, sorted and ranged list of materials. 
@@ -38,9 +38,9 @@ namespace WebApiDB.Controllers.MaterialControllers
         ///     1 Desc
         ///     null without sorting
         ///     
-        ///  Min  - search for debts from
+        ///  Min  - search for price from
         /// 
-        ///  Max - search for debts up
+        ///  Max - search for price up
         /// </remarks>
         /// <returns>Page list materials</returns>
         /// <response code="200">materials retrieved</response>
@@ -55,7 +55,7 @@ namespace WebApiDB.Controllers.MaterialControllers
             var expression = orderable.Property;
             var sort = orderable.Sort;
             var entities = _materialRepository.GetAll(validFilter, expression, sort, ranges);
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Material>(entities, validFilter, totalRecords, uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Material>(entities, validFilter, totalRecords, _uriService, route);
             return Ok(pagedReponse);
         }
     }

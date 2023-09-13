@@ -1,20 +1,8 @@
-﻿using Castle.Core.Resource;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using WebApiDB.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
-using WebApiDB.Helpers;
-using System.Collections.Concurrent;
-using System.Linq.Expressions;
-using System.ComponentModel.DataAnnotations;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
@@ -26,12 +14,12 @@ namespace WebApiDB.Controllers.DealerControllers
     {
 
         private IDealerRepository _dealerRepository;
-        private readonly IUriService uriService;
+        private readonly IUriService _uriService;
 
         public DealerGetController(IDealerRepository dealerRepository, IUriService uriService)
         {
             _dealerRepository = dealerRepository;
-            this.uriService = uriService;
+            _uriService = uriService;
         }
         /// <summary>
         /// Returns a paginated, sorted and ranged list of dealers. 
@@ -71,7 +59,7 @@ namespace WebApiDB.Controllers.DealerControllers
             var expression = orderable.Property;
             var sort = orderable.Sort;
             var entities = _dealerRepository.GetAll(validFilter, expression, sort, ranges);
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(entities, validFilter, totalRecords, uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(entities, validFilter, totalRecords, _uriService, route);
             return Ok(pagedReponse);
         }
 

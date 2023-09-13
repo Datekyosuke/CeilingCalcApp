@@ -34,6 +34,8 @@ namespace WebApiDB.Controllers.MaterialControllers
                 return BadRequest("Texture cannot be more than 50 and less than 3 characters");
             if (material.Color.Length > 50 || material.Color.Length < 2)
                 return BadRequest("Color cannot be more than 50 and less than 2 characters");
+            if (material.Size < 1 || material.Size > 6)
+                return BadRequest("Size cannot be more than 50 and less than 2 characters");
             await _materialRepository.Post(material);
             return Ok("Material created!");
         }

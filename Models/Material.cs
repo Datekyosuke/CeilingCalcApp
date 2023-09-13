@@ -21,7 +21,7 @@ namespace WebApiDB.Models
         public string Color { get; set; }
 
         /// <summary>
-        /// Size in meters
+        /// Size in meters, 
         /// </summary>
         public float Size { get; set; }
 

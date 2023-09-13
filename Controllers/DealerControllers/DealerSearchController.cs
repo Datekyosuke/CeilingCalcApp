@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SoftWx.Match;
-using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
-using WebApiDB.Pagination;
 using static WebApiDB.Helpers.LevenshteinDistance;
 
 namespace WebApiDB.Controllers.DealerControllers
@@ -19,7 +16,7 @@ namespace WebApiDB.Controllers.DealerControllers
             _dealerRepository = dealerRepository;
         }
         /// <summary>
-        /// Returns dealer by Id
+        /// Implements fuzzy search dealer by LastName, FirstName, City
         /// </summary>
         /// <param name="searchString"> Строка для поиска</param>
         /// <returns>Dealer</returns>

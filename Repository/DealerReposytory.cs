@@ -1,17 +1,11 @@
-﻿using Castle.Core.Resource;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System.Web.Mvc;
 using WebApiDB.Data;
+using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
-using System;
 using WebApiDB.Pagination;
-using System.Linq.Expressions;
-using WebApiDB.Helpers;
 
 namespace WebApiDB.Repository
 {
