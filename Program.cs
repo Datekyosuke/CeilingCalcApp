@@ -59,7 +59,8 @@ builder.Services.AddCors(options =>
                       {
                           policy.WithOrigins("https://localhost:7021/swagger",
                                               "http://localhost:3000",
-                                              "http://localhost:8000").AllowAnyMethod().AllowAnyHeader();
+                                              "http://localhost:8000").WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "Patch")
+                                              .WithHeaders("Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With");
                       });
 });
 builder.Services.AddHttpContextAccessor();
