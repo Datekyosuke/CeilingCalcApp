@@ -39,7 +39,7 @@ namespace WebApiDB.Controllers.MaterialControllers
         ///     "Id": can't be changed, integer
         ///     "Texture": "string", required, min 3 character
         ///     "Color": "string", min 2 character
-        ///     "Size": float  1 < float < 6
+        ///     "Size": float  more 1 and less 6
         ///     "Price": float, 0
         /// </remarks>
         /// <param name="id">Material ID</param>

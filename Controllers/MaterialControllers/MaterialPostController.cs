@@ -18,7 +18,7 @@ namespace WebApiDB.Controllers.MaterialControllers
         /// <summary>
         /// Create new material
         /// </summary>
-        /// <param name="dealer">All fields of the material, except id. ID is generated automatically, leave 0.</param>
+        /// <param name="material">All fields of the material, except id. ID is generated automatically, leave 0.</param>
         /// <returns>New material</returns>
         /// <response code="200">Material created</response>
         /// <response code="400">Something went wrong. Possibly invalid request body.</response>

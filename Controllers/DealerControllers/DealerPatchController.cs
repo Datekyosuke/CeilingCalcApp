@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Channels;
 using WebApiDB.Data;
+using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 
@@ -60,18 +61,11 @@ namespace WebApiDB.Controllers.DealerControllers
                 dealer.City = oldClient.City;
 
 
-            if (dealer.FirstName.Length > 50)
-                return BadRequest("FirstName cannot be more than 50 characters");
-            if (dealer.Telephone < 10000000000 || dealer.Telephone > 99999999999)
+            var validation = ValidationDealer.DealerValidation(dealer);
+            if (!validation.Item1)
             {
-                return BadRequest("Invalid phone number. Must contain 10 digits!");
+                return BadRequest(validation.Item2);
             }
-            if (dealer.LastName.Length > 50 || dealer.LastName.Length < 2)
-                return BadRequest("LastName cannot be more than 50 and less than 2 characters");
-            if (dealer.Debts > float.MaxValue || dealer.Debts < float.MinValue)
-                return BadRequest("Wrong debts! Too big (small) number");
-            if (dealer.City.Length > 50 || dealer.City.Length < 2)
-                return BadRequest("City cannot be more than 50 and less than 2 characters");
 
             await _dealerRepository.Patch(oldClient, dealer);
 
