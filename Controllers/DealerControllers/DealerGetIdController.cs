@@ -33,7 +33,7 @@ namespace WebApiDB.Controllers.DealerControllers
         [ProducesResponseType(500)]
         public IActionResult Get(int id)
         {
-            var dealer = _dealerRepository.Get(id);
+            var dealer = _dealerRepository.GetAsync(id).Result;
 
             if (dealer == null)
             {

@@ -9,17 +9,17 @@ namespace WebApiDB.Interfaces
 {
     public interface IDealerRepository 
     {
-        public List<Dealer> GetAll();
+        public Task<List<Dealer>> GetAllAsync();
         public Task Delete(Dealer dealer);
         public Task Put(Dealer oldClient, Dealer dealer);
         public Task JsonPatchWithModelState(Dealer dealer,
          JsonPatchDocument<Dealer> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelStat);
         public Task Post(Dealer dealer);
-        public Dealer Get(int id);
+        public Task<Dealer> GetAsync(int id);
 
         public Task Patch(Dealer oldClient, Dealer dealer);
 
         public int Count();
-        public List<Dealer> GetAll(PaginationFilter validFilter, string expression, Sort sort, NumericRanges ranges);
+        public Task<List<Dealer>> GetAllAsync(PaginationFilter validFilter, string expression, Sort sort, NumericRanges ranges);
     }
 }

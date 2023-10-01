@@ -58,7 +58,7 @@ namespace WebApiDB.Controllers.DealerControllers
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, totalRecords);
             var expression = orderable.Property;
             var sort = orderable.Sort;
-            var entities = _dealerRepository.GetAll(validFilter, expression, sort, ranges);
+            var entities = _dealerRepository.GetAllAsync(validFilter, expression, sort, ranges).Result;
             var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(entities, validFilter, totalRecords, _uriService, route);
             return Ok(pagedReponse);
         }

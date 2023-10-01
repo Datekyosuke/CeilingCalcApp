@@ -84,7 +84,7 @@ namespace WebApiDB.Controllers.DealerControllers
 
             if (patchDoc != null)
             {
-                var customer = _dealerRepository.Get(id);
+                var customer = _dealerRepository.GetAsync(id).Result;
                 await _dealerRepository.JsonPatchWithModelState(customer, patchDoc, ModelState);
 
 

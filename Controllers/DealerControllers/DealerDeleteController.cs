@@ -24,7 +24,7 @@ namespace WebApiDB.Controllers.DealerControllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var dealer = _dealerRepository.Get(id);
+            var dealer = _dealerRepository.GetAsync(id).Result;
 
             if (dealer != null)
             {

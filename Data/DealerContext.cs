@@ -8,7 +8,7 @@ namespace WebApiDB.Data
     {
         public DealerContext(DbContextOptions<DealerContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            //Database.OpenConnection();
         }
 
         public DbSet<Dealer> Dealers { get; set; }

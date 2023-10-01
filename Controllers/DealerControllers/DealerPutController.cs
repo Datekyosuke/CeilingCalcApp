@@ -48,7 +48,7 @@ namespace WebApiDB.Controllers.DealerControllers
         [HttpPut]
         public async Task<ActionResult> Put(int id, [FromBody] Dealer dealer)
         {
-            var oldClient = _dealerRepository.Get(id);
+            var oldClient = _dealerRepository.GetAsync(id).Result;
             if (oldClient == null)
                 return NotFound();
 

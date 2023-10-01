@@ -44,11 +44,16 @@ namespace WebApiDB.Controllers.DealerControllers
         [HttpPatch]
         public async Task<ActionResult> Put(int id, [FromBody] Dealer dealer)
         {
-            var oldClient = _dealerRepository.Get(id);
+            var oldClient = _dealerRepository.GetAsync(id).Result;
 
             if (oldClient == null)
                 return NotFound();
 
+            var validation = ValidationDealer.DealerValidation(dealer);
+            if (!validation.Item1)
+            {
+                return BadRequest(validation.Item2);
+            }
             if (dealer.FirstName == "string")
                 dealer.FirstName = oldClient.FirstName;
             if (dealer.LastName == "string")
@@ -61,11 +66,7 @@ namespace WebApiDB.Controllers.DealerControllers
                 dealer.City = oldClient.City;
 
 
-            var validation = ValidationDealer.DealerValidation(dealer);
-            if (!validation.Item1)
-            {
-                return BadRequest(validation.Item2);
-            }
+          
 
             await _dealerRepository.Patch(oldClient, dealer);
 

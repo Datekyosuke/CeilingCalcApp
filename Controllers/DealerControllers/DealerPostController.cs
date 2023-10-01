@@ -25,6 +25,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="400">Something went wrong. Possibly invalid request body.</response>
         /// <response code="500">Something went wrong.</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] Dealer dealer)
         {
             var validation = ValidationDealer.DealerValidation(dealer);
