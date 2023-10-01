@@ -18,7 +18,7 @@
             } else
             { 
             this.PageNumber = pageNumber;
-            this.PageSize = pageSize > 10 ? 10 : pageSize;
+            this.PageSize = pageSize;
             }
         }
     }

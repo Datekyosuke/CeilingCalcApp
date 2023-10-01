@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using WebApiDB.Interfaces;
 using WebApiDB.Repository;
 using WebApiDB.Servics;
+using Microsoft.AspNetCore.Mvc;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -74,6 +75,22 @@ builder.Services.AddSingleton<IUriService>(o =>
 builder.Services.AddControllers(options =>
 {
 options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
+});
+builder.Services.Configure<ApiBehaviorOptions>(o =>
+{
+    o.InvalidModelStateResponseFactory = actionContext =>
+    {
+
+        List<Error> error = actionContext.ModelState
+                    .Where(modelError => modelError.Value.Errors.Count > 0)
+                    .Select(modelError => new Error
+                    {
+                        ErrorField = modelError.Key,
+                        ErrorDescription = modelError.Value.Errors.FirstOrDefault().ErrorMessage
+                    }).ToList();
+
+        return new BadRequestObjectResult(error);
+    };
 });
 
 var app = builder.Build();

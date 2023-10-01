@@ -25,9 +25,9 @@ namespace WebApiDB.Repository
         }
 
 
-        public Dealer Get(int id)
+        public async Task<Dealer> GetAsync(int id)
         {
-            var customer = _context.Dealers.SingleOrDefault(p => p.Id == id);
+            var customer = await _context.Dealers.FirstOrDefaultAsync(p => p.Id == id);
             return customer;
         }
         public int Count()
@@ -35,9 +35,9 @@ namespace WebApiDB.Repository
             return _context.Dealers.Count();
         }
 
-        public List<Dealer> GetAll()
+        public async Task<List<Dealer>> GetAllAsync()
         {
-            var pagedData = _context.Dealers.ToList();
+            var pagedData = await _context.Dealers.ToListAsync();
             return pagedData;
         }
 
@@ -66,7 +66,7 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public List<Dealer> GetAll(PaginationFilter validFilter, string property, Sort sort, NumericRanges ranges)
+        public async Task<List<Dealer>> GetAllAsync(PaginationFilter validFilter, string property, Sort sort, NumericRanges ranges)
         {
             if (sort == Sort.Asc)
             {
@@ -76,10 +76,10 @@ namespace WebApiDB.Repository
                 var sortEntities = from Dealer entity in sortDealers
                                    where entity.Debts >= ranges.Min && entity.Debts <= ranges.Max
                                    select entity;
-                return sortEntities
+                return await sortEntities
                             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                             .Take(validFilter.PageSize)
-                            .ToList();
+                            .ToListAsync();
             }
             else
             {
@@ -89,10 +89,10 @@ namespace WebApiDB.Repository
                 var sortEntities = from Dealer entity in sortDealers
                                    where entity.Debts >= ranges.Min && entity.Debts <= ranges.Max
                                    select entity;
-                return sortEntities
+                return await sortEntities
                             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                             .Take(validFilter.PageSize)
-                            .ToList();
+                            .ToListAsync();
             }
         
         }

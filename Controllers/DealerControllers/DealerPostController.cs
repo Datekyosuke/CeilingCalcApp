@@ -24,18 +24,19 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="200">Dealer created</response>
         /// <response code="400">Something went wrong. Possibly invalid request body.</response>
         /// <response code="500">Something went wrong.</response>
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Dealer dealer)
-        {
-            var validation = ValidationDealer.DealerValidation(dealer);
-            if (!validation.Item1)
-            {
-                return BadRequest(validation.Item2);
-            }
+        //[HttpPost]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public async Task<IActionResult> Post([FromBody] Dealer dealer)
+        //{
+        //    var validation = ValidationDealer.DealerValidation(dealer);
+        //    if (!validation.Item1)
+        //    {
+        //        return BadRequest(validation.Item2);
+        //    }
             
-            await _dealerRepository.Post(dealer);
-            return Ok("Dealer created!");
-        }
+        //    await _dealerRepository.Post(dealer);
+        //    return Ok("Dealer created!");
+        //}
 
     }
 }

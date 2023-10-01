@@ -29,7 +29,7 @@ namespace WebApiDB.Controllers.DealerControllers
         [ProducesResponseType(500)]
         public IActionResult Get([FromQuery] string searchString)
         {
-            var dealers = _dealerRepository.GetAll();
+            var dealers = _dealerRepository.GetAllAsync().Result;
             var matches = new List<Dealer>();
             foreach (var dealer in dealers)
             {
