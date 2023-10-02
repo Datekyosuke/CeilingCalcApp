@@ -35,40 +35,37 @@ namespace WebApiDB.Repository
             return materail;
         }
 
-        public List<Material> GetAll()
+        public async Task<List<Material>> GetAll()
         {
-            var pagedData = _context.Materials.ToList();
+            var pagedData =await _context.Materials.ToListAsync();
             return pagedData;
         }
 
-        public List<Material> GetAll(PaginationFilter validFilter, string property, string sort, NumericRanges ranges)
+        public async Task<List<Material>> GetAllAsync(PaginationFilter validFilter, string property, string sort, NumericRanges ranges)
         {
-            if (sort == "Asc")
-            {
-                var sortDealers = _context.Materials
-                            .Select(x => x)
-                            .OrderBy(x => EF.Property<object>(x, property));
-                var sortEntities = from Material entity in sortDealers
-                                   where entity.Price >= ranges.Min && entity.Price <= ranges.Max
-                                   select entity;
-                return sortEntities
-                            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                            .Take(validFilter.PageSize)
-                            .ToList();
-            }
-            else
-            {
-                var sortDealers = _context.Materials
-                           .Select(x => x)
-                           .OrderByDescending(x => EF.Property<object>(x, property));
-                var sortEntities = from Material entity in sortDealers
-                                   where entity.Price >= ranges.Min && entity.Price <= ranges.Max
-                                   select entity;
-                return sortEntities
-                            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                            .Take(validFilter.PageSize)
-                            .ToList();
-            }
+            var sortMaterials =
+                        sort == "Asc" ?
+                        _context.Materials
+                        .Select(x => x)
+                        .OrderBy(x => EF.Property<object>(x, property)) :
+
+                        sort == "Desc" ?
+                        _context.Materials
+                       .Select(x => x)
+                       .OrderByDescending(x => EF.Property<object>(x, property)) :
+
+                        _context.Materials
+                        .Select(x => x);
+
+
+            var sortEntities = from Material entity in sortMaterials
+                               where entity.Size >= ranges.Min && entity.Size <= ranges.Max
+                               select entity;
+
+            return await sortEntities
+                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                        .Take(validFilter.PageSize)
+                        .ToListAsync();
         }
 
         public async Task JsonPatchWithModelState(Material material, JsonPatchDocument<Material> patchDoc, ModelStateDictionary modelState)

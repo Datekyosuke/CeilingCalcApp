@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using FuzzySharp;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiDB.Data;
@@ -66,7 +67,7 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Dealer>> GetAllAsync(PaginationFilter validFilter, string property, string sort, NumericRanges ranges)
+        public async Task<List<Dealer>> GetAllAsync(PaginationFilter validFilter, string property, string sort, NumericRanges ranges, string searchString)
         {
 
             var sortDealers = 
@@ -82,16 +83,33 @@ namespace WebApiDB.Repository
 
                         _context.Dealers
                         .Select(x => x);
-            
-            
-            var sortEntities = from Dealer entity in sortDealers
-                                   where entity.Debts >= ranges.Min && entity.Debts <= ranges.Max
+
+            var matches = new List<Dealer>();
+            if (searchString is not null)
+            {
+                foreach (var str in searchString.Split(' '))
+                    foreach (var dealer in sortDealers)
+                    {
+                        if (Fuzz.PartialRatio(dealer.LastName.ToLower(), str.ToLower()) >= 70)
+                        { matches.Add(dealer); continue; }
+                        if (Fuzz.PartialRatio(dealer.FirstName.ToLower(), str.ToLower()) >= 70)
+                        { matches.Add(dealer); continue; }
+                        if (Fuzz.PartialRatio(dealer.City.ToLower(), str.ToLower()) >= 70)
+                        { matches.Add(dealer); continue; }
+
+                    }
+                matches.Distinct().ToList();
+            }
+            else matches = await sortDealers.ToListAsync();
+
+            var sortEntities = from Dealer entity in matches
+                               where entity.Debts >= ranges.Min && entity.Debts <= ranges.Max
                                    select entity;
 
-            return await sortEntities
+            return       sortEntities
                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                         .Take(validFilter.PageSize)
-                        .ToListAsync();
+                        .ToList();
             
 
         }

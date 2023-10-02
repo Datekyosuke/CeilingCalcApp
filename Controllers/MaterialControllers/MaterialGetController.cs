@@ -54,7 +54,7 @@ namespace WebApiDB.Controllers.MaterialControllers
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, totalRecords);
             var expression = orderable.Property;
             var sort = orderable.Sort;
-            var entities = _materialRepository.GetAll(validFilter, expression, sort, ranges);
+            var entities = _materialRepository.GetAllAsync(validFilter, expression, sort, ranges).Result;
             var pagedReponse = PaginationHelper.CreatePagedReponse<Material>(entities, validFilter, totalRecords, _uriService, route);
             return Ok(pagedReponse);
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FuzzySharp;
+using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
@@ -51,7 +52,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="200">Dealers retrieved</response>
         ///  <response code="400">Wrong request body</response>
         [HttpGet()]
-        public IActionResult GetAll([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges)
+        public IActionResult GetAll([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges, [FromQuery] string searchString)
         {
             if (ranges.Max < ranges.Min) return BadRequest("Maximum must be greater than or equal to the minimum"); 
             var route = Request.Path.Value;
@@ -59,7 +60,7 @@ namespace WebApiDB.Controllers.DealerControllers
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, totalRecords);
             var expression = orderable.Property;
             var sort = orderable.Sort;
-            var entities = _dealerRepository.GetAllAsync(validFilter, expression, sort, ranges).Result;
+            var entities = _dealerRepository.GetAllAsync(validFilter, expression, sort, ranges, searchString).Result;
             var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(entities, validFilter, totalRecords, _uriService, route);
             return Ok(pagedReponse);
         }

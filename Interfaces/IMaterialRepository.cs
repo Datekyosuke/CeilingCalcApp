@@ -7,7 +7,7 @@ namespace WebApiDB.Interfaces
 {
     public interface IMaterialRepository
     {
-        public List<Material> GetAll();
+        public Task<List<Material>> GetAll();
         public Task Delete(Material materail);
         public Task Put(Material oldMaterial, Material material);
         public Task JsonPatchWithModelState(Material material,
@@ -18,6 +18,6 @@ namespace WebApiDB.Interfaces
         public Task Patch(Material oldMaterial, Material material);
 
         public int Count();
-        public List<Material> GetAll(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges);
+        public Task<List<Material>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges);
     }
 }
