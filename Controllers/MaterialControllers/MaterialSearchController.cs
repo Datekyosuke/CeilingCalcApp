@@ -29,7 +29,7 @@ namespace WebApiDB.Controllers.MaterialControllers
         [ProducesResponseType(500)]
         public IActionResult Get([FromQuery] string searchString)
         {
-            var materials = _materialRepository.GetAll();
+            var materials = _materialRepository.GetAll().Result;
             var matches = new List<Material>();
             foreach (var material in materials)
             {

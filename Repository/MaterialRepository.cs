@@ -35,9 +35,9 @@ namespace WebApiDB.Repository
             return materail;
         }
 
-        public List<Material> GetAll()
+        public async Task<List<Material>> GetAll()
         {
-            var pagedData = _context.Materials.ToList();
+            var pagedData =await _context.Materials.ToListAsync();
             return pagedData;
         }
 
@@ -58,8 +58,8 @@ namespace WebApiDB.Repository
                         .Select(x => x);
 
 
-            var sortEntities = from Dealer entity in sortMaterials
-                               where entity.Debts >= ranges.Min && entity.Debts <= ranges.Max
+            var sortEntities = from Material entity in sortMaterials
+                               where entity.Size >= ranges.Min && entity.Size <= ranges.Max
                                select entity;
 
             return await sortEntities

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FuzzySharp;
+using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using static WebApiDB.Helpers.LevenshteinDistance;
@@ -31,17 +32,18 @@ namespace WebApiDB.Controllers.DealerControllers
         {
             var dealers = _dealerRepository.GetAllAsync().Result;
             var matches = new List<Dealer>();
+            foreach(var str in searchString.Split(' '))
             foreach (var dealer in dealers)
             {
-                if (Distance(dealer.LastName, searchString) <= 2)
+                if (Fuzz.PartialRatio(dealer.LastName.ToLower(), str.ToLower()) >= 70)
                 { matches.Add(dealer); continue; }
-                if (Distance(dealer.FirstName, searchString) <= 2)
+                if (Fuzz.PartialRatio(dealer.FirstName.ToLower(), str.ToLower()) >= 70)
                 { matches.Add(dealer); continue; }
-                if (Distance(dealer.City, searchString) <= 2)
+                if (Fuzz.PartialRatio(dealer.City.ToLower(), str.ToLower()) >= 70)
                 { matches.Add(dealer); continue; }
 
             }
-            return Ok(matches);
+            return Ok(matches.Distinct());
         }
     }
 }
