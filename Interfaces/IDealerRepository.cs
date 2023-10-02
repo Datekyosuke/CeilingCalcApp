@@ -20,6 +20,6 @@ namespace WebApiDB.Interfaces
         public Task Patch(Dealer oldClient, Dealer dealer);
 
         public int Count();
-        public Task<List<Dealer>> GetAllAsync(PaginationFilter validFilter, string expression, Sort sort, NumericRanges ranges);
+        public Task<List<Dealer>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges);
     }
 }

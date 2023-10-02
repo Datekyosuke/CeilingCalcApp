@@ -36,11 +36,12 @@ namespace WebApiDB.Controllers.DealerControllers
         ///     Telephone
         ///     Debts
         ///     City
-        /// Sort is enum
+        ///     
+        /// Sort 
         /// 
-        ///     0 ASc
-        ///     1 Desc
-        ///     null without sorting
+        ///     Asc - ascending
+        ///     Desc - descending
+        ///     else without sorting
         ///     
         ///  Min  - search for debts from
         /// 

@@ -4,6 +4,6 @@
     {
         public string Property { get; init; } = "Id";
 
-        public Sort Sort { get; init; } = Sort.Asc;
+        public string Sort { get; set; }
     }
 }

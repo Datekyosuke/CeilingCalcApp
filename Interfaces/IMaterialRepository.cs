@@ -18,6 +18,6 @@ namespace WebApiDB.Interfaces
         public Task Patch(Material oldMaterial, Material material);
 
         public int Count();
-        public List<Material> GetAll(PaginationFilter validFilter, string expression, Sort sort, NumericRanges ranges);
+        public List<Material> GetAll(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges);
     }
 }

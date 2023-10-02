@@ -66,35 +66,34 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Dealer>> GetAllAsync(PaginationFilter validFilter, string property, Sort sort, NumericRanges ranges)
+        public async Task<List<Dealer>> GetAllAsync(PaginationFilter validFilter, string property, string sort, NumericRanges ranges)
         {
-            if (sort == Sort.Asc)
-            {
-                var sortDealers = _context.Dealers
-                            .Select(x => x)
-                            .OrderBy(x => EF.Property<object>(x, property));
-                var sortEntities = from Dealer entity in sortDealers
+
+            var sortDealers = 
+                        sort == "Asc" ?
+                        _context.Dealers
+                        .Select(x => x)
+                        .OrderBy(x => EF.Property<object>(x, property)) :
+
+                        sort == "Desc" ?
+                        _context.Dealers
+                       .Select(x => x)
+                       .OrderByDescending(x => EF.Property<object>(x, property)) :
+
+                        _context.Dealers
+                        .Select(x => x);
+            
+            
+            var sortEntities = from Dealer entity in sortDealers
                                    where entity.Debts >= ranges.Min && entity.Debts <= ranges.Max
                                    select entity;
-                return await sortEntities
-                            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                            .Take(validFilter.PageSize)
-                            .ToListAsync();
-            }
-            else
-            {
-                var sortDealers = _context.Dealers
-                           .Select(x => x)
-                           .OrderByDescending(x => EF.Property<object>(x, property));
-                var sortEntities = from Dealer entity in sortDealers
-                                   where entity.Debts >= ranges.Min && entity.Debts <= ranges.Max
-                                   select entity;
-                return await sortEntities
-                            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                            .Take(validFilter.PageSize)
-                            .ToListAsync();
-            }
-        
+
+            return await sortEntities
+                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                        .Take(validFilter.PageSize)
+                        .ToListAsync();
+            
+
         }
     }
 }
