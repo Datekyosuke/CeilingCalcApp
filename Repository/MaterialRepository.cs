@@ -41,9 +41,9 @@ namespace WebApiDB.Repository
             return pagedData;
         }
 
-        public List<Material> GetAll(PaginationFilter validFilter, string property, Sort sort, NumericRanges ranges)
+        public List<Material> GetAll(PaginationFilter validFilter, string property, string sort, NumericRanges ranges)
         {
-            if (sort == Sort.Asc)
+            if (sort == "Asc")
             {
                 var sortDealers = _context.Materials
                             .Select(x => x)
