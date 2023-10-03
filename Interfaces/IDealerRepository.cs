@@ -9,7 +9,7 @@ namespace WebApiDB.Interfaces
 {
     public interface IDealerRepository 
     {
-        public Task<List<Dealer>> GetAllAsync();
+        //public Task<List<Dealer>> GetAllAsync();
         public Task Delete(Dealer dealer);
         public Task Put(Dealer oldClient, Dealer dealer);
         public Task JsonPatchWithModelState(Dealer dealer,
@@ -20,6 +20,6 @@ namespace WebApiDB.Interfaces
         public Task Patch(Dealer oldClient, Dealer dealer);
 
         public int Count();
-        public Task<List<Dealer>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges, string searchString);
+        public Task<PagedResponse<List<Dealer>>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges, string searchString, string? route);
     }
 }
