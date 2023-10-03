@@ -1,12 +1,15 @@
 ﻿using FuzzySharp;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using WebApiDB.Controllers.DealerControllers;
 using WebApiDB.Data;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
+using WebApiDB.Servics;
 
 namespace WebApiDB.Repository
 {
@@ -14,11 +17,15 @@ namespace WebApiDB.Repository
     {
 
         private readonly DealerContext _context;
+        private readonly IUriService _uriService;
 
-        public DealerReposytory(DealerContext context)
+        public DealerReposytory(DealerContext context, IUriService uriService)
         {
             _context = context;
+            _uriService = uriService;
         }
+
+
         public async Task Delete(Dealer dealer)
         {
             _context.Dealers.Remove(dealer);
@@ -36,11 +43,11 @@ namespace WebApiDB.Repository
             return _context.Dealers.Count();
         }
 
-        public async Task<List<Dealer>> GetAllAsync()
-        {
-            var pagedData = await _context.Dealers.ToListAsync();
-            return pagedData;
-        }
+        //public async Task<List<Dealer>> GetAllAsync()
+        //{
+        //    var pagedData = await _context.Dealers.AllAsync();
+        //    return pagedData;
+        //}
 
 
         public async Task JsonPatchWithModelState(Dealer dealer, JsonPatchDocument<Dealer> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelState)
@@ -67,9 +74,9 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Dealer>> GetAllAsync(PaginationFilter validFilter, string property, string sort, NumericRanges ranges, string searchString)
+        public async Task<PagedResponse<List<Dealer>>> GetAllAsync(PaginationFilter validFilter, string property, string sort, NumericRanges ranges, string searchString, string? route)
         {
-
+            var totalRecords = 0;
             var sortDealers = 
                         sort == "Asc" ?
                         _context.Dealers
@@ -98,19 +105,23 @@ namespace WebApiDB.Repository
                         { matches.Add(dealer); continue; }
 
                     }
-                matches.Distinct().ToList();
-            }
-            else matches = await sortDealers.ToListAsync();
-
-            var sortEntities = from Dealer entity in matches
-                               where entity.Debts >= ranges.Min && entity.Debts <= ranges.Max
-                                   select entity;
-
-            return       sortEntities
+                totalRecords = matches.Distinct().Count();
+                var sortedSearchEntities = matches
+                        .Where(x => x.Debts >= ranges.Min && x.Debts <= ranges.Max)
+                        .Distinct()
                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                         .Take(validFilter.PageSize)
                         .ToList();
-            
+                return  PaginationHelper.CreatePagedReponse<Dealer>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
+            }
+            totalRecords = sortDealers.Count();
+             var sortedEntities = sortDealers
+                        .Where(x => x.Debts >= ranges.Min && x.Debts <= ranges.Max)
+                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                        .Take(validFilter.PageSize)
+                        .ToList();
+            return PaginationHelper.CreatePagedReponse<Dealer>(sortedEntities, validFilter, totalRecords, _uriService, route);
+
 
         }
     }

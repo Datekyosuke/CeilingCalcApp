@@ -9,12 +9,12 @@
             this.PageNumber = 1;
             this.PageSize = 10;
         }
-        public PaginationFilter(int pageNumber, int pageSize, int totalrecords)
+        public PaginationFilter(int pageNumber, int pageSize)
         {
             if(pageNumber <= 0) 
             {
                 this.PageNumber = 1;
-                this.PageSize = totalrecords;
+                this.PageSize = int.MaxValue;
             } else
             { 
             this.PageNumber = pageNumber;

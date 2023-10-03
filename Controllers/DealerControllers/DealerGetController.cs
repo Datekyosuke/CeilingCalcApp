@@ -56,12 +56,10 @@ namespace WebApiDB.Controllers.DealerControllers
         {
             if (ranges.Max < ranges.Min) return BadRequest("Maximum must be greater than or equal to the minimum"); 
             var route = Request.Path.Value;
-            var totalRecords = _dealerRepository.Count();
-            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, totalRecords);
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var expression = orderable.Property;
             var sort = orderable.Sort;
-            var entities = _dealerRepository.GetAllAsync(validFilter, expression, sort, ranges, searchString).Result;
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(entities, validFilter, totalRecords, _uriService, route);
+            var pagedReponse = _dealerRepository.GetAllAsync(validFilter, expression, sort, ranges, searchString, route).Result;        
             return Ok(pagedReponse);
         }
 

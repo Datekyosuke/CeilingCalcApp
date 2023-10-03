@@ -50,11 +50,12 @@ namespace WebApiDB.Controllers.MaterialControllers
         {
             if (ranges.Max < ranges.Min) return BadRequest("Maximum must be greater than or equal to the minimum");
             var route = Request.Path.Value;
-            var totalRecords = _materialRepository.Count();
-            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, totalRecords);
+          
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var expression = orderable.Property;
             var sort = orderable.Sort;
             var entities = _materialRepository.GetAllAsync(validFilter, expression, sort, ranges).Result;
+            var totalRecords = entities.Count();
             var pagedReponse = PaginationHelper.CreatePagedReponse<Material>(entities, validFilter, totalRecords, _uriService, route);
             return Ok(pagedReponse);
         }
