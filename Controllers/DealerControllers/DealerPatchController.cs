@@ -41,10 +41,10 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="404">There is no dealer for this id</response>
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
 
-        //[HttpPatch]
-        //public async Task<ActionResult> Put(int id, [FromBody] Dealer dealer)
-        //{
-        //    var oldClient = _dealerRepository.GetAsync(id).Result;
+        [HttpPatch]
+        public async Task<ActionResult> Put(int id, [FromBody] Dealer dealer)
+        {
+            var oldClient = _dealerRepository.Get(id);
 
         //    if (oldClient == null)
         //        return NotFound();
