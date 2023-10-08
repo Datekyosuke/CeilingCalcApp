@@ -74,16 +74,18 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PagedResponse<List<Dealer>>> GetAllAsync(PaginationFilter validFilter, string property, string sort, NumericRanges ranges, string searchString, string? route)
+        public async Task<PagedResponse<List<Dealer>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
         {
             var totalRecords = 0;
+            var firstChar = propertyCamelCase[0].ToString().ToUpper();
+            var property = firstChar + propertyCamelCase.Substring(1);
             var sortDealers = 
-                        sort == "Asc" ?
+                        sort == "asc" ?
                         _context.Dealers
                         .Select(x => x)
                         .OrderBy(x => EF.Property<object>(x, property)) :
 
-                        sort == "Desc" ?
+                        sort == "desc" ?
                         _context.Dealers
                        .Select(x => x)
                        .OrderByDescending(x => EF.Property<object>(x, property)) :

@@ -39,8 +39,8 @@ namespace WebApiDB.Controllers.DealerControllers
         ///     "city": "string",  required    
         /// Sort 
         /// 
-        ///     Asc - ascending
-        ///     Desc - descending
+        ///     asc - ascending
+        ///     desc - descending
         ///     else without sorting
         ///     
         ///  Min  - search for debts from
