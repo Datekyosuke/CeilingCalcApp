@@ -1,8 +1,12 @@
-﻿namespace WebApiDB.Pagination
+﻿using System.Text.Json.Serialization;
+
+namespace WebApiDB.Pagination
 {
     public class PaginationFilter
     {
+        [JsonPropertyName("pageNumber")]
         public int PageNumber { get; set; }
+        [JsonPropertyName("pageSize")]
         public int PageSize { get; set; }
         public PaginationFilter()
         {

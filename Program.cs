@@ -35,6 +35,7 @@ builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();
 
 builder.Services.AddSwaggerGen(options =>
 {
+    options.DescribeAllParametersInCamelCase();
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
