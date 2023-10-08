@@ -36,14 +36,15 @@ namespace WebApiDB.Controllers.DealerControllers
         /// 
         ///     See more: https://learn.microsoft.com/ru-ru/aspnet/core/web-api/jsonpatch?view=aspnetcore-7.0#path-syntax
         ///     
-        ///     Fields dealer:
+        /// Properties can take Dealer field values:
+        /// 
+        ///     "id": can't be changed, integer
+        ///     "firstName": "string", required
+        ///     "lastName": "string", may be null
+        ///     "telephone": 11 digit, integer
+        ///     "debts": 0, integer
+        ///     "city": "string",  required    
         ///     
-        ///     "Id": can't be changed, integer
-        ///     "FirstName": "string", may be null
-        ///     "LastName": "string", required
-        ///     "Telephone": 11 digit, integer
-        ///     "Debts": 0, integer
-        ///     "City": "string",  required
         /// </remarks>
         /// <param name="id">Dealer ID</param>
         /// <param name="patchDoc"></param>

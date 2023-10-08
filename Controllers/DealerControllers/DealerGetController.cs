@@ -31,13 +31,12 @@ namespace WebApiDB.Controllers.DealerControllers
         /// 
         /// Properties can take Dealer field values:
         /// 
-        ///     Id
-        ///     FirstName
-        ///     LastName
-        ///     Telephone
-        ///     Debts
-        ///     City
-        ///     
+        ///     "id": can't be changed, integer
+        ///     "firstName": "string", required
+        ///     "lastName": "string", may be null
+        ///     "telephone": 11 digit, integer
+        ///     "debts": 0, integer
+        ///     "city": "string",  required    
         /// Sort 
         /// 
         ///     Asc - ascending

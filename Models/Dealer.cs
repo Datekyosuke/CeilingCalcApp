@@ -11,25 +11,25 @@ namespace WebApiDB.Models
         /// ID. Auto increment
         /// </summary>
         [Key]
-        [JsonPropertyName("Id")]
+        [JsonPropertyName("id")]
         public int Id { get; set; }
 
         /// <summary>
         /// FirstName may be null
         /// </summary>
-        [JsonPropertyName("FirstName")]
+        [JsonPropertyName("firstName")]
         public string FirstName { get; set; }
 
         /// <summary>
         /// LastName not null
         /// </summary>
-        [JsonPropertyName("LastName")]
+        [JsonPropertyName("lastName")]
         public string LastName { get; set; }
 
         /// <summary>
         /// only numbers
         /// </summary>
-        [JsonPropertyName("Telephone")]
+        [JsonPropertyName("telephone")]
         [Range(10000000000, 99999999999,
         ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         public long? Telephone { get; set; }
@@ -37,13 +37,13 @@ namespace WebApiDB.Models
         /// <summary>
         /// only numbers, may be negative  
         /// </summary>
-        [JsonPropertyName("Debts")]
+        [JsonPropertyName("debts")]
         public float Debts { get; set; }
 
         /// <summary>
         /// City of residence
         /// </summary>
-        [JsonPropertyName("City")]
+        [JsonPropertyName("city")]
         public string City { get; set; }
 
       

@@ -27,12 +27,12 @@ namespace WebApiDB.Controllers.DealerControllers
         ///     
         ///Fields dealer:
         ///
-        ///     "Id": can't be changed, integer
-        ///     "FirstName": "string", required
-        ///     "LastName": "string", may be null
-        ///     "Telephone": 11 digit, integer
-        ///     "Debts": 0, integer
-        ///     "City": "string",  required
+        ///     "id": can't be changed, integer
+        ///     "firstName": "string", required
+        ///     "lastName": "string", may be null
+        ///     "telephone": 11 digit, integer
+        ///     "debts": 0, integer
+        ///     "city": "string",  required
         /// </remarks>
         /// <param name="id">Dealer ID</param>
         /// <param name="dealer"></param>
