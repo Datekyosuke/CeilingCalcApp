@@ -8,16 +8,10 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/DealerController")]
-    [ApiController]
-    public class DealerPatchJSONController : ControllerBase
-    {
-        private IDealerRepository _dealerRepository;
 
-        public DealerPatchJSONController(IDealerRepository dealerRepository)
-        {
-            _dealerRepository = dealerRepository;
-        }
+    public partial class DealerController 
+    {
+
         /// <summary>
         /// Making changes to one or more dealer fields
         /// </summary>

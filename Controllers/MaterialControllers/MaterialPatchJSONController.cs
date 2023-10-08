@@ -5,17 +5,9 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.MaterialControllers
 {
-    [Route("api/MaterialController")]
-    [ApiController]
-    public class MaterialPatchJSONController : Controller
+
+    public partial class MaterialController
     {
-        private IMaterialRepository _materialRepository;
-
-        public MaterialPatchJSONController(IMaterialRepository materialRepository)
-        {
-            _materialRepository = materialRepository;
-        }
-
         /// <summary>
         /// Making changes to one or more material fields
         /// </summary>

@@ -3,16 +3,9 @@ using WebApiDB.Interfaces;
 
 namespace WebApiDB.Controllers.MaterialControllers
 {
-    [Route("api/MaterialController")]
-    [ApiController]
-    public class MaterialDeleteController : Controller
-    {
-        private IMaterialRepository _materialRepository;
 
-        public MaterialDeleteController(IMaterialRepository materialRepository)
-        {
-            _materialRepository = materialRepository;
-        }
+    public partial class MaterialController
+    {
         /// <summary>
         /// Removes material by id
         /// </summary>

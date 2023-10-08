@@ -4,16 +4,8 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.MaterialControllers
 {
-    [Route("api/MaterialController")]
-    [ApiController]
-    public class MaterialPatchController : Controller
+    public partial class MaterialController
     {
-        private IMaterialRepository _materialRepository;
-
-        public MaterialPatchController(IMaterialRepository materialRepository)
-        {
-            _materialRepository = materialRepository;
-        }
         /// <summary>
         /// Making changes to one material record of a specific ID.
         /// </summary>
@@ -36,7 +28,7 @@ namespace WebApiDB.Controllers.MaterialControllers
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
 
         [HttpPatch]
-        public async Task<ActionResult> Put(int id, [FromBody] Material material)
+        public async Task<ActionResult> Patch(int id, [FromBody] Material material)
         {
             var oldMaterial = _materialRepository.Get(id);
 

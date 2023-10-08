@@ -5,16 +5,9 @@ using WebApiDB.Pagination;
 
 namespace WebApiDB.Controllers.MaterialControllers
 {
-    [Route("api/MaterialController")]
-    [ApiController]
-    public class MaterialGetIDController : Controller
-    {
-        private IMaterialRepository _materialRepository;
 
-        public MaterialGetIDController(IMaterialRepository materialRepository)
-        {
-            _materialRepository = materialRepository;
-        }
+    public partial class MaterialController 
+    {
         /// <summary>
         /// Returns material by Id
         /// </summary>

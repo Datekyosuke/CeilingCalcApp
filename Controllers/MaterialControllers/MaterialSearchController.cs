@@ -5,16 +5,8 @@ using static WebApiDB.Helpers.LevenshteinDistance;
 
 namespace WebApiDB.Controllers.MaterialControllers
 {
-    [Route("api/MaterialController")]
-    [ApiController]
-    public class MaterialSearchController : Controller
+    public partial class MaterialController
     {
-        private IMaterialRepository _materialRepository;
-
-        public MaterialSearchController(IMaterialRepository materialRepository)
-        {
-            _materialRepository = materialRepository;
-        }
         /// <summary>
         /// Implements fuzzy search material by Texture
         /// </summary>

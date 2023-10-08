@@ -3,16 +3,11 @@ using WebApiDB.Interfaces;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/DealerController")]
-    [ApiController]
-    public class DealerDeleteController : ControllerBase
-    {
-        private IDealerRepository _dealerRepository;
 
-        public DealerDeleteController(IDealerRepository dealerRepository)
-        {
-            _dealerRepository = dealerRepository;
-        }
+
+    public partial class DealerController 
+    {
+    
         /// <summary>
         /// Removes dealer by id
         /// </summary>

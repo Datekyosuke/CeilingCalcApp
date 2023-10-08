@@ -1,21 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Helpers;
-using WebApiDB.Interfaces;
 using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/DealerController")]
-    [ApiController]
-    public class DealerPostController : ControllerBase
+    public partial class DealerController 
     {
-        private IDealerRepository _dealerRepository;
-
-        public DealerPostController(IDealerRepository dealerRepository)
-        {
-            _dealerRepository = dealerRepository;
-        }
-
         /// <summary>
         /// Create new dealer
         /// </summary>

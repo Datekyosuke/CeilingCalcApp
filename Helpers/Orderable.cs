@@ -4,6 +4,6 @@
     {
         public string Property { get; init; } = "Id";
 
-        public string Sort { get; set; }
+        public string? Sort { get; set; }
     }
 }

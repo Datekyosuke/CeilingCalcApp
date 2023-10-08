@@ -9,16 +9,10 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/DealerController")]
-    [ApiController]
-    public class DealerPatchController : ControllerBase
-    {
-        private IDealerRepository _dealerRepository;
 
-        public DealerPatchController(IDealerRepository dealerRepository)
-        {
-            _dealerRepository = dealerRepository;
-        }
+    public partial class DealerController 
+    {
+   
         /// <summary>
         /// Making changes to one dealer record of a specific ID.
         /// </summary>
@@ -42,7 +36,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
 
         [HttpPatch]
-        public async Task<ActionResult> Put(int id, [FromBody] Dealer dealer)
+        public async Task<ActionResult> Patch(int id, [FromBody] Dealer dealer)
         {
             var oldClient = _dealerRepository.GetAsync(id).Result;
 

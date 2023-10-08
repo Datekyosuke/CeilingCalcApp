@@ -4,17 +4,8 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.MaterialControllers
 {
-    [Route("api/MaterialController")]
-    [ApiController]
-    public class MaterialPostController : Controller
+    public partial class MaterialController
     {
-        private IMaterialRepository _materialRepository;
-
-        public MaterialPostController(IMaterialRepository materialRepository)
-        {
-            _materialRepository = materialRepository;
-        }
-
         /// <summary>
         /// Create new material
         /// </summary>

@@ -6,16 +6,10 @@ using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/DealerController")]
-    [ApiController]
-    public class DealerPutController : ControllerBase
-    {
-        private IDealerRepository _dealerRepository;
 
-        public DealerPutController(IDealerRepository dealerRepository)
-        {
-            _dealerRepository = dealerRepository;
-        }
+    public partial class DealerController 
+    {
+
         /// <summary>
         /// Making changes to one dealer record of a specific ID
         /// </summary>

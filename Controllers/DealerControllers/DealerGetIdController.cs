@@ -1,24 +1,14 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Channels;
-using WebApiDB.Data;
-using WebApiDB.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
 
 namespace WebApiDB.Controllers.DealerControllers
 {
-    [Route("api/DealerController")]
-    [ApiController]
-    public class DealerGetIdController : ControllerBase
-    {
-        private IDealerRepository _dealerRepository;
 
-        public DealerGetIdController(IDealerRepository dealerRepository)
-        {
-            _dealerRepository = dealerRepository;
-        }
+
+    public partial class DealerController 
+    {
+      
         /// <summary>
         /// Returns dealer by Id
         /// </summary>

@@ -11,13 +11,14 @@ namespace WebApiDB.Controllers.DealerControllers
     /// Controller for working with dealers
     /// </summary>
     [Route("/api/DealerController")]
-    public class DealerGetController : Controller
+    [ApiController]
+    public partial class DealerController : Controller
     {
 
         private IDealerRepository _dealerRepository;
         private readonly IUriService _uriService;
 
-        public DealerGetController(IDealerRepository dealerRepository, IUriService uriService)
+        public DealerController(IDealerRepository dealerRepository, IUriService uriService)
         {
             _dealerRepository = dealerRepository;
             _uriService = uriService;
@@ -43,15 +44,15 @@ namespace WebApiDB.Controllers.DealerControllers
         ///     desc - descending
         ///     else without sorting
         ///     
-        ///  Min  - search for debts from
+        ///  min  - search for debts from
         /// 
-        ///  Max - search for debts up
+        ///  max - search for debts up
         /// </remarks>
         /// <returns>Page list dealers</returns>
         /// <response code="200">Dealers retrieved</response>
         ///  <response code="400">Wrong request body</response>
         [HttpGet()]
-        public IActionResult GetAll([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges, [FromQuery] string searchString)
+        public virtual IActionResult GetAll([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges, [FromQuery] string? searchString)
         {
             if (ranges.Max < ranges.Min) return BadRequest("Maximum must be greater than or equal to the minimum"); 
             var route = Request.Path.Value;

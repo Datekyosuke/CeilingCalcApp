@@ -8,12 +8,12 @@ namespace WebApiDB.Controllers.MaterialControllers
 {
     [Route("/api/MaterailController")]
     [ApiController]
-    public class MaterialGetController : Controller
+    public partial class MaterialController : Controller
     {
         private IMaterialRepository _materialRepository;
         private readonly IUriService _uriService;
 
-        public MaterialGetController(IMaterialRepository materialRepository, IUriService uriService)
+        public MaterialController(IMaterialRepository materialRepository, IUriService uriService)
         {
             _materialRepository = materialRepository;
             _uriService = uriService;

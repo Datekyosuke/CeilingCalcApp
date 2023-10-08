@@ -5,16 +5,8 @@ using WebApiDB.Repository;
 
 namespace WebApiDB.Controllers.MaterialControllers
 {
-    [Route("api/MaterialController")]
-    [ApiController]
-    public class MaterialPutController : Controller
+    public partial class MaterialController
     {
-        private IMaterialRepository _materialRepository;
-
-        public MaterialPutController(IMaterialRepository materialRepository)
-        {
-            _materialRepository = materialRepository;
-        }
         /// <summary>
         /// Making changes to one material record of a specific ID
         /// </summary>
