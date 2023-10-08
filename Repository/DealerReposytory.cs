@@ -93,20 +93,27 @@ namespace WebApiDB.Repository
                         _context.Dealers
                         .Select(x => x);
 
-            var matches = new List<Dealer>();
+
+            
             if (searchString is not null)
             {
-                foreach (var str in searchString.Split(' '))
-                    foreach (var dealer in sortDealers)
+                var matches = new List<Dealer>();
+                foreach (var dealer in sortDealers)
+                {
+                    var flag = searchString.Split(' ').Count();
+                    foreach (var str in searchString.Split(' '))
                     {
                         if (Fuzz.PartialRatio(dealer.LastName.ToLower(), str.ToLower()) >= 70)
-                        { matches.Add(dealer); continue; }
+                        { flag--; continue; }
                         if (Fuzz.PartialRatio(dealer.FirstName.ToLower(), str.ToLower()) >= 70)
-                        { matches.Add(dealer); continue; }
+                        { flag--; continue; }
                         if (Fuzz.PartialRatio(dealer.City.ToLower(), str.ToLower()) >= 70)
-                        { matches.Add(dealer); continue; }
+                        { flag--; continue; }
 
                     }
+                    if(flag == 0)
+                        matches.Add(dealer);
+                }
                 totalRecords = matches.Distinct().Count();
                 var sortedSearchEntities = matches
                         .Where(x => x.Debts >= ranges.Min && x.Debts <= ranges.Max)
