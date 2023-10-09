@@ -48,6 +48,7 @@ namespace WebApiDB.Controllers.DealerControllers
             {
                 return BadRequest(validation.Item2);
             }
+            dealer.Id = id;
             if (dealer.FirstName == "string")
                 dealer.FirstName = oldClient.FirstName;
             if (dealer.LastName == "string")

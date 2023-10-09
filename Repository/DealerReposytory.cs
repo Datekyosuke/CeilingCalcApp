@@ -94,27 +94,31 @@ namespace WebApiDB.Repository
                         .Select(x => x);
 
 
-            
+
             if (searchString is not null)
             {
-                var matches = new List<Dealer>();
-                foreach (var dealer in sortDealers)
-                {
-                    var flag = searchString.Split(' ').Count();
-                    foreach (var str in searchString.Split(' '))
-                    {
-                        if (Fuzz.PartialRatio(dealer.LastName.ToLower(), str.ToLower()) >= 70)
-                        { flag--; continue; }
-                        if (Fuzz.PartialRatio(dealer.FirstName.ToLower(), str.ToLower()) >= 70)
-                        { flag--; continue; }
-                        if (Fuzz.PartialRatio(dealer.City.ToLower(), str.ToLower()) >= 70)
-                        { flag--; continue; }
+            //    var matches = new List<Dealer>();
+            //    foreach (var dealer in sortDealers)
+            //    {
+            //        var flag = searchString.Split(' ').Count();
+            //        foreach (var str in searchString.Split(' '))
+            //        {
+            //            if (Fuzz.PartialRatio(dealer.LastName.ToLower(), str.ToLower()) >= 70)
+            //            { flag--; continue; }
+            //            if (Fuzz.PartialRatio(dealer.FirstName.ToLower(), str.ToLower()) >= 70)
+            //            { flag--; continue; }
+            //            if (Fuzz.PartialRatio(dealer.City.ToLower(), str.ToLower()) >= 70)
+            //            { flag--; continue; }
 
-                    }
-                    if(flag == 0)
-                        matches.Add(dealer);
-                }
-                totalRecords = matches.Distinct().Count();
+            //        }
+            //        if(flag == 0)
+            //            matches.Add(dealer);
+            //    }
+            string[] propertySearch =  { "LastName", "FirstName", "City" };
+            var matches = SearchHelper.Search(sortDealers.ToList(), searchString, propertySearch);
+               totalRecords = matches.Distinct().Count();
+
+
                 var sortedSearchEntities = matches
                         .Where(x => x.Debts >= ranges.Min && x.Debts <= ranges.Max)
                         .Distinct()

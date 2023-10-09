@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
-using static WebApiDB.Helpers.LevenshteinDistance;
 
 namespace WebApiDB.Controllers.MaterialControllers
 {
@@ -23,13 +22,13 @@ namespace WebApiDB.Controllers.MaterialControllers
         {
             var materials = _materialRepository.GetAll().Result;
             var matches = new List<Material>();
-            foreach (var material in materials)
+           /* foreach (var material in materials)
             {
                 if (Distance(material.Texture, searchString) <= 2)
                 { matches.Add(material); continue; }
 
 
-            }
+            }*/
             return Ok(matches);
         }
     }
