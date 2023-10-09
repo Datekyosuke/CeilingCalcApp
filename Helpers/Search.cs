@@ -1,7 +1,5 @@
 ﻿using FuzzySharp;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Reflection;
-using WebApiDB.Models;
 
 namespace WebApiDB.Helpers
 {
@@ -22,7 +20,7 @@ namespace WebApiDB.Helpers
                         {
                             var property = typeof(T).GetProperty(searchPar, BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance);
 
-                            if (Fuzz.PartialRatio(property.ToString().ToLower(), searchStr.ToLower()) >= 70)
+                            if (Fuzz.PartialRatio(property.GetValue(entity).ToString().ToLower(), searchStr.ToLower()) >= 70)
                             { flag--; continue; }
                         }
                     }
