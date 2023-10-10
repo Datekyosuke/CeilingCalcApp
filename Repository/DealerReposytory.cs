@@ -74,7 +74,7 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PagedResponse<List<Dealer>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
+        public async Task<IEnumerable<Dealer>> Get(string propertyCamelCase, string sort)
         {
             var totalRecords = 0;
             var firstChar = propertyCamelCase[0].ToString().ToUpper();
@@ -93,10 +93,6 @@ namespace WebApiDB.Repository
                         _context.Dealers
                         .Select(x => x);
 
-
-
-            if (searchString is not null)
-            {
             //    var matches = new List<Dealer>();
             //    foreach (var dealer in sortDealers)
             //    {
@@ -114,26 +110,11 @@ namespace WebApiDB.Repository
             //        if(flag == 0)
             //            matches.Add(dealer);
             //    }
-            string[] propertySearch =  { "LastName", "FirstName", "City" };
-            var matches = SearchHelper.Search(sortDealers.ToList(), searchString, propertySearch);
-               totalRecords = matches.Distinct().Count();
+ 
+            
 
-
-                var sortedSearchEntities = matches
-                        .Where(x => x.Debts >= ranges.Min && x.Debts <= ranges.Max)
-                        .Distinct()
-                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                        .Take(validFilter.PageSize)
-                        .ToList();
-                return  PaginationHelper.CreatePagedReponse<Dealer>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
-            }
-            totalRecords = sortDealers.Count();
-             var sortedEntities = sortDealers
-                        .Where(x => x.Debts >= ranges.Min && x.Debts <= ranges.Max)
-                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                        .Take(validFilter.PageSize)
-                        .ToList();
-            return PaginationHelper.CreatePagedReponse<Dealer>(sortedEntities, validFilter, totalRecords, _uriService, route);
+           
+            return sortDealers.ToList();
 
 
         }

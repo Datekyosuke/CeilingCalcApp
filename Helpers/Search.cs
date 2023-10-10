@@ -9,7 +9,11 @@ namespace WebApiDB.Helpers
         {
             var matches = new List<T>();
 
-            if (searchString is not null)
+            if (searchString is null)
+            {
+                return data;
+            }
+            else
             {
                 foreach (var entity in data)
                 {

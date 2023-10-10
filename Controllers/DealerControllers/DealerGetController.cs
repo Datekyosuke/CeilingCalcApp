@@ -59,7 +59,20 @@ namespace WebApiDB.Controllers.DealerControllers
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var expression = orderable.Property;
             var sort = orderable.Sort;
-            var pagedReponse = _dealerRepository.GetAllAsync(validFilter, expression, sort, ranges, searchString, route).Result;        
+            var sortDealers = _dealerRepository.Get(expression, sort).Result;
+            string[] propertySearch = { "LastName", "FirstName", "City" };
+            var matches = SearchHelper.Search(sortDealers.ToList(), searchString, propertySearch).Distinct();
+            var totalRecords = matches.Count();
+            var sortedSearchEntities = matches
+                   .Where(x => x.Debts >= ranges.Min && x.Debts <= ranges.Max)
+                   .Distinct()
+                   .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                   .Take(validFilter.PageSize)
+                   .ToList();
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
+            
+
+            
             return Ok(pagedReponse);
         }
 
