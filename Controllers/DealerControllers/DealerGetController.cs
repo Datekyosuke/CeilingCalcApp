@@ -15,10 +15,10 @@ namespace WebApiDB.Controllers.DealerControllers
     public partial class DealerController : Controller
     {
 
-        private IDealerRepository _dealerRepository;
+        private IRepository<Dealer> _dealerRepository;
         private readonly IUriService _uriService;
 
-        public DealerController(IDealerRepository dealerRepository, IUriService uriService)
+        public DealerController(IRepository<Dealer> dealerRepository, IUriService uriService)
         {
             _dealerRepository = dealerRepository;
             _uriService = uriService;
@@ -61,8 +61,11 @@ namespace WebApiDB.Controllers.DealerControllers
             var sort = orderable.Sort;
             var sortDealers = _dealerRepository.Get(expression, sort).Result;
             string[] propertySearch = { "LastName", "FirstName", "City" };
+
             var matches = SearchHelper.Search(sortDealers.ToList(), searchString, propertySearch).Distinct();
+
             var totalRecords = matches.Count();
+
             var sortedSearchEntities = matches
                    .Where(x => x.Debts >= ranges.Min && x.Debts <= ranges.Max)
                    .Distinct()

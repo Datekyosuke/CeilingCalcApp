@@ -13,16 +13,14 @@ using WebApiDB.Servics;
 
 namespace WebApiDB.Repository
 {
-    public class DealerReposytory : IDealerRepository
+    public class DealerReposytory : IRepository<Dealer>
     {
 
         private readonly DealerContext _context;
-        private readonly IUriService _uriService;
 
-        public DealerReposytory(DealerContext context, IUriService uriService)
+        public DealerReposytory(DealerContext context)
         {
             _context = context;
-            _uriService = uriService;
         }
 
 
@@ -38,17 +36,6 @@ namespace WebApiDB.Repository
             var customer = await _context.Dealers.FirstOrDefaultAsync(p => p.Id == id);
             return customer;
         }
-        public int Count()
-        {
-            return _context.Dealers.Count();
-        }
-
-        //public async Task<List<Dealer>> GetAllAsync()
-        //{
-        //    var pagedData = await _context.Dealers.AllAsync();
-        //    return pagedData;
-        //}
-
 
         public async Task JsonPatchWithModelState(Dealer dealer, JsonPatchDocument<Dealer> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelState)
         {
@@ -93,27 +80,6 @@ namespace WebApiDB.Repository
                         _context.Dealers
                         .Select(x => x);
 
-            //    var matches = new List<Dealer>();
-            //    foreach (var dealer in sortDealers)
-            //    {
-            //        var flag = searchString.Split(' ').Count();
-            //        foreach (var str in searchString.Split(' '))
-            //        {
-            //            if (Fuzz.PartialRatio(dealer.LastName.ToLower(), str.ToLower()) >= 70)
-            //            { flag--; continue; }
-            //            if (Fuzz.PartialRatio(dealer.FirstName.ToLower(), str.ToLower()) >= 70)
-            //            { flag--; continue; }
-            //            if (Fuzz.PartialRatio(dealer.City.ToLower(), str.ToLower()) >= 70)
-            //            { flag--; continue; }
-
-            //        }
-            //        if(flag == 0)
-            //            matches.Add(dealer);
-            //    }
- 
-            
-
-           
             return sortDealers.ToList();
 
 

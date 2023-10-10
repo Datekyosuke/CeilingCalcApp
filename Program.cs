@@ -9,6 +9,7 @@ using WebApiDB.Interfaces;
 using WebApiDB.Repository;
 using WebApiDB.Servics;
 using Microsoft.AspNetCore.Mvc;
+using WebApiDB.Models;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -29,7 +30,7 @@ builder.Services.AddDbContext<DealerContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
 builder.Services.AddDbContext<MaterialContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
-builder.Services.AddTransient<IDealerRepository, DealerReposytory>();
+builder.Services.AddTransient<IRepository<Dealer>, DealerReposytory>();
 builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();
 
 
