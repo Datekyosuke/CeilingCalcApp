@@ -13,14 +13,16 @@ using WebApiDB.Servics;
 
 namespace WebApiDB.Repository
 {
-    public class DealerReposytory : IRepository<Dealer>
+    public class DealerReposytory : IDealerRepository
     {
 
         private readonly DealerContext _context;
+        private readonly IUriService _uriService;
 
-        public DealerReposytory(DealerContext context)
+        public DealerReposytory(DealerContext context, IUriService uriService)
         {
             _context = context;
+            _uriService = uriService;
         }
 
 
@@ -36,6 +38,17 @@ namespace WebApiDB.Repository
             var customer = await _context.Dealers.FirstOrDefaultAsync(p => p.Id == id);
             return customer;
         }
+        public int Count()
+        {
+            return _context.Dealers.Count();
+        }
+
+        //public async Task<List<Dealer>> GetAllAsync()
+        //{
+        //    var pagedData = await _context.Dealers.AllAsync();
+        //    return pagedData;
+        //}
+
 
         public async Task JsonPatchWithModelState(Dealer dealer, JsonPatchDocument<Dealer> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelState)
         {
@@ -61,12 +74,12 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Dealer>> Get(string propertyCamelCase, string sort)
+        public async Task<PagedResponse<List<Dealer>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
         {
             var totalRecords = 0;
             var firstChar = propertyCamelCase[0].ToString().ToUpper();
             var property = firstChar + propertyCamelCase.Substring(1);
-            var sortDealers = 
+            var sortDealers =
                         sort == "asc" ?
                         _context.Dealers
                         .Select(x => x)
@@ -80,7 +93,30 @@ namespace WebApiDB.Repository
                         _context.Dealers
                         .Select(x => x);
 
-            return sortDealers.ToList();
+
+
+            if (searchString is not null)
+            {
+                string[] propertySearch = { "LastName", "FirstName", "City" };
+                var matches = SearchHelper.Search(sortDealers.ToList(), searchString, propertySearch);
+                totalRecords = matches.Distinct().Count();
+
+
+                var sortedSearchEntities = matches
+                        .Where(x => x.Debts >= ranges.Min && x.Debts <= ranges.Max)
+                        .Distinct()
+                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                        .Take(validFilter.PageSize)
+                        .ToList();
+                return PaginationHelper.CreatePagedReponse<Dealer>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
+            }
+            totalRecords = sortDealers.Count();
+            var sortedEntities = sortDealers
+                       .Where(x => x.Debts >= ranges.Min && x.Debts <= ranges.Max)
+                       .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                       .Take(validFilter.PageSize)
+                       .ToList();
+            return PaginationHelper.CreatePagedReponse<Dealer>(sortedEntities, validFilter, totalRecords, _uriService, route);
 
 
         }

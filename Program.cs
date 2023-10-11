@@ -30,7 +30,7 @@ builder.Services.AddDbContext<DealerContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
 builder.Services.AddDbContext<MaterialContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
-builder.Services.AddTransient<IRepository<Dealer>, DealerReposytory>();
+builder.Services.AddTransient<IDealerRepository, DealerReposytory>();
 builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();
 
 

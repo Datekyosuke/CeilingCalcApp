@@ -15,10 +15,10 @@ namespace WebApiDB.Controllers.DealerControllers
     public partial class DealerController : Controller
     {
 
-        private IRepository<Dealer> _dealerRepository;
+        private IDealerRepository _dealerRepository;
         private readonly IUriService _uriService;
 
-        public DealerController(IRepository<Dealer> dealerRepository, IUriService uriService)
+        public DealerController(IDealerRepository dealerRepository, IUriService uriService)
         {
             _dealerRepository = dealerRepository;
             _uriService = uriService;
@@ -54,28 +54,12 @@ namespace WebApiDB.Controllers.DealerControllers
         [HttpGet()]
         public virtual IActionResult GetAll([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges, [FromQuery] string? searchString)
         {
-            if (ranges.Max < ranges.Min) return BadRequest("Maximum must be greater than or equal to the minimum"); 
+            if (ranges.Max < ranges.Min) return BadRequest("Maximum must be greater than or equal to the minimum");
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var expression = orderable.Property;
             var sort = orderable.Sort;
-            var sortDealers = _dealerRepository.Get(expression, sort).Result;
-            string[] propertySearch = { "LastName", "FirstName", "City" };
-
-            var matches = SearchHelper.Search(sortDealers.ToList(), searchString, propertySearch).Distinct();
-
-            var totalRecords = matches.Count();
-
-            var sortedSearchEntities = matches
-                   .Where(x => x.Debts >= ranges.Min && x.Debts <= ranges.Max)
-                   .Distinct()
-                   .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                   .Take(validFilter.PageSize)
-                   .ToList();
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Dealer>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
-            
-
-            
+            var pagedReponse = _dealerRepository.GetAllAsync(validFilter, expression, sort, ranges, searchString, route).Result;
             return Ok(pagedReponse);
         }
 
