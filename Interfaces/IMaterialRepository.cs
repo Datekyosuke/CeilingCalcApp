@@ -7,17 +7,15 @@ namespace WebApiDB.Interfaces
 {
     public interface IMaterialRepository
     {
-        public Task<List<Material>> GetAll();
-        public Task Delete(Material materail);
+        public  Task<Material> GetAsync(int id);
+        public Task Delete(Material material);
         public Task Put(Material oldMaterial, Material material);
         public Task JsonPatchWithModelState(Material material,
          JsonPatchDocument<Material> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelStat);
         public Task Post(Material material);
-        public Material Get(int id);
 
         public Task Patch(Material oldMaterial, Material material);
 
-        public int Count();
-        public Task<List<Material>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges);
+        public Task<PagedResponse<List<Material>>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges, string searchString, string? route);
     }
 }

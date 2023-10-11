@@ -17,12 +17,12 @@ namespace WebApiDB.Controllers.MaterialControllers
         /// <response code="404">Material not found</response>
         /// <response code="500">Oops! Can't lookup your Material right now</response>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Dealer), 200)]
+        [ProducesResponseType(typeof(Material), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public IActionResult Get(int id)
         {
-            var material = _materialRepository.Get(id);
+            var material = _materialRepository.GetAsync(id).Result;
 
             if (material == null)
             {

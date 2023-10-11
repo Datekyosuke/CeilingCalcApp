@@ -37,7 +37,7 @@ namespace WebApiDB.Controllers.MaterialControllers
         [HttpPut]
         public async Task<ActionResult> Put(int id, [FromBody] Material material)
         {
-            var oldMaterial = _materialRepository.Get(id);
+            var oldMaterial = _materialRepository.GetAsync(id).Result;
             if (oldMaterial == null)
                 return NotFound();
 

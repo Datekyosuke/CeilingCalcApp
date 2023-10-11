@@ -30,7 +30,7 @@ namespace WebApiDB.Controllers.MaterialControllers
         [HttpPatch]
         public async Task<ActionResult> Patch(int id, [FromBody] Material material)
         {
-            var oldMaterial = _materialRepository.Get(id);
+            var oldMaterial = _materialRepository.GetAsync(id).Result;
 
             if (oldMaterial == null)
                 return NotFound();

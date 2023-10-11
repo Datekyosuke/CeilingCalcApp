@@ -17,11 +17,11 @@ namespace WebApiDB.Controllers.MaterialControllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var dealer = _materialRepository.Get(id);
+            var material = _materialRepository.GetAsync(id).Result;
 
-            if (dealer != null)
+            if (material != null)
             {
-                await _materialRepository.Delete(dealer);
+                await _materialRepository.Delete(material);
             }
             else return NotFound();
             return Ok("Material deleted!");

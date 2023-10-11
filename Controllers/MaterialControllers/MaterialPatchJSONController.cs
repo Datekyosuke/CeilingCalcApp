@@ -46,7 +46,7 @@ namespace WebApiDB.Controllers.MaterialControllers
         {
             if (patchDoc != null)
             {
-                var material = _materialRepository.Get(id);
+                var material = _materialRepository.GetAsync(id).Result;
                 await _materialRepository.JsonPatchWithModelState(material, patchDoc, ModelState);
                 if (!ModelState.IsValid)
                 {

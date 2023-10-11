@@ -7,20 +7,19 @@ using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
+using WebApiDB.Servics;
 
 namespace WebApiDB.Repository
 {
     public class MaterialRepository : IMaterialRepository
     {
         private readonly MaterialContext _context;
+        private readonly IUriService _uriService;
 
-        public MaterialRepository(MaterialContext context)
+        public MaterialRepository(MaterialContext context, IUriService uriService)
         {
             _context = context;
-        }
-        public int Count()
-        {
-            return _context.Materials.Count();
+            _uriService = uriService;   
         }
 
         public async Task Delete(Material materail)
@@ -29,27 +28,23 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public Material Get(int id)
+        public async Task<Material> GetAsync(int id)
         {
-            var materail = _context.Materials.SingleOrDefault(p => p.Id == id);
+            var materail = await _context.Materials.FirstOrDefaultAsync(p => p.Id == id);
             return materail;
         }
-
-        public async Task<List<Material>> GetAll()
+        public async Task<PagedResponse<List<Material>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
         {
-            var pagedData =await _context.Materials.ToListAsync();
-            return pagedData;
-        }
-
-        public async Task<List<Material>> GetAllAsync(PaginationFilter validFilter, string property, string sort, NumericRanges ranges)
-        {
-            var sortMaterials =
-                        sort == "Asc" ?
+            var totalRecords = 0;
+            var firstChar = propertyCamelCase[0].ToString().ToUpper();
+            var property = firstChar + propertyCamelCase.Substring(1);
+            var sortDealers =
+                        sort == "asc" ?
                         _context.Materials
                         .Select(x => x)
                         .OrderBy(x => EF.Property<object>(x, property)) :
 
-                        sort == "Desc" ?
+                        sort == "desc" ?
                         _context.Materials
                        .Select(x => x)
                        .OrderByDescending(x => EF.Property<object>(x, property)) :
@@ -58,14 +53,31 @@ namespace WebApiDB.Repository
                         .Select(x => x);
 
 
-            var sortEntities = from Material entity in sortMaterials
-                               where entity.Size >= ranges.Min && entity.Size <= ranges.Max
-                               select entity;
 
-            return await sortEntities
+            if (searchString is not null)
+            {
+                string[] propertySearch = { "Texture", "Color" };
+                var matches = SearchHelper.Search(sortDealers.ToList(), searchString, propertySearch);
+                totalRecords = matches.Distinct().Count();
+
+
+                var sortedSearchEntities = matches
+                        .Where(x => x.Size >= ranges.Min && x.Size <= ranges.Max)
+                        .Distinct()
                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                         .Take(validFilter.PageSize)
-                        .ToListAsync();
+                        .ToList();
+                return PaginationHelper.CreatePagedReponse<Material>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
+            }
+            totalRecords = sortDealers.Count();
+            var sortedEntities = sortDealers
+                       .Where(x => x.Size >= ranges.Min && x.Size <= ranges.Max)
+                       .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                       .Take(validFilter.PageSize)
+                       .ToList();
+            return PaginationHelper.CreatePagedReponse<Material>(sortedEntities, validFilter, totalRecords, _uriService, route);
+
+
         }
 
         public async Task JsonPatchWithModelState(Material material, JsonPatchDocument<Material> patchDoc, ModelStateDictionary modelState)

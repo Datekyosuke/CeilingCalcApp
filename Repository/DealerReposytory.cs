@@ -35,20 +35,9 @@ namespace WebApiDB.Repository
 
         public async Task<Dealer> GetAsync(int id)
         {
-            var customer = await _context.Dealers.FirstOrDefaultAsync(p => p.Id == id);
-            return customer;
+            var dealer = await _context.Dealers.FirstOrDefaultAsync(p => p.Id == id);
+            return dealer;
         }
-        public int Count()
-        {
-            return _context.Dealers.Count();
-        }
-
-        //public async Task<List<Dealer>> GetAllAsync()
-        //{
-        //    var pagedData = await _context.Dealers.AllAsync();
-        //    return pagedData;
-        //}
-
 
         public async Task JsonPatchWithModelState(Dealer dealer, JsonPatchDocument<Dealer> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelState)
         {
@@ -62,15 +51,15 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task Put(Dealer oldClient, Dealer dealer)
+        public async Task Put(Dealer oldDealer, Dealer dealer)
         {
-            _context.Entry(oldClient).CurrentValues.SetValues(dealer);
+            _context.Entry(oldDealer).CurrentValues.SetValues(dealer);
             await _context.SaveChangesAsync();
         }
 
-        public async Task Patch(Dealer oldClient, Dealer dealer)
+        public async Task Patch(Dealer oldDealer, Dealer dealer)
         {
-            _context.Entry(oldClient).CurrentValues.SetValues(dealer);
+            _context.Entry(oldDealer).CurrentValues.SetValues(dealer);
             await _context.SaveChangesAsync();
         }
 

@@ -3,6 +3,7 @@ using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
+using WebApiDB.Repository;
 
 namespace WebApiDB.Controllers.MaterialControllers
 {
@@ -46,17 +47,14 @@ namespace WebApiDB.Controllers.MaterialControllers
         /// <response code="200">materials retrieved</response>
         ///  <response code="400">Wrong request body</response>
         [HttpGet()]
-        public IActionResult GetAll([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges)
+        public virtual IActionResult GetAll([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges, [FromQuery] string? searchString)
         {
             if (ranges.Max < ranges.Min) return BadRequest("Maximum must be greater than or equal to the minimum");
             var route = Request.Path.Value;
-          
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var expression = orderable.Property;
             var sort = orderable.Sort;
-            var entities = _materialRepository.GetAllAsync(validFilter, expression, sort, ranges).Result;
-            var totalRecords = entities.Count();
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Material>(entities, validFilter, totalRecords, _uriService, route);
+            var pagedReponse = _materialRepository.GetAllAsync(validFilter, expression, sort, ranges, searchString, route).Result;
             return Ok(pagedReponse);
         }
     }
