@@ -13,10 +13,10 @@ namespace WebApiDB.Repository
 {
     public class MaterialRepository : IMaterialRepository
     {
-        private readonly MaterialContext _context;
+        private readonly AplicationContext _context;
         private readonly IUriService _uriService;
 
-        public MaterialRepository(MaterialContext context, IUriService uriService)
+        public MaterialRepository(AplicationContext context, IUriService uriService)
         {
             _context = context;
             _uriService = uriService;   

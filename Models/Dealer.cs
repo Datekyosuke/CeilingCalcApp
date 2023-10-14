@@ -1,6 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace WebApiDB.Models
@@ -11,6 +10,7 @@ namespace WebApiDB.Models
         /// ID. Auto increment
         /// </summary>
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
@@ -46,6 +46,7 @@ namespace WebApiDB.Models
         [JsonPropertyName("city")]
         public string City { get; set; }
 
-      
+
+
     }
 }

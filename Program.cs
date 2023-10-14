@@ -26,9 +26,7 @@ var connectionString = builder.Configuration.GetConnectionString("DealerContext"
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContext<DealerContext>(options =>
-                options.UseMySql(connectionString, serverVersion));
-builder.Services.AddDbContext<MaterialContext>(options =>
+builder.Services.AddDbContext<AplicationContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
 builder.Services.AddTransient<IDealerRepository, DealerReposytory>();
 builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();

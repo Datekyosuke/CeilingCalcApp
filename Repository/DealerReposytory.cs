@@ -16,10 +16,10 @@ namespace WebApiDB.Repository
     public class DealerReposytory : IDealerRepository
     {
 
-        private readonly DealerContext _context;
+        private readonly AplicationContext _context;
         private readonly IUriService _uriService;
 
-        public DealerReposytory(DealerContext context, IUriService uriService)
+        public DealerReposytory(AplicationContext context, IUriService uriService)
         {
             _context = context;
             _uriService = uriService;
