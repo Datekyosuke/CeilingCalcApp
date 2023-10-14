@@ -86,7 +86,7 @@ namespace WebApiDB.Repository
 
             if (searchString is not null)
             {
-                string[] propertySearch = { "LastName", "FirstName", "City" };
+                string[] propertySearch = { "LastName", "FirstName", "City", "Telephone" };
                 var matches = SearchHelper.Search(sortDealers.ToList(), searchString, propertySearch);
                 totalRecords = matches.Distinct().Count();
 
