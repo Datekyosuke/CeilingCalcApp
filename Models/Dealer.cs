@@ -46,6 +46,8 @@ namespace WebApiDB.Models
         [JsonPropertyName("city")]
         public string City { get; set; }
 
+        public virtual IEnumerable<Order>? Orders { get; set; }
+
 
 
     }

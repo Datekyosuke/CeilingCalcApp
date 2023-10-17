@@ -11,14 +11,14 @@ namespace WebApiDB.Models
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [JsonPropertyName("orderId")]
-        public int OrderId { get; set; }
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
 
         /// <summary>
         /// Dealer id not null, must exist 
         /// </summary>
         [JsonPropertyName("dealerId")]
-        [ForeignKey("ID")]
+        [ForeignKey("Id")]
         public virtual Dealer Dealer { get; set; }
 
         /// <summary>

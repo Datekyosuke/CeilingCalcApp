@@ -50,6 +50,8 @@ namespace WebApiDB.Controllers.DealerControllers
         public async Task<IActionResult> JsonPatchWithModelState(int id,
         [FromBody] JsonPatchDocument<Dealer> patchDoc)
         {
+            if (patchDoc.Operations[0].path == "Id")
+                return BadRequest("id cannot be changes");
 
             if (patchDoc.Operations[0].path == "LastName" && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
                 return BadRequest("LastName cannot be more than 50 and less than 2 characters");
@@ -81,8 +83,6 @@ namespace WebApiDB.Controllers.DealerControllers
             {
                 var customer = _dealerRepository.GetAsync(id).Result;
                 await _dealerRepository.JsonPatchWithModelState(customer, patchDoc, ModelState);
-
-
                 return new ObjectResult(customer);
             }
             else
