@@ -1,15 +1,13 @@
 
 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
+using Microsoft.OpenApi.Models;
 using WebApiDB;
 using WebApiDB.Data;
-using Microsoft.OpenApi.Models;
 using WebApiDB.Interfaces;
 using WebApiDB.Repository;
 using WebApiDB.Servics;
-using Microsoft.AspNetCore.Mvc;
-using WebApiDB.Models;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 

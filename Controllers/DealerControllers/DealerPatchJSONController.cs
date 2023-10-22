@@ -46,23 +46,23 @@ namespace WebApiDB.Controllers.DealerControllers
         public async Task<IActionResult> JsonPatchWithModelState(int id,
         [FromBody] JsonPatchDocument<Dealer> patchDoc)
         {
-            if (patchDoc.Operations[0].path == "Id")
+            if (patchDoc.Operations[0].path.ToLower() == "id")
                 return BadRequest("id cannot be changes");
 
-            if (patchDoc.Operations[0].path == "LastName" && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
+            if (patchDoc.Operations[0].path.ToLower() == "lastName"  && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
                 return BadRequest("LastName cannot be more than 50 and less than 2 characters");
 
-            if (patchDoc.Operations[0].path == "FirstName" && patchDoc.Operations[0].value.ToString().Length > 50)
+            if (patchDoc.Operations[0].path.ToLower() == "firstName" && patchDoc.Operations[0].value.ToString().Length > 50)
                 return BadRequest("FirstName cannot be more than 50 characters");
 
-            if (patchDoc.Operations[0].path == "Telephone")
+            if (patchDoc.Operations[0].path.ToLower() == "telephone")
             {
                 long.TryParse(patchDoc.Operations[0].value.ToString(), out long telephone);
                 if(telephone < 10000000000 || telephone > 99999999999)
                  return BadRequest("Invalid telephone. Must contain 11 digits!");
             }
 
-            if (patchDoc.Operations[0].path == "Debts")
+            if (patchDoc.Operations[0].path.ToLower() == "debts" )
             {
                 {
                     if(!float.TryParse(patchDoc.Operations[0].value.ToString(), out float debts))
@@ -72,7 +72,7 @@ namespace WebApiDB.Controllers.DealerControllers
                 }
 
             }
-            if (patchDoc.Operations[0].path == "City" && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
+            if (patchDoc.Operations[0].path.ToLower() == "city" && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
                 return BadRequest("City cannot be more than 50 and less than 2 characters");
 
             if (patchDoc != null)
