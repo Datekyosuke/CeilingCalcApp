@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
@@ -49,10 +50,10 @@ namespace WebApiDB.Controllers.DealerControllers
             if (patchDoc.Operations[0].path.ToLower() == "id")
                 return BadRequest("id cannot be changes");
 
-            if (patchDoc.Operations[0].path.ToLower() == "lastName"  && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
+            if (patchDoc.Operations[0].path.ToLower() == "lastname"  && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
                 return BadRequest("LastName cannot be more than 50 and less than 2 characters");
 
-            if (patchDoc.Operations[0].path.ToLower() == "firstName" && patchDoc.Operations[0].value.ToString().Length > 50)
+            if (patchDoc.Operations[0].path.ToLower() == "firstname" && patchDoc.Operations[0].value.ToString().Length > 50)
                 return BadRequest("FirstName cannot be more than 50 characters");
 
             if (patchDoc.Operations[0].path.ToLower() == "telephone")
@@ -62,10 +63,12 @@ namespace WebApiDB.Controllers.DealerControllers
                  return BadRequest("Invalid telephone. Must contain 11 digits!");
             }
 
-            if (patchDoc.Operations[0].path.ToLower() == "debts" )
+           if (patchDoc.Operations[0].path.ToLower() == "debts" )
             {
                 {
-                    if(!float.TryParse(patchDoc.Operations[0].value.ToString(), out float debts))
+                    if (patchDoc.Operations[0].value == "")
+                        patchDoc.Operations[0].value = 0;
+                    if (!float.TryParse(patchDoc.Operations[0].value.ToString(), out float debts))
                         return BadRequest("Wrong debts! Must be a number");
                     else if (debts < float.MinValue || debts > float.MaxValue)
                         return BadRequest("Wrong debts! Too big (small) number");
