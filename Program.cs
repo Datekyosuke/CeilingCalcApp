@@ -30,6 +30,7 @@ builder.Services.AddDbContext<AplicationContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
 builder.Services.AddTransient<IDealerRepository, DealerReposytory>();
 builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 
 
 builder.Services.AddSwaggerGen(options =>
@@ -60,7 +61,7 @@ builder.Services.AddCors(options =>
                       {
                           policy.WithOrigins("https://localhost:7021/swagger",
                                               "http://localhost:3000",
-                                              "http://localhost:8000").WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "Patch")
+                                              "http://localhost:8000").WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                                               .WithHeaders("Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With");
                       });
 });

@@ -1,8 +1,6 @@
-﻿using FuzzySharp;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
-using WebApiDB.Models;
 using WebApiDB.Pagination;
 
 namespace WebApiDB.Controllers.DealerControllers
@@ -16,12 +14,12 @@ namespace WebApiDB.Controllers.DealerControllers
     {
 
         private IDealerRepository _dealerRepository;
-        private readonly IUriService _uriService;
 
-        public DealerController(IDealerRepository dealerRepository, IUriService uriService)
+
+        public DealerController(IDealerRepository dealerRepository)
         {
             _dealerRepository = dealerRepository;
-            _uriService = uriService;
+
         }
         /// <summary>
         /// Returns a paginated, sorted and ranged list of dealers. 

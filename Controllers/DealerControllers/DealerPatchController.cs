@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Channels;
-using WebApiDB.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Helpers;
-using WebApiDB.Interfaces;
 using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
@@ -48,7 +43,7 @@ namespace WebApiDB.Controllers.DealerControllers
             {
                 return BadRequest(validation.Item2);
             }
-            dealer.Id = id;
+
             if (dealer.FirstName == "string")
                 dealer.FirstName = oldClient.FirstName;
             if (dealer.LastName == "string")
