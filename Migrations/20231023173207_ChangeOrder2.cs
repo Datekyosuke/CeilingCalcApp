@@ -5,31 +5,31 @@
 namespace WebApiDB.Migrations
 {
     /// <inheritdoc />
-    public partial class AddOrder : Migration
+    public partial class ChangeOrder2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Orders_Dealers_ID",
+                name: "FK_Orders_Dealers_DealerId",
                 table: "Orders");
 
             migrationBuilder.RenameColumn(
-                name: "ID",
+                name: "DealerId",
                 table: "Orders",
-                newName: "Id");
+                newName: "DealerInfoId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_Orders_ID",
+                name: "IX_Orders_DealerId",
                 table: "Orders",
-                newName: "IX_Orders_Id");
+                newName: "IX_Orders_DealerInfoId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Orders_Dealers_Id",
+                name: "FK_Orders_Dealers_DealerInfoId",
                 table: "Orders",
-                column: "Id",
+                column: "DealerInfoId",
                 principalTable: "Dealers",
-                principalColumn: "Id",
+                principalColumn: "DealerId",
                 onDelete: ReferentialAction.Cascade);
         }
 
@@ -37,25 +37,25 @@ namespace WebApiDB.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Orders_Dealers_Id",
+                name: "FK_Orders_Dealers_DealerInfoId",
                 table: "Orders");
 
             migrationBuilder.RenameColumn(
-                name: "Id",
+                name: "DealerInfoId",
                 table: "Orders",
-                newName: "ID");
+                newName: "DealerId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_Orders_Id",
+                name: "IX_Orders_DealerInfoId",
                 table: "Orders",
-                newName: "IX_Orders_ID");
+                newName: "IX_Orders_DealerId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Orders_Dealers_ID",
+                name: "FK_Orders_Dealers_DealerId",
                 table: "Orders",
-                column: "ID",
+                column: "DealerId",
                 principalTable: "Dealers",
-                principalColumn: "Id",
+                principalColumn: "DealerId",
                 onDelete: ReferentialAction.Cascade);
         }
     }

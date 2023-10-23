@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using WebApiDB;
-using WebApiDB.Data;
+using WebApiDB.Context;
 using WebApiDB.Interfaces;
 using WebApiDB.Repository;
 using WebApiDB.Servics;
@@ -19,7 +19,7 @@ var serverVersion = new MySqlServerVersion(new Version(5, 7, 27));
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DealerContext");
+var connectionString = builder.Configuration.GetConnectionString("DealerContextWithMigrations");
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

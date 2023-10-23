@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace WebApiDB.Models
 {
-    public class Order
+    public class DTOOrder
     { 
         /// <summary>
         /// ID. Auto increment
@@ -21,9 +21,6 @@ namespace WebApiDB.Models
         
         [JsonPropertyName("dealerId")]
         public int DealerInfoId { get; set; }
-
-        [ForeignKey("DealerInfoId")]
-        public virtual Dealer Dealer { get; set; }
 
         /// <summary>
         /// data
