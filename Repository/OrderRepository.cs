@@ -7,6 +7,7 @@ using WebApiDB.Models;
 using WebApiDB.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Context;
+using AutoMapper;
 
 namespace WebApiDB.Repository
 {
@@ -14,6 +15,7 @@ namespace WebApiDB.Repository
     {
         private readonly AplicationContext _context;
         private readonly IUriService _uriService;
+
 
         public OrderRepository(AplicationContext context, IUriService uriService)
         {
@@ -29,8 +31,9 @@ namespace WebApiDB.Repository
 
         public async Task<Order> GetAsync(int id)
         {
-            var materail = await _context.Orders.FirstOrDefaultAsync(p => p.Id == id);
-            return materail;
+            var order =await  _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
+            //order.Dealer =await _context.Dealers.FirstOrDefaultAsync(x => x.DealerId == order.DealerId);
+            return order;
         }
         public async Task<PagedResponse<List<Order>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
         {
@@ -93,7 +96,8 @@ namespace WebApiDB.Repository
 
         public async Task Post(Order order)
         {
-            _context.Add(order);
+            order.Dealer = _context.Dealers.FirstOrDefault(x => x.DealerId == order.DealerId);
+             _context.Add(order);
             await _context.SaveChangesAsync();
         }
 

@@ -19,7 +19,7 @@ namespace WebApiDB.Context
             modelBuilder.Entity<Order>()
                 .HasOne(u => u.Dealer)
                 .WithMany(c => c.Orders)
-                .HasForeignKey(u => u.DealerInfoId);
+                .HasForeignKey(u => u.DealerId);
         }
     }
 

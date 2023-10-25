@@ -16,7 +16,7 @@ namespace WebApiDB.Controllers.OrderControllers
         /// <response code="500">Something went wrong.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] Order order)
+        public async Task<IActionResult> Post([FromBody] DTOOrder dtoOrder)
         {
             // TODO: valadation order
 
@@ -26,7 +26,7 @@ namespace WebApiDB.Controllers.OrderControllers
             //{
             //    return BadRequest(validation.Item2);
             //}
-            
+            var order = _mapper.Map<Order>(dtoOrder);
             await _orderRepository.Post(order);
             return Ok("Oder created!");
         }

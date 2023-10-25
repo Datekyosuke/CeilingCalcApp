@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Pagination;
@@ -14,11 +15,13 @@ namespace WebApiDB.Controllers.DealerControllers
     {
 
         private IDealerRepository _dealerRepository;
+        private readonly IMapper _mapper;
 
 
-        public DealerController(IDealerRepository dealerRepository)
+        public DealerController(IDealerRepository dealerRepository, IMapper mapper)
         {
             _dealerRepository = dealerRepository;
+            _mapper = mapper;
 
         }
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Pagination;
@@ -11,11 +12,13 @@ namespace WebApiDB.Controllers.OrderControllers
     public partial class OrderController : Controller
     {
         private IOrderRepository _orderRepository;
+        private readonly IMapper _mapper;
 
 
-        public OrderController(IOrderRepository orderRepository)
+        public OrderController(IOrderRepository orderRepository, IMapper mapper)
         {
             _orderRepository = orderRepository;
+            _mapper = mapper;
 
         }
         /// <summary>

@@ -16,8 +16,9 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="500">Something went wrong.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] Dealer dealer)
+        public async Task<IActionResult> Post([FromBody] DTODealer DTOdealer)
         {
+            var dealer = _mapper.Map<Dealer>(DTOdealer);
             var validation = ValidationDealer.DealerValidation(dealer);
             if (!validation.Item1)
             {

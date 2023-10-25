@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using WebApiDB;
 using WebApiDB.Context;
 using WebApiDB.Interfaces;
+using WebApiDB.Mapper;
 using WebApiDB.Repository;
 using WebApiDB.Servics;
 
@@ -30,6 +31,7 @@ builder.Services.AddTransient<IDealerRepository, DealerReposytory>();
 builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();
 builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 
+builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
 builder.Services.AddSwaggerGen(options =>
 {

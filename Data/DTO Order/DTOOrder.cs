@@ -20,7 +20,7 @@ namespace WebApiDB.Models
  
         
         [JsonPropertyName("dealerId")]
-        public int DealerInfoId { get; set; }
+        public int DealerId { get; set; }
 
         /// <summary>
         /// data

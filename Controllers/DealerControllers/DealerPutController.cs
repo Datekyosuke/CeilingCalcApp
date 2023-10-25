@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using WebApiDB.Data;
-using WebApiDB.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.DealerControllers
@@ -36,8 +33,9 @@ namespace WebApiDB.Controllers.DealerControllers
 
 
         [HttpPut]
-        public async Task<ActionResult> Put(int id, [FromBody] Dealer dealer)
+        public async Task<ActionResult> Put(int id, [FromBody] DTODealer dTOdealer)
         {
+            var dealer = _mapper.Map<Dealer>(dTOdealer);
             var oldClient = _dealerRepository.GetAsync(id).Result;
             if (oldClient == null)
                 return NotFound();
