@@ -30,9 +30,8 @@ namespace WebApiDB.Repository
         }
 
         public async Task<Order> GetAsync(int id)
-        {
-            var order =await  _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
-            //order.Dealer =await _context.Dealers.FirstOrDefaultAsync(x => x.DealerId == order.DealerId);
+        { 
+            var order = await _context.Orders.Include(o => o.Dealer).Where(x => x.Id == id).FirstOrDefaultAsync();
             return order;
         }
         public async Task<PagedResponse<List<Order>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
@@ -44,14 +43,17 @@ namespace WebApiDB.Repository
                         sort == "asc" ?
                         _context.Orders
                         .Select(x => x)
+                        .Include(x => x.Dealer)
                         .OrderBy(x => EF.Property<object>(x, property)) :
 
                         sort == "desc" ?
                         _context.Orders
                        .Select(x => x)
+                       .Include(x => x.Dealer)
                        .OrderByDescending(x => EF.Property<object>(x, property)) :
 
                         _context.Orders
+                        .Include(x => x.Dealer)
                         .Select(x => x);
 
 

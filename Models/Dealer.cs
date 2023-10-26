@@ -48,6 +48,10 @@ namespace WebApiDB.Models
 
         public virtual ICollection<Order>? Orders { get; set; }
 
+        public string GetName()
+        {
+            return this.FirstName + " " + this.LastName;
+        }
 
 
     }

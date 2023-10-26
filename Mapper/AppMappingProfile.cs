@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using WebApiDB.Models;
 
 namespace WebApiDB.Mapper
@@ -9,6 +10,7 @@ namespace WebApiDB.Mapper
         {
             CreateMap<DTOOrder, Order>().ReverseMap();
             CreateMap<DTODealer, Dealer>().ReverseMap();
+
         }
     }
 }

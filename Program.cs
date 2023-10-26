@@ -76,7 +76,11 @@ builder.Services.AddSingleton<IUriService>(o =>
 builder.Services.AddControllers(options =>
 {
 options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
+
 });
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 builder.Services.Configure<ApiBehaviorOptions>(o =>
 {
     o.InvalidModelStateResponseFactory = actionContext =>
