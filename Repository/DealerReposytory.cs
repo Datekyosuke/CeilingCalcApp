@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using WebApiDB.Context;
 using WebApiDB.Controllers.DealerControllers;
-using WebApiDB.Data;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
@@ -35,7 +35,7 @@ namespace WebApiDB.Repository
 
         public async Task<Dealer> GetAsync(int id)
         {
-            var dealer = await _context.Dealers.FirstOrDefaultAsync(p => p.Id == id);
+            var dealer = await _context.Dealers.FirstOrDefaultAsync(p => p.DealerId == id);
             return dealer;
         }
 

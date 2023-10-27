@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiDB.Context;
 
@@ -10,9 +11,11 @@ using WebApiDB.Context;
 namespace WebApiDB.Migrations
 {
     [DbContext(typeof(AplicationContext))]
-    partial class AplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231022174900_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +24,7 @@ namespace WebApiDB.Migrations
 
             modelBuilder.Entity("WebApiDB.Models.Dealer", b =>
                 {
-                    b.Property<int>("DealerId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("Relational:JsonPropertyName", "id");
@@ -49,7 +52,7 @@ namespace WebApiDB.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Relational:JsonPropertyName", "telephone");
 
-                    b.HasKey("DealerId");
+                    b.HasKey("Id");
 
                     b.ToTable("Dealers");
                 });
@@ -95,10 +98,6 @@ namespace WebApiDB.Migrations
                         .HasColumnType("datetime(6)")
                         .HasAnnotation("Relational:JsonPropertyName", "dateOrder");
 
-                    b.Property<int>("DealerId")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "dealerId");
-
                     b.Property<int>("OperatorId")
                         .HasColumnType("int")
                         .HasAnnotation("Relational:JsonPropertyName", "operatorId");
@@ -114,8 +113,6 @@ namespace WebApiDB.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DealerId");
-
                     b.ToTable("Orders");
                 });
 
@@ -123,7 +120,7 @@ namespace WebApiDB.Migrations
                 {
                     b.HasOne("WebApiDB.Models.Dealer", "Dealer")
                         .WithMany("Orders")
-                        .HasForeignKey("DealerId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

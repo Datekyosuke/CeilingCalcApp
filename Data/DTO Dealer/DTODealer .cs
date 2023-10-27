@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace WebApiDB.Models
 {
-    public class Dealer
+    public class DTODealer
     {
         /// <summary>
         /// ID. Auto increment
@@ -45,14 +46,6 @@ namespace WebApiDB.Models
         /// </summary>
         [JsonPropertyName("city")]
         public string City { get; set; }
-
-        public virtual ICollection<Order>? Orders { get; set; }
-
-        public string GetName()
-        {
-            return this.FirstName + " " + this.LastName;
-        }
-
 
     }
 }

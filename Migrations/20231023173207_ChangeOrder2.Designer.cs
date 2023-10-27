@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiDB.Context;
 
@@ -10,9 +11,11 @@ using WebApiDB.Context;
 namespace WebApiDB.Migrations
 {
     [DbContext(typeof(AplicationContext))]
-    partial class AplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231023173207_ChangeOrder2")]
+    partial class ChangeOrder2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,7 +98,7 @@ namespace WebApiDB.Migrations
                         .HasColumnType("datetime(6)")
                         .HasAnnotation("Relational:JsonPropertyName", "dateOrder");
 
-                    b.Property<int>("DealerId")
+                    b.Property<int>("DealerInfoId")
                         .HasColumnType("int")
                         .HasAnnotation("Relational:JsonPropertyName", "dealerId");
 
@@ -114,7 +117,7 @@ namespace WebApiDB.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DealerId");
+                    b.HasIndex("DealerInfoId");
 
                     b.ToTable("Orders");
                 });
@@ -123,7 +126,7 @@ namespace WebApiDB.Migrations
                 {
                     b.HasOne("WebApiDB.Models.Dealer", "Dealer")
                         .WithMany("Orders")
-                        .HasForeignKey("DealerId")
+                        .HasForeignKey("DealerInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

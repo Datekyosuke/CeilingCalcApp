@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using WebApiDB.Data;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
 using Microsoft.AspNetCore.Mvc;
+using WebApiDB.Context;
+using AutoMapper;
 
 namespace WebApiDB.Repository
 {
@@ -14,6 +15,7 @@ namespace WebApiDB.Repository
     {
         private readonly AplicationContext _context;
         private readonly IUriService _uriService;
+
 
         public OrderRepository(AplicationContext context, IUriService uriService)
         {
@@ -28,9 +30,9 @@ namespace WebApiDB.Repository
         }
 
         public async Task<Order> GetAsync(int id)
-        {
-            var materail = await _context.Orders.FirstOrDefaultAsync(p => p.Id == id);
-            return materail;
+        { 
+            var order = await _context.Orders.Include(o => o.Dealer).Where(x => x.Id == id).FirstOrDefaultAsync();
+            return order;
         }
         public async Task<PagedResponse<List<Order>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
         {
@@ -41,14 +43,17 @@ namespace WebApiDB.Repository
                         sort == "asc" ?
                         _context.Orders
                         .Select(x => x)
+                        .Include(x => x.Dealer)
                         .OrderBy(x => EF.Property<object>(x, property)) :
 
                         sort == "desc" ?
                         _context.Orders
                        .Select(x => x)
+                       .Include(x => x.Dealer)
                        .OrderByDescending(x => EF.Property<object>(x, property)) :
 
                         _context.Orders
+                        .Include(x => x.Dealer)
                         .Select(x => x);
 
 
@@ -93,7 +98,8 @@ namespace WebApiDB.Repository
 
         public async Task Post(Order order)
         {
-            _context.Add(order);
+            order.Dealer = _context.Dealers.FirstOrDefault(x => x.DealerId == order.DealerId);
+             _context.Add(order);
             await _context.SaveChangesAsync();
         }
 

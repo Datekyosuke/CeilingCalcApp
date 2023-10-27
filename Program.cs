@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using WebApiDB;
-using WebApiDB.Data;
+using WebApiDB.Context;
 using WebApiDB.Interfaces;
+using WebApiDB.Mapper;
 using WebApiDB.Repository;
 using WebApiDB.Servics;
 
@@ -19,7 +20,7 @@ var serverVersion = new MySqlServerVersion(new Version(5, 7, 27));
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DealerContext");
+var connectionString = builder.Configuration.GetConnectionString("DealerContextWithMigrations");
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -30,6 +31,7 @@ builder.Services.AddTransient<IDealerRepository, DealerReposytory>();
 builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();
 builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 
+builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -74,7 +76,11 @@ builder.Services.AddSingleton<IUriService>(o =>
 builder.Services.AddControllers(options =>
 {
 options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
+
 });
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 builder.Services.Configure<ApiBehaviorOptions>(o =>
 {
     o.InvalidModelStateResponseFactory = actionContext =>
