@@ -35,7 +35,7 @@ namespace WebApiDB.Repository
 
         public async Task<Dealer> GetAsync(int id)
         {
-            var dealer = await _context.Dealers.FirstOrDefaultAsync(p => p.DealerId == id);
+            var dealer = await _context.Dealers.FirstOrDefaultAsync(p => p.Id == id);
             return dealer;
         }
 

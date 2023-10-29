@@ -98,7 +98,7 @@ namespace WebApiDB.Repository
 
         public async Task Post(Order order)
         {
-            order.Dealer = _context.Dealers.FirstOrDefault(x => x.DealerId == order.DealerId);
+            order.Dealer = _context.Dealers.FirstOrDefault(x => x.Id == order.Id);
              _context.Add(order);
             await _context.SaveChangesAsync();
         }

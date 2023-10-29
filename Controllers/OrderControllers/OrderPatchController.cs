@@ -40,8 +40,8 @@ namespace WebApiDB.Controllers.OrderControllers
                 return BadRequest(validation.Item2);
             }*/
 
-            if (order.Dealer.DealerId == 0)
-                order.Dealer.DealerId = oldOrder.Dealer.DealerId;
+            if (order.Dealer.Id == 0)
+                order.Dealer.Id = oldOrder.Dealer.Id;
             if (order.DateOrder == default(DateTime))
                 order.DateOrder = oldOrder.DateOrder;
             if (order.OperatorId == 0)

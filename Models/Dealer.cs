@@ -12,7 +12,7 @@ namespace WebApiDB.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [JsonPropertyName("id")]
-        public int DealerId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// FirstName may be null

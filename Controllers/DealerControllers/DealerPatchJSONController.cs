@@ -47,7 +47,7 @@ namespace WebApiDB.Controllers.DealerControllers
         public async Task<IActionResult> JsonPatchWithModelState(int id,
         [FromBody] JsonPatchDocument<Dealer> patchDoc)
         {
-            if (patchDoc.Operations[0].path.ToLower() == "dealerid")
+            if (patchDoc.Operations[0].path.ToLower() == "id")
                 return BadRequest("id cannot be changes");
 
             if (patchDoc.Operations[0].path.ToLower() == "lastname"  && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
