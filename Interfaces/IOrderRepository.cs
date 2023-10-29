@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
+using WebApiDB.Data.DTO_Order;
 using WebApiDB.Helpers;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
@@ -16,6 +17,6 @@ namespace WebApiDB.Interfaces
 
         public Task Patch(Order oldOrder, Order order);
 
-        public Task<PagedResponse<List<Order>>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges, string searchString, string? route);
+        public Task<PagedResponse<List<OrderG>>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges, string searchString, string? route);
     }
 }

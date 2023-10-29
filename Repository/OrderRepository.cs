@@ -8,6 +8,7 @@ using WebApiDB.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Context;
 using AutoMapper;
+using WebApiDB.Data.DTO_Order;
 
 namespace WebApiDB.Repository
 {
@@ -34,16 +35,41 @@ namespace WebApiDB.Repository
             var order = await _context.Orders.Include(o => o.Dealer).Where(x => x.Id == id).FirstOrDefaultAsync();
             return order;
         }
-        public async Task<PagedResponse<List<Order>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
+        public async Task<PagedResponse<List<OrderG>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
         {
             var totalRecords = 0;
             var firstChar = propertyCamelCase[0].ToString().ToUpper();
             var property = firstChar + propertyCamelCase.Substring(1);
+
             var sortDealers =
+                        _context.Orders
+                        .Include(x => x.Dealer)
+                         .Select(x => new OrderG
+                         {
+                             Id = x.Id,
+                             DateOrder = x.DateOrder,
+                             OperatorId = x.OperatorId,
+                             Sum = x.Sum,
+                             Status = x.Status,
+                             DealerName = x.Dealer.LastName
+                         }).
+                         AsQueryable()
+                        .OrderBy(x => EF.Property<object>(x, property));
+
+            /*var sortDealers =
                         sort == "asc" ?
                         _context.Orders
-                        .Select(x => x)
                         .Include(x => x.Dealer)
+                         .Select(x => new
+                         {
+                             x.Id,
+                             x.DateOrder,
+                             x.OperatorId,
+                             x.Sum,
+                             x.Status,
+                             x.Dealer.LastName
+                         }).
+                         AsEnumerable()
                         .OrderBy(x => EF.Property<object>(x, property)) :
 
                         sort == "desc" ?
@@ -54,7 +80,7 @@ namespace WebApiDB.Repository
 
                         _context.Orders
                         .Include(x => x.Dealer)
-                        .Select(x => x);
+                        .Select(x => x);*/
 
 
 
@@ -71,7 +97,7 @@ namespace WebApiDB.Repository
                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                         .Take(validFilter.PageSize)
                         .ToList();
-                return PaginationHelper.CreatePagedReponse<Order>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
+                return PaginationHelper.CreatePagedReponse<OrderG>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
             }
             totalRecords = sortDealers.Count();
             var sortedEntities = sortDealers
@@ -79,7 +105,7 @@ namespace WebApiDB.Repository
                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                        .Take(validFilter.PageSize)
                        .ToList();
-            return PaginationHelper.CreatePagedReponse<Order>(sortedEntities, validFilter, totalRecords, _uriService, route);
+            return PaginationHelper.CreatePagedReponse<OrderG>(sortedEntities, validFilter, totalRecords, _uriService, route);
 
 
         }
