@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
+using WebApiDB.Context;
+using WebApiDB.Data.DTO_Order;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
-using Microsoft.AspNetCore.Mvc;
-using WebApiDB.Context;
-using AutoMapper;
-using WebApiDB.Data.DTO_Order;
 
 namespace WebApiDB.Repository
 {
@@ -41,7 +40,7 @@ namespace WebApiDB.Repository
             var firstChar = propertyCamelCase[0].ToString().ToUpper();
             var property = firstChar + propertyCamelCase.Substring(1);
 
-            var sortDealers =
+            /*var sortDealers =
                         _context.Orders
                         .Include(x => x.Dealer)
                          .Select(x => new OrderG
@@ -54,33 +53,51 @@ namespace WebApiDB.Repository
                              DealerName = x.Dealer.LastName
                          }).
                          AsQueryable()
-                        .OrderBy(x => EF.Property<object>(x, property));
+                        .OrderBy(x => EF.Property<object>(x, property));*/
 
-            /*var sortDealers =
-                        sort == "asc" ?
-                        _context.Orders
-                        .Include(x => x.Dealer)
-                         .Select(x => new
+            var sortDealers =
+                         sort == "asc" ?
+                         _context.Orders
+                         .Include(x => x.Dealer)
+                         .Select(x => new OrderG
                          {
-                             x.Id,
-                             x.DateOrder,
-                             x.OperatorId,
-                             x.Sum,
-                             x.Status,
-                             x.Dealer.LastName
-                         }).
-                         AsEnumerable()
-                        .OrderBy(x => EF.Property<object>(x, property)) :
+                             Id = x.Id,
+                             DateOrder = x.DateOrder,
+                             OperatorId = x.OperatorId,
+                             Sum = x.Sum,
+                             Status = x.Status,
+                             DealerFullName = x.Dealer.FirstName + " " + x.Dealer.LastName,
+                         })
+                        .AsQueryable()
+                        .OrderBy(x => EF.Property<object>(x, property)):
 
                         sort == "desc" ?
                         _context.Orders
-                       .Select(x => x)
-                       .Include(x => x.Dealer)
+                        .Include(x => x.Dealer)
+                         .Select(x => new OrderG
+                         {
+                             Id = x.Id,
+                             DateOrder = x.DateOrder,
+                             OperatorId = x.OperatorId,
+                             Sum = x.Sum,
+                             Status = x.Status,
+                             DealerFullName = x.Dealer.FirstName + " " + x.Dealer.LastName,
+                         }).
+                         AsQueryable()
                        .OrderByDescending(x => EF.Property<object>(x, property)) :
 
                         _context.Orders
                         .Include(x => x.Dealer)
-                        .Select(x => x);*/
+                         .Select(x => new OrderG
+                         {
+                             Id = x.Id,
+                             DateOrder = x.DateOrder,
+                             OperatorId = x.OperatorId,
+                             Sum = x.Sum,
+                             Status = x.Status,
+                             DealerFullName = x.Dealer.FirstName + " " + x.Dealer.LastName,
+                         }).
+                         AsQueryable();
 
 
 

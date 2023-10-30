@@ -22,7 +22,7 @@ namespace WebApiDB.Controllers.OrderControllers
 
         }
         /// <summary>
-        /// Returns a paginated, sorted and ranged list of oreders. 
+        /// Returns a paginated, sorted and ranged list of orders. 
         /// </summary>
         /// <remarks>
         /// Page number must be greater than or equal to 0 and PageSize greater than or equal to 1. 
@@ -31,23 +31,23 @@ namespace WebApiDB.Controllers.OrderControllers
         /// Properties can take Dealer field values:
         /// 
         ///     "id": can't be changed, integer
-        ///     "firstName": "string", required
-        ///     "lastName": "string", may be null
-        ///     "telephone": 11 digit, integer
-        ///     "debts": 0, integer
-        ///     "city": "string",  required    
+        ///     "dillerFullName": "string"
+        ///     "dateOrder": "date", regured, auto time
+        ///     "OperatorId": id who added the order, integer
+        ///     "Sum": full sum this order, float
+        ///     "status": "string",  work/not work/on calculation etc    
         /// Sort 
         /// 
         ///     asc - ascending
         ///     desc - descending
         ///     else without sorting
         ///     
-        ///  min  - search for debts from
+        ///  min  - search for sum from
         /// 
-        ///  max - search for debts up
+        ///  max - search for sum up
         /// </remarks>
-        /// <returns>Page list dealers</returns>
-        /// <response code="200">Dealers retrieved</response>
+        /// <returns>Page list orders</returns>
+        /// <response code="200">Orders retrieved</response>
         ///  <response code="400">Wrong request body</response>
         [HttpGet()]
         public IActionResult GetAll([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges, [FromQuery] string? searchString)

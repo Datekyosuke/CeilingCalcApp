@@ -20,7 +20,7 @@ namespace WebApiDB.Data.DTO_Order
 
 
         [JsonPropertyName("dealerId")]
-        public string DealerName { get; set; }
+        public string DealerFullName { get; set; }
 
         /// <summary>
         /// data
