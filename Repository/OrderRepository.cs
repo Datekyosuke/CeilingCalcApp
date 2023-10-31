@@ -40,21 +40,6 @@ namespace WebApiDB.Repository
             var firstChar = propertyCamelCase[0].ToString().ToUpper();
             var property = firstChar + propertyCamelCase.Substring(1);
 
-            /*var sortDealers =
-                        _context.Orders
-                        .Include(x => x.Dealer)
-                         .Select(x => new OrderG
-                         {
-                             Id = x.Id,
-                             DateOrder = x.DateOrder,
-                             OperatorId = x.OperatorId,
-                             Sum = x.Sum,
-                             Status = x.Status,
-                             DealerName = x.Dealer.LastName
-                         }).
-                         AsQueryable()
-                        .OrderBy(x => EF.Property<object>(x, property));*/
-
             var sortDealers =
                          sort == "asc" ?
                          _context.Orders
@@ -63,6 +48,7 @@ namespace WebApiDB.Repository
                          {
                              Id = x.Id,
                              DateOrder = x.DateOrder,
+                             DealerId = x.DealerId,
                              OperatorId = x.OperatorId,
                              Sum = x.Sum,
                              Status = x.Status,
@@ -78,6 +64,7 @@ namespace WebApiDB.Repository
                          {
                              Id = x.Id,
                              DateOrder = x.DateOrder,
+                             DealerId = x.DealerId,
                              OperatorId = x.OperatorId,
                              Sum = x.Sum,
                              Status = x.Status,
@@ -92,6 +79,7 @@ namespace WebApiDB.Repository
                          {
                              Id = x.Id,
                              DateOrder = x.DateOrder,
+                             DealerId = x.DealerId,
                              OperatorId = x.OperatorId,
                              Sum = x.Sum,
                              Status = x.Status,

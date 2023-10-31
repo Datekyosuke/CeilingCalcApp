@@ -1,15 +1,11 @@
-﻿using FuzzySharp;
-using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using WebApiDB.Context;
-using WebApiDB.Controllers.DealerControllers;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
-using WebApiDB.Servics;
 
 namespace WebApiDB.Repository
 {
@@ -35,7 +31,7 @@ namespace WebApiDB.Repository
 
         public async Task<Dealer> GetAsync(int id)
         {
-            var dealer = await _context.Dealers.FirstOrDefaultAsync(p => p.Id == id);
+            var dealer = await _context.Dealers.Include(x => x.Orders).FirstOrDefaultAsync(p => p.Id == id);
             return dealer;
         }
 

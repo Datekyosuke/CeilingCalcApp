@@ -38,7 +38,7 @@ namespace WebApiDB.Models
         /// only numbers, may be negative  
         /// </summary>
         [JsonPropertyName("sum")]
-        public float Sum { get; set; }
+        public float? Sum { get; set; }
 
         /// <summary>
         /// Status orders

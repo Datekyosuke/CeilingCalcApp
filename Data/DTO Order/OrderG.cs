@@ -17,9 +17,13 @@ namespace WebApiDB.Data.DTO_Order
         /// <summary>
         /// Dealer id not null, must exist 
         /// </summary>
-
-
         [JsonPropertyName("dealerId")]
+        public int DealerId { get; set; }
+        /// <summary>
+        /// Dealer last name + first name
+        /// </summary>
+
+        [JsonPropertyName("dealerName")]
         public string DealerFullName { get; set; }
 
         /// <summary>
@@ -38,7 +42,7 @@ namespace WebApiDB.Data.DTO_Order
         /// only numbers, may be negative  
         /// </summary>
         [JsonPropertyName("sum")]
-        public float Sum { get; set; }
+        public float? Sum { get; set; }
 
         /// <summary>
         /// Status orders

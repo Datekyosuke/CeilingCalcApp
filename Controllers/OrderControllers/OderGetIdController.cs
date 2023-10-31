@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApiDB.Data.DTO_Order;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
 
@@ -20,14 +21,14 @@ namespace WebApiDB.Controllers.OrderControllers
         [ProducesResponseType(500)]
         public IActionResult Get(int id)
         {
-            var order = _orderRepository.GetAsync(id).Result;
+            var order =_mapper.Map<OrderG>(_orderRepository.GetAsync(id).Result);
 
             if (order == null)
             {
                 return NotFound();
             }
 
-            return Ok(new Response<Order>(order));
+            return Ok(new Response<OrderG>(order));
         }
     }
 }

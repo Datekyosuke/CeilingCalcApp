@@ -24,7 +24,7 @@ namespace WebApiDB.Controllers.OrderControllers
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
 
         [HttpPatch]
-        public async Task<ActionResult> Patch(int id, [FromBody] Order order)
+        public async Task<ActionResult> Patch(int id, [FromBody] DTOOrder dtoOrder)
         {
             var oldOrder = _orderRepository.GetAsync(id).Result;
 
@@ -38,25 +38,26 @@ namespace WebApiDB.Controllers.OrderControllers
             if (!validation.Item1)
             {
                 return BadRequest(validation.Item2);
-            }*/
-
-            if (order.Dealer.Id == 0)
-                order.Dealer.Id = oldOrder.Dealer.Id;
-            if (order.DateOrder == default(DateTime))
-                order.DateOrder = oldOrder.DateOrder;
-            if (order.OperatorId == 0)
-                order.OperatorId = oldOrder.OperatorId;
-            if (order.Sum == 0)
-                order.Sum = oldOrder.Sum;
-            if (order.Status == "string")
-                order.Status = oldOrder.Status;
-
-
+            }
+            */
+            dtoOrder.Id = id;
+            if (dtoOrder.DealerId == 0)
+                dtoOrder.DealerId = oldOrder.Dealer.Id;
+            if (dtoOrder.DateOrder == default(DateTime))
+                dtoOrder.DateOrder = oldOrder.DateOrder;
+            if (dtoOrder.OperatorId == 0)
+                dtoOrder.OperatorId = oldOrder.OperatorId;
+            if (dtoOrder.Sum == 0)
+                dtoOrder.Sum = oldOrder.Sum;
+            if (dtoOrder.Status == "string")
+                dtoOrder.Status = oldOrder.Status;
+            
+            var order = _mapper.Map<Order>(dtoOrder);
 
 
             await _orderRepository.Patch(oldOrder, order);
 
-            return Ok("Dealer changed!");
+            return Ok("Order changed!");
         }
     }
 }

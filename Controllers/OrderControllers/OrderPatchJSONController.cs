@@ -15,30 +15,30 @@ namespace WebApiDB.Controllers.OrderControllers
         ///     [
         ///     {
         ///        "op": "add",
-        ///        "path": "FirstName",
-        ///        "value": "Barry"
+        ///        "path": "Status",
+        ///        "value": "In work"
         ///     }
         ///     ]
         ///
-        /// This example changes the value of the FirstName field of the selected dealer by id to "Barry"
+        /// This example changes the value of the Status field of the selected order by id to "In work"
         /// 
         ///     See more: https://learn.microsoft.com/ru-ru/aspnet/core/web-api/jsonpatch?view=aspnetcore-7.0#path-syntax
         ///     
-        /// Properties can take Dealer field values:
+        /// Properties can take Order field values:
         /// 
         ///     "id": can't be changed, integer
-        ///     "firstName": "string", required
-        ///     "lastName": "string", may be null
-        ///     "telephone": 11 digit, integer
-        ///     "debts": 0, integer
-        ///     "city": "string",  required    
+        ///     "dealerId": integer, required
+        ///     "DateOrder": "date time", not null, in format DateTime(2015, 7, 20, 18, 30, 25); // год - месяц - день - час - минута - секунда
+        ///     "OperatorId": integer, who added order  
+        ///     "Sum": float, full sum of order
+        ///     "Status": "string",  status of order. in work, in calculation etc    
         ///     
         /// </remarks>
-        /// <param name="id">Dealer ID</param>
+        /// <param name="id">Order ID</param>
         /// <param name="patchDoc"></param>
-        /// <response code="200">Dealer changed</response>
+        /// <response code="200">Order changed</response>
         /// <response code="400">Something went wrong. Possibly invalid request body.</response>
-        /// <response code="404">There is no dealer for this id</response>
+        /// <response code="404">There is no order for this id</response>
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
         [HttpPatch("PatchJson")]
         public async Task<IActionResult> JsonPatchWithModelState(int id,
@@ -46,40 +46,41 @@ namespace WebApiDB.Controllers.OrderControllers
         {
             //TODO: validation order!
 
-            //if (patchDoc.Operations[0].path == "Id")
-            //    return BadRequest("id cannot be changes");
+            if (patchDoc.Operations[0].path.ToLower() == "id")
+                return BadRequest("id cannot be changes");
 
-            //if (patchDoc.Operations[0].path == "LastName" && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
-            //    return BadRequest("LastName cannot be more than 50 and less than 2 characters");
+            if (patchDoc.Operations[0].path.ToLower() == "dateorder")
+            {
+                if (!DateTime.TryParse(patchDoc.Operations[0].value.ToString(), out DateTime dateTime))
+                    return BadRequest("Wrong date time! Must be a number");
+                else if (dateTime > DateTime.Now)
+                    return BadRequest("Wrong date! Not future");
+            }
 
-            //if (patchDoc.Operations[0].path == "FirstName" && patchDoc.Operations[0].value.ToString().Length > 50)
-            //    return BadRequest("FirstName cannot be more than 50 characters");
+            if (patchDoc.Operations[0].path.ToLower() == "firstname" && patchDoc.Operations[0].value.ToString().Length > 50)
+                return BadRequest("FirstName cannot be more than 50 characters");
 
-            //if (patchDoc.Operations[0].path == "Telephone")
-            //{
-            //    long.TryParse(patchDoc.Operations[0].value.ToString(), out long telephone);
-            //    if (telephone < 10000000000 || telephone > 99999999999)
-            //        return BadRequest("Invalid telephone. Must contain 11 digits!");
-            //}
+            if (patchDoc.Operations[0].path.ToLower() == "sum")
+            {
+                {
+                    if (patchDoc.Operations[0].value == "")
+                        patchDoc.Operations[0].value = 0;
+                    if (!float.TryParse(patchDoc.Operations[0].value.ToString(), out float sum))
+                        return BadRequest("Wrong debts! Must be a number");
+                    else if (sum < float.MinValue || sum > float.MaxValue)
+                        return BadRequest("Wrong sum! Too big (small) number");
+                }
 
-            //if (patchDoc.Operations[0].path == "Debts")
-            //{
-            //    {
-            //        if (!float.TryParse(patchDoc.Operations[0].value.ToString(), out float debts))
-            //            return BadRequest("Wrong debts! Must be a number");
-            //        else if (debts < float.MinValue || debts > float.MaxValue)
-            //            return BadRequest("Wrong debts! Too big (small) number");
-            //    }
-
-            //}
-            //if (patchDoc.Operations[0].path == "City" && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
-            //    return BadRequest("City cannot be more than 50 and less than 2 characters");
+            }
+            if (patchDoc.Operations[0].path.ToLower() == "status" && (patchDoc.Operations[0].value.ToString().Length > 50))
+                return BadRequest("Status cannot be more than 50 and less than 2 characters");
 
             if (patchDoc != null)
             {
-                var order = _orderRepository.GetAsync(id).Result;
-                await _orderRepository.JsonPatchWithModelState(order, patchDoc, ModelState);
-                return new ObjectResult(order);
+                var customerDTO = _orderRepository.GetAsync(id).Result;
+                var customer = _mapper.Map<Order>(customerDTO);
+                await _orderRepository.JsonPatchWithModelState(customer, patchDoc, ModelState);
+                return new ObjectResult(customer);
             }
             else
             {
