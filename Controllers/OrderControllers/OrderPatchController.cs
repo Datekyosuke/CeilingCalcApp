@@ -24,7 +24,7 @@ namespace WebApiDB.Controllers.OrderControllers
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
 
         [HttpPatch]
-        public async Task<ActionResult> Patch(int id, [FromBody] DTOOrder dtoOrder)
+        public async Task<ActionResult> Patch(int id, [FromBody] OrderDTO dtoOrder)
         {
             var oldOrder = _orderRepository.GetAsync(id).Result;
 

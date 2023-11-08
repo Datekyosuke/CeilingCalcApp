@@ -57,9 +57,6 @@ namespace WebApiDB.Controllers.OrderControllers
                     return BadRequest("Wrong date! Not future");
             }
 
-            if (patchDoc.Operations[0].path.ToLower() == "firstname" && patchDoc.Operations[0].value.ToString().Length > 50)
-                return BadRequest("FirstName cannot be more than 50 characters");
-
             if (patchDoc.Operations[0].path.ToLower() == "sum")
             {
                 {
@@ -77,10 +74,10 @@ namespace WebApiDB.Controllers.OrderControllers
 
             if (patchDoc != null)
             {
-                var customerDTO = _orderRepository.GetAsync(id).Result;
-                var customer = _mapper.Map<Order>(customerDTO);
-                await _orderRepository.JsonPatchWithModelState(customer, patchDoc, ModelState);
-                return new ObjectResult(customer);
+                var orderDTO = _orderRepository.GetAsync(id).Result;
+               /* var order = _mapper.Map<Order>(orderDTO);*/
+                await _orderRepository.JsonPatchWithModelState(orderDTO, patchDoc, ModelState);
+                return new ObjectResult(orderDTO);
             }
             else
             {

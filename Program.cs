@@ -7,8 +7,11 @@ using WebApiDB;
 using WebApiDB.Context;
 using WebApiDB.Interfaces;
 using WebApiDB.Mapper;
+using WebApiDB.Models;
 using WebApiDB.Repository;
 using WebApiDB.Servics;
+using FluentValidation;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -81,6 +84,8 @@ options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+builder.Services.AddValidatorsFromAssemblyContaining<OrderDTOValidator>();
+builder.Services.AddFluentValidationAutoValidation();
 builder.Services.Configure<ApiBehaviorOptions>(o =>
 {
     o.InvalidModelStateResponseFactory = actionContext =>

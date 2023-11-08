@@ -8,7 +8,7 @@ namespace WebApiDB.Mapper
     {
         public AppMappingProfile()
         {
-            CreateMap<DTOOrder, Order>().ReverseMap();
+            CreateMap<OrderDTO, Order>().ReverseMap();
             CreateMap<DTODealer, Dealer>().ReverseMap();
             CreateMap<Order, OrderG>().ForMember(dest => dest.DealerFullName, opt => opt.MapFrom(src => $"{src.Dealer.FirstName} {src.Dealer.LastName}"));
         }

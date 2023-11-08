@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using WebApiDB.Context;
 
 namespace WebApiDB.Models
 {
-    public class DTOOrder
+    public class OrderDTO
     { 
         /// <summary>
         /// ID. Auto increment
@@ -47,5 +49,16 @@ namespace WebApiDB.Models
         public string Status { get; set; }
     }
 
-
+    public class OrderDTOValidator : AbstractValidator<OrderDTO>
+    {
+        public OrderDTOValidator(AplicationContext context)
+        {
+            RuleLevelCascadeMode = CascadeMode.Stop;
+            RuleFor(x => x.DateOrder).LessThan(DateTime.Now).WithMessage("Сannot create an order in the future!");
+            RuleFor(x => x.Sum).GreaterThanOrEqualTo(0).WithMessage("Order amount must be 0 or more").LessThan(float.MaxValue).WithMessage("To mach sum");
+            RuleFor(x => x.Status).Length(0, 50).WithMessage("To long status!");
+            RuleFor(x => x.DealerId).Must(dealerId => context.Dealers.Any(dealer => dealer.Id == dealerId))
+           .WithMessage("Dealer does not exist");
+        }
+    }
 }

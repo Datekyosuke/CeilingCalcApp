@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using WebApiDB.Data.DTO_Order;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
+using WebApiDB.Models;
 using WebApiDB.Pagination;
 
 namespace WebApiDB.Controllers.OrderControllers
@@ -13,12 +17,14 @@ namespace WebApiDB.Controllers.OrderControllers
     {
         private IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
+        private IValidator<Order> _validatorOrder;
 
 
-        public OrderController(IOrderRepository orderRepository, IMapper mapper)
+        public OrderController(IOrderRepository orderRepository, IMapper mapper, IValidator<Order> validatorOrder)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
+            _validatorOrder = validatorOrder;
 
         }
         /// <summary>
