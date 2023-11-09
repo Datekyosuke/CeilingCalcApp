@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -30,8 +31,6 @@ namespace WebApiDB.Models
         /// only numbers
         /// </summary>
         [JsonPropertyName("telephone")]
-        [Range(10000000000, 99999999999,
-        ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         public long? Telephone { get; set; }
 
         /// <summary>
@@ -48,9 +47,17 @@ namespace WebApiDB.Models
 
         public virtual ICollection<Order>? Orders { get; set; }
 
-        public string GetName()
+        public class DealerValidator : AbstractValidator<Dealer>
         {
-            return this.FirstName + " " + this.LastName;
+            public DealerValidator()
+            {
+                RuleLevelCascadeMode = CascadeMode.Stop;
+                RuleFor(x => x.FirstName).Must(c => c.All(Char.IsLetter)).WithMessage("Invalid character in {PropertyName}").MaximumLength(50).WithMessage("{PropertyName} maximum lenght 50 character");
+                RuleFor(x => x.LastName).Must(c => c.All(Char.IsLetter)).WithMessage("Invalid character in {PropertyName}").Length(2, 50).WithMessage("{PropertyName} more 2 and less 50 character");
+                RuleFor(x => x.Telephone).NotNull().InclusiveBetween(10000000000, 99999999999).WithMessage("Invalid {PropertyName}. Must contain 11 digits!");
+                RuleFor(x => x.Debts).InclusiveBetween(float.MinValue, float.MaxValue).WithMessage("Wrong {PropertyName}! Too big (small) number");
+                RuleFor(x => x.City).NotNull().WithMessage("{PropertyName} is requered!").Length(2, 50).WithMessage("{PropertyName} more 2 and less 50 character");
+            }
         }
 
 

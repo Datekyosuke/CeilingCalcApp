@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace WebApiDB.Models
@@ -35,6 +36,19 @@ namespace WebApiDB.Models
         /// </summary>
         [JsonPropertyName("price")]
         public float Price { get; set; }
+
+        public class MaterialValidator : AbstractValidator<Material>
+        {
+            public MaterialValidator()
+            {
+                RuleLevelCascadeMode = CascadeMode.Stop;
+                RuleFor(x => x.Texture).Length(3, 50).WithMessage("{PropertyName} more 2 and less 50 character");
+                RuleFor(x => x.Color).Length(2, 50).WithMessage("{PropertyName} more 2 and less 50 character");
+                RuleFor(x => x.Size).NotNull().InclusiveBetween(float.MinValue, float.MaxValue).WithMessage("Wrong {PropertyName}! Too big (small) number");
+                RuleFor(x => x.Price).NotNull().InclusiveBetween(float.MinValue, float.MaxValue).WithMessage("Wrong {PropertyName}! Too big (small) number");
+
+            }
+        }
 
     }
 }

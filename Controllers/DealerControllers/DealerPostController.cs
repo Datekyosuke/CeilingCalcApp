@@ -19,14 +19,15 @@ namespace WebApiDB.Controllers.DealerControllers
         public async Task<IActionResult> Post([FromBody] DTODealer DTOdealer)
         {
             var dealer = _mapper.Map<Dealer>(DTOdealer);
-            var validation = ValidationDealer.DealerValidation(dealer);
-            if (!validation.Item1)
+            var validationResult = _validatorDealer.Validate(dealer);
+            if (validationResult.IsValid)
             {
-                return BadRequest(validation.Item2);
+
+                await _dealerRepository.Post(dealer);
+                return Ok("Dealer created!");
             }
-            
-            await _dealerRepository.Post(dealer);
-            return Ok("Dealer created!");
+            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            return BadRequest(errorMessages);
         }
 
     }

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using FluentValidation;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using WebApiDB.Context;
 
 namespace WebApiDB.Models
 {
@@ -31,8 +33,6 @@ namespace WebApiDB.Models
         /// only numbers
         /// </summary>
         [JsonPropertyName("telephone")]
-        [Range(10000000000, 99999999999,
-        ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         public long? Telephone { get; set; }
 
         /// <summary>
@@ -46,6 +46,20 @@ namespace WebApiDB.Models
         /// </summary>
         [JsonPropertyName("city")]
         public string City { get; set; }
+
+        public class DTODealerValidator : AbstractValidator<DTODealer>
+        {
+            public DTODealerValidator()
+            {
+                RuleLevelCascadeMode = CascadeMode.Stop;
+                RuleFor(x => x.FirstName).Must(c => c.All(Char.IsLetter)).WithMessage("Invalid character in {PropertyName}").MaximumLength(50).WithMessage("{PropertyName} maximum lenght 50 character");
+                RuleFor(x => x.LastName).Must(c => c.All(Char.IsLetter)).WithMessage("Invalid character in {PropertyName}").Length(2, 50).WithMessage("{PropertyName} more 2 and less 50 character");
+                RuleFor(x => x.Telephone).NotNull().InclusiveBetween(10000000000, 99999999999).WithMessage("Invalid {PropertyName}. Must contain 11 digits!");
+                RuleFor(x => x.Debts).InclusiveBetween(float.MinValue, float.MaxValue).WithMessage("Wrong {PropertyName}! Too big (small) number");
+                RuleFor(x => x.City).NotNull().WithMessage("{PropertyName} is requered!").Length(2, 50).WithMessage("{PropertyName} more 2 and less 50 character");
+
+            }
+        }
 
     }
 }

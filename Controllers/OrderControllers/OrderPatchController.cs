@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
+using WebApiDB.Data.DTO_Order;
 using WebApiDB.Helpers;
 using WebApiDB.Models;
 
@@ -30,34 +33,29 @@ namespace WebApiDB.Controllers.OrderControllers
 
             if (oldOrder == null)
                 return NotFound();
-
-            // TODO : add validation order
-
-
-            /*var validation = ValidationDealer.DealerValidation(order);
-            if (!validation.Item1)
-            {
-                return BadRequest(validation.Item2);
-            }
-            */
-            dtoOrder.Id = id;
-            if (dtoOrder.DealerId == 0)
-                dtoOrder.DealerId = oldOrder.Dealer.Id;
-            if (dtoOrder.DateOrder == default(DateTime))
-                dtoOrder.DateOrder = oldOrder.DateOrder;
-            if (dtoOrder.OperatorId == 0)
-                dtoOrder.OperatorId = oldOrder.OperatorId;
-            if (dtoOrder.Sum == 0)
-                dtoOrder.Sum = oldOrder.Sum;
-            if (dtoOrder.Status == "string")
-                dtoOrder.Status = oldOrder.Status;
-            
             var order = _mapper.Map<Order>(dtoOrder);
 
+            ValidationResult validationResult = await _validatorOrder.ValidateAsync(order);
 
-            await _orderRepository.Patch(oldOrder, order);
+            if (validationResult.IsValid)
+            {
+                order.Id = id;
+                if (order.DealerId == 0)
+                    order.DealerId = oldOrder.Dealer.Id;
+                if (order.DateOrder == default(DateTime))
+                    order.DateOrder = oldOrder.DateOrder;
+                if (order.OperatorId == 0)
+                    order.OperatorId = oldOrder.OperatorId;
+                if (order.Sum == 0)
+                    order.Sum = oldOrder.Sum;
+                if (order.Status == "string")
+                    order.Status = oldOrder.Status;
 
-            return Ok("Order changed!");
+                await _orderRepository.Patch(oldOrder, order);
+                return Ok("Order changed!");
+            }
+            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            return BadRequest(errorMessages);
         }
     }
 }
