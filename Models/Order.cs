@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CeilingCalc.Models;
+using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -50,6 +51,8 @@ namespace WebApiDB.Models
         /// </summary>
         [JsonPropertyName("status")]
         public string Status { get; set; }
+
+        public virtual ICollection<OrderDetail>? OrderDetail { get; set; }
     }
 
     public class OrderValidator : AbstractValidator<Order>
