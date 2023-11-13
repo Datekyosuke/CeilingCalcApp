@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using CeilingCalc.Interfaces;
+using CeilingCalc.Models;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using WebApiDB.Context;
 using WebApiDB.Data.DTO_Order;
@@ -10,31 +10,31 @@ using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
 
-namespace WebApiDB.Repository
+namespace CeilingCalc.Repository
 {
-    public class OrderRepository : IOrderRepository
+    public class OrderDetailRepository : IOrderDetailRepository
     {
         private readonly AplicationContext _context;
         private readonly IUriService _uriService;
         private readonly IMapper _mapper;
 
 
-        public OrderRepository(AplicationContext context, IUriService uriService, IMapper mapper)
+        public OrderDetailRepository(AplicationContext context, IUriService uriService, IMapper mapper)
         {
             _context = context;
             _uriService = uriService;
             _mapper = mapper;
         }
 
-        public async Task Delete(Order order)
+        public async Task Delete(OrderDetail order)
         {
-            _context.Orders.Remove(order);
+            _context.OrderDetails.Remove(order);
             await _context.SaveChangesAsync();
         }
 
         public async Task<Order> GetAsync(int id)
-        { 
-            var order = await _context.Orders.Include(o => o.Dealer).Where(x => x.Id == id).FirstOrDefaultAsync();
+        {
+            var order = await _context.OrderDetails.Include(o => o.Dealer).Where(x => x.Id == id).FirstOrDefaultAsync();
             return order;
         }
         public async Task<PagedResponse<List<OrderG>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
@@ -57,7 +57,7 @@ namespace WebApiDB.Repository
                              Dealer = _mapper.Map<DealerDTOGet>(x.Dealer),
                          })
                         .AsQueryable()
-                        .OrderBy(x => EF.Property<object>(x, property)):
+                        .OrderBy(x => EF.Property<object>(x, property)) :
 
                         sort == "desc" ?
                         _context.Orders
@@ -130,7 +130,7 @@ namespace WebApiDB.Repository
         public async Task Post(Order order)
         {
             order.Dealer = _context.Dealers.FirstOrDefault(x => x.Id == order.Id);
-             _context.Add(order);
+            _context.Add(order);
             await _context.SaveChangesAsync();
         }
 
