@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CeilingCalc.Data.DTO_Material;
+using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
@@ -22,14 +23,14 @@ namespace WebApiDB.Controllers.MaterialControllers
         [ProducesResponseType(500)]
         public IActionResult Get(int id)
         {
-            var material = _materialRepository.GetAsync(id).Result;
+            var material =_mapper.Map<MaterialDTO>(_materialRepository.GetAsync(id).Result);
 
             if (material == null)
             {
                 return NotFound();
             }
 
-            return Ok(new Response<Material>(material));
+            return Ok(new Response<MaterialDTO>(material));
         }
     }
 }

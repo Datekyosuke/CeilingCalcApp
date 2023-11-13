@@ -21,11 +21,8 @@ namespace WebApiDB.Models
         /// Dealer id not null, must exist 
         /// </summary>
 
-
         [JsonPropertyName("dealerId")]
         public int DealerId { get; set; }
-
-
         public virtual Dealer Dealer { get; set; }
 
         /// <summary>

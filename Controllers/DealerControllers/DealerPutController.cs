@@ -33,7 +33,7 @@ namespace WebApiDB.Controllers.DealerControllers
 
 
         [HttpPut]
-        public async Task<ActionResult> Put(int id, [FromBody] DTODealer dTOdealer)
+        public async Task<ActionResult> Put(int id, [FromBody] DealerDTOGet dTOdealer)
         {
             var dealer = _mapper.Map<Dealer>(dTOdealer);
             var oldClient = _dealerRepository.GetAsync(id).Result;

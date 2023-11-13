@@ -29,6 +29,7 @@ namespace CeilingCalc.Models
         /// </summary>
         [JsonPropertyName("materialId")]
         public int MaterialId { get; set; }
+        [NotMapped]
         public virtual Material Material { get; set; }
 
         /// <summary>

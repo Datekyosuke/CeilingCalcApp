@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -15,12 +16,14 @@ namespace WebApiDB.Repository
     {
         private readonly AplicationContext _context;
         private readonly IUriService _uriService;
+        private readonly IMapper _mapper;
 
 
-        public OrderRepository(AplicationContext context, IUriService uriService)
+        public OrderRepository(AplicationContext context, IUriService uriService, IMapper mapper)
         {
             _context = context;
             _uriService = uriService;
+            _mapper = mapper;
         }
 
         public async Task Delete(Order order)
@@ -52,7 +55,7 @@ namespace WebApiDB.Repository
                              OperatorId = x.OperatorId,
                              Sum = x.Sum,
                              Status = x.Status,
-                             DealerFullName = x.Dealer.FirstName + " " + x.Dealer.LastName,
+                             Dealer = _mapper.Map<DealerDTOGet>(x.Dealer),
                          })
                         .AsQueryable()
                         .OrderBy(x => EF.Property<object>(x, property)):
@@ -68,7 +71,7 @@ namespace WebApiDB.Repository
                              OperatorId = x.OperatorId,
                              Sum = x.Sum,
                              Status = x.Status,
-                             DealerFullName = x.Dealer.FirstName + " " + x.Dealer.LastName,
+                             Dealer = _mapper.Map<DealerDTOGet>(x.Dealer),
                          }).
                          AsQueryable()
                        .OrderByDescending(x => EF.Property<object>(x, property)) :
@@ -83,7 +86,7 @@ namespace WebApiDB.Repository
                              OperatorId = x.OperatorId,
                              Sum = x.Sum,
                              Status = x.Status,
-                             DealerFullName = x.Dealer.FirstName + " " + x.Dealer.LastName,
+                             Dealer = _mapper.Map<DealerDTOGet>(x.Dealer),
                          }).
                          AsQueryable();
 

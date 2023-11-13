@@ -1,4 +1,5 @@
-﻿using FluentValidation.Results;
+﻿using CeilingCalc.Data.DTO_Material;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
@@ -29,8 +30,9 @@ namespace WebApiDB.Controllers.MaterialControllers
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
 
         [HttpPatch]
-        public async Task<ActionResult> Patch(int id, [FromBody] Material material)
+        public async Task<ActionResult> Patch(int id, [FromBody] MaterialDTO materialDTO)
         {
+            var material = _mapper.Map<Material>(materialDTO);
             var oldMaterial = _materialRepository.GetAsync(id).Result;
 
             if (oldMaterial == null)

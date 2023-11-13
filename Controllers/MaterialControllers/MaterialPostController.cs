@@ -1,4 +1,5 @@
-﻿using FluentValidation.Results;
+﻿using CeilingCalc.Data.DTO_Material;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Data.DTO_Order;
 using WebApiDB.Interfaces;
@@ -17,8 +18,9 @@ namespace WebApiDB.Controllers.MaterialControllers
         /// <response code="400">Something went wrong. Possibly invalid request body.</response>
         /// <response code="500">Something went wrong.</response>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Material material)
+        public async Task<IActionResult> Post([FromBody] MaterialDTO materialDTO)
         {
+            var material = _mapper.Map<Material>(materialDTO);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

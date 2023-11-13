@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
@@ -15,12 +16,14 @@ namespace WebApiDB.Controllers.MaterialControllers
         private IMaterialRepository _materialRepository;
         private readonly IUriService _uriService;
         private IValidator<Material> _validatorMaterial;
+        private IMapper _mapper;
 
-        public MaterialController(IMaterialRepository materialRepository, IUriService uriService, IValidator<Material> validatorMaterial)
+        public MaterialController(IMaterialRepository materialRepository, IUriService uriService, IValidator<Material> validatorMaterial, IMapper mapper)
         {
             _materialRepository = materialRepository;
             _uriService = uriService;
             _validatorMaterial = validatorMaterial;
+            _mapper = mapper;
         }
         /// <summary>
         /// Returns a paginated, sorted and ranged list of materials. 

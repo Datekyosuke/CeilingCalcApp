@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using WebApiDB.Models;
 
 namespace WebApiDB.Data.DTO_Order
 {
@@ -23,8 +24,8 @@ namespace WebApiDB.Data.DTO_Order
         /// Dealer last name + first name
         /// </summary>
 
-        [JsonPropertyName("dealerName")]
-        public string DealerFullName { get; set; }
+        [JsonPropertyName("dealer")]
+        public DealerDTOGet Dealer { get; set; }
 
         /// <summary>
         /// data

@@ -1,13 +1,11 @@
 ﻿using FluentValidation;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using WebApiDB.Context;
 
 namespace WebApiDB.Models
 {
-    public class DTODealer
+    public class DealerDTOGet
     {
         /// <summary>
         /// ID. Auto increment
@@ -47,7 +45,7 @@ namespace WebApiDB.Models
         [JsonPropertyName("city")]
         public string City { get; set; }
 
-        public class DTODealerValidator : AbstractValidator<DTODealer>
+        public class DTODealerValidator : AbstractValidator<DealerDTOGet>
         {
             public DTODealerValidator()
             {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CeilingCalc.Data.DTO_Material;
 using WebApiDB.Data.DTO_Order;
 using WebApiDB.Models;
 
@@ -9,8 +10,9 @@ namespace WebApiDB.Mapper
         public AppMappingProfile()
         {
             CreateMap<OrderDTO, Order>().ReverseMap();
-            CreateMap<DTODealer, Dealer>().ReverseMap();
-            CreateMap<Order, OrderG>().ForMember(dest => dest.DealerFullName, opt => opt.MapFrom(src => $"{src.Dealer.FirstName} {src.Dealer.LastName}"));
+            CreateMap<DealerDTOGet, Dealer>().ReverseMap();
+            CreateMap<Order, OrderG>();
+            CreateMap<Material, MaterialDTO>().ReverseMap();
         }
     }
 }

@@ -31,7 +31,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
 
         [HttpPatch]
-        public async Task<ActionResult> Patch(int id, [FromBody] DTODealer dTOdealer)
+        public async Task<ActionResult> Patch(int id, [FromBody] DealerDTOGet dTOdealer)
         {
             var dealer = _mapper.Map<Dealer>(dTOdealer);
             var oldClient = _dealerRepository.GetAsync(id).Result;

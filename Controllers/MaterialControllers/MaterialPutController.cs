@@ -1,4 +1,5 @@
-﻿using FluentValidation.Results;
+﻿using CeilingCalc.Data.DTO_Material;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
@@ -36,8 +37,9 @@ namespace WebApiDB.Controllers.MaterialControllers
 
 
         [HttpPut]
-        public async Task<ActionResult> Put(int id, [FromBody] Material material)
+        public async Task<ActionResult> Put(int id, [FromBody] MaterialDTO materialDTO)
         {
+            var material = _mapper.Map<Material>(materialDTO);
             var oldMaterial = _materialRepository.GetAsync(id).Result;
             if (oldMaterial == null)
                 return NotFound();

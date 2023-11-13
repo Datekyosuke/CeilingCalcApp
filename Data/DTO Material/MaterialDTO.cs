@@ -2,10 +2,11 @@
 using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using WebApiDB.Models;
 
-namespace WebApiDB.Models
+namespace CeilingCalc.Data.DTO_Material
 {
-    public class Material
+    public class MaterialDTO
     {
         /// <summary>
         /// ID. Auto increment
@@ -37,10 +38,6 @@ namespace WebApiDB.Models
         /// </summary>
         [JsonPropertyName("price")]
         public float Price { get; set; }
-
-
-        public virtual ICollection<OrderDetail>? OrderDetail { get;  set; }
-
         public class MaterialValidator : AbstractValidator<Material>
         {
             public MaterialValidator()
@@ -53,6 +50,5 @@ namespace WebApiDB.Models
 
             }
         }
-
     }
 }

@@ -27,8 +27,9 @@ namespace WebApiDB.Context
                 .WithMany(c => c.OrderDetail)
                 .HasForeignKey(u => u.OrderId);
             modelBuilder.Entity<OrderDetail>()
-                .Property(p => p.Material)
-                .IsRequired();
+                .HasOne(u => u.Material)
+                .WithMany(c => c.OrderDetail)
+                .HasForeignKey(u => u.MaterialId);
         }
     }
 
