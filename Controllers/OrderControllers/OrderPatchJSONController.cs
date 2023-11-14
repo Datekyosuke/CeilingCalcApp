@@ -69,6 +69,18 @@ namespace WebApiDB.Controllers.OrderControllers
                 }
 
             }
+            //if (patchDoc.Operations[0].path.ToLower() == "dealerid")
+            //{
+            //    {
+            //        if (patchDoc.Operations[0].value == "")
+            //            return BadRequest("Wrong dealer");
+            //        if (!float.TryParse(patchDoc.Operations[0].value.ToString(), out float sum))
+            //            return BadRequest("Wrong dealer id! Must be a number");
+            //        else if (sum < float.MinValue || sum > float.MaxValue)
+            //            return BadRequest("Wrong sum! Too big (small) number");
+            //    }
+
+            //}
             if (patchDoc.Operations[0].path.ToLower() == "status" && (patchDoc.Operations[0].value.ToString().Length > 50))
                 return BadRequest("Status cannot be more than 50 and less than 2 characters");
 
