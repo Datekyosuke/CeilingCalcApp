@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using WebApiDB.Models;
 
-namespace CeilingCalc.Models
+namespace CeilingCalc.Data.DTO_OrderDetail
 {
-    public class OrderDetail
+    public class OrderDetailDTO
     {
         /// <summary>
         /// ID. Auto increment
@@ -22,14 +22,12 @@ namespace CeilingCalc.Models
 
         [JsonPropertyName("orderId")]
         public int OrderId { get; set; }
-        public virtual Order Order { get; set; }
-
+     
         /// <summary>
         /// Material id not null, must exist 
         /// </summary>
         [JsonPropertyName("materialId")]
         public int MaterialId { get; set; }
-        public virtual Material Material { get; set; }
 
         /// <summary>
         /// Count in square meters
@@ -48,6 +46,5 @@ namespace CeilingCalc.Models
         /// </summary>
         [JsonPropertyName("sum")]
         public float Sum { get; set; }
-
     }
 }

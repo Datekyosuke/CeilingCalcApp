@@ -2,6 +2,8 @@
 using CeilingCalc.Interfaces;
 using CeilingCalc.Models;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using WebApiDB.Context;
 using WebApiDB.Data.DTO_Order;
@@ -26,18 +28,18 @@ namespace CeilingCalc.Repository
             _mapper = mapper;
         }
 
-        public async Task Delete(OrderDetail order)
+        public async Task Delete(OrderDetail orderDetail)
         {
-            _context.OrderDetails.Remove(order);
+            _context.OrderDetails.Remove(orderDetail);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Order> GetAsync(int id)
+        public async Task<OrderDetail> GetAsync(int id)
         {
-            var order = await _context.OrderDetails.Include(o => o.Dealer).Where(x => x.Id == id).FirstOrDefaultAsync();
-            return order;
+            var orderDetail = await _context.OrderDetails.Include(o => o.Material).Include(d => d.Order).Where(x => x.Id == id).FirstOrDefaultAsync();
+            return orderDetail;
         }
-        public async Task<PagedResponse<List<OrderG>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
+        public async Task<PagedResponse<List<OrderDetail>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
         {
             var totalRecords = 0;
             var firstChar = propertyCamelCase[0].ToString().ToUpper();
@@ -45,53 +47,32 @@ namespace CeilingCalc.Repository
 
             var sortDealers =
                          sort == "asc" ?
-                         _context.Orders
-                         .Include(x => x.Dealer)
-                         .Select(x => new OrderG
-                         {
-                             Id = x.Id,
-                             DateOrder = x.DateOrder,
-                             OperatorId = x.OperatorId,
-                             Sum = x.Sum,
-                             Status = x.Status,
-                             Dealer = _mapper.Map<DealerDTOGet>(x.Dealer),
-                         })
+                         _context.OrderDetails
+                         .Include(x => x.Material)
+                         .Include(o => o.Order)
+                         .Select(x => x)
                         .AsQueryable()
                         .OrderBy(x => EF.Property<object>(x, property)) :
 
                         sort == "desc" ?
-                        _context.Orders
-                        .Include(x => x.Dealer)
-                         .Select(x => new OrderG
-                         {
-                             Id = x.Id,
-                             DateOrder = x.DateOrder,
-                             OperatorId = x.OperatorId,
-                             Sum = x.Sum,
-                             Status = x.Status,
-                             Dealer = _mapper.Map<DealerDTOGet>(x.Dealer),
-                         }).
-                         AsQueryable()
-                       .OrderByDescending(x => EF.Property<object>(x, property)) :
+                        _context.OrderDetails
+                         .Include(x => x.Material)
+                         .Include(o => o.Order)
+                         .Select(x => x)
+                         .AsQueryable()
+                         .OrderByDescending(x => EF.Property<object>(x, property)) :
 
-                        _context.Orders
-                        .Include(x => x.Dealer)
-                         .Select(x => new OrderG
-                         {
-                             Id = x.Id,
-                             DateOrder = x.DateOrder,
-                             OperatorId = x.OperatorId,
-                             Sum = x.Sum,
-                             Status = x.Status,
-                             Dealer = _mapper.Map<DealerDTOGet>(x.Dealer),
-                         }).
-                         AsQueryable();
+                        _context.OrderDetails
+                         .Include(x => x.Material)
+                         .Include(o => o.Order)
+                         .Select(x => x)
+                        .AsQueryable();
 
 
 
             if (searchString is not null)
             {
-                string[] propertySearch = { "Status" };
+                string[] propertySearch = { "Sum", "Price"};
                 var matches = SearchHelper.Search(sortDealers.ToList(), searchString, propertySearch);
                 totalRecords = matches.Distinct().Count();
 
@@ -102,7 +83,7 @@ namespace CeilingCalc.Repository
                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                         .Take(validFilter.PageSize)
                         .ToList();
-                return PaginationHelper.CreatePagedReponse<OrderG>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
+                return PaginationHelper.CreatePagedReponse<OrderDetail>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
             }
             totalRecords = sortDealers.Count();
             var sortedEntities = sortDealers
@@ -110,33 +91,32 @@ namespace CeilingCalc.Repository
                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                        .Take(validFilter.PageSize)
                        .ToList();
-            return PaginationHelper.CreatePagedReponse<OrderG>(sortedEntities, validFilter, totalRecords, _uriService, route);
+            return PaginationHelper.CreatePagedReponse<OrderDetail>(sortedEntities, validFilter, totalRecords, _uriService, route);
 
 
         }
 
-        public async Task JsonPatchWithModelState(Order order, JsonPatchDocument<Order> patchDoc, ModelStateDictionary modelState)
+        public async Task JsonPatchWithModelState(OrderDetail orderDetail, JsonPatchDocument<OrderDetail> patchDoc, ModelStateDictionary modelState)
         {
-            patchDoc.ApplyTo(order, modelState);
+            patchDoc.ApplyTo(orderDetail, modelState);
             await _context.SaveChangesAsync();
         }
 
-        public async Task Patch(Order oldOrder, Order order)
+        public async Task Patch(OrderDetail oldOrderDetail, OrderDetail orderDetail)
         {
-            _context.Entry(oldOrder).CurrentValues.SetValues(order);
+            _context.Entry(oldOrderDetail).CurrentValues.SetValues(orderDetail);
             await _context.SaveChangesAsync();
         }
 
-        public async Task Post(Order order)
+        public async Task Post(OrderDetail orderDetail)
         {
-            order.Dealer = _context.Dealers.FirstOrDefault(x => x.Id == order.Id);
-            _context.Add(order);
+            _context.Add(orderDetail);
             await _context.SaveChangesAsync();
         }
 
-        public async Task Put(Order oldOrder, Order order)
+        public async Task Put(OrderDetail oldOrderDetail, OrderDetail orderDetail)
         {
-            _context.Entry(oldOrder).CurrentValues.SetValues(order);
+            _context.Entry(oldOrderDetail).CurrentValues.SetValues(orderDetail);
             await _context.SaveChangesAsync();
         }
     }
