@@ -12,6 +12,8 @@ using WebApiDB.Repository;
 using WebApiDB.Servics;
 using FluentValidation;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using CeilingCalc.Interfaces;
+using CeilingCalc.Repository;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -33,6 +35,7 @@ builder.Services.AddDbContext<AplicationContext>(options =>
 builder.Services.AddTransient<IDealerRepository, DealerReposytory>();
 builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();
 builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+builder.Services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
 
 builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 

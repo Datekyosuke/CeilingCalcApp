@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using WebApiDB.Context;
 using WebApiDB.Models;
 
 namespace CeilingCalc.Data.DTO_OrderDetail
@@ -46,5 +48,19 @@ namespace CeilingCalc.Data.DTO_OrderDetail
         /// </summary>
         [JsonPropertyName("sum")]
         public float Sum { get; set; }
+    }
+
+    public class OrderDetailDTOValidator : AbstractValidator<OrderDetailDTO>
+    {
+        public OrderDetailDTOValidator(AplicationContext context)
+        {
+            RuleLevelCascadeMode = CascadeMode.Stop;
+            RuleFor(x => x.Sum).GreaterThanOrEqualTo(0).WithMessage("{PropertyName} amount must be 0 or more").LessThan(float.MaxValue).WithMessage("To mach sum");
+            RuleFor(x => x.Count).GreaterThanOrEqualTo(0).WithMessage("{PropertyName} must be 0 or more");
+            RuleFor(x => x.MaterialId).Must(materialId => context.Materials.Any(material => material.Id == materialId))
+            .WithMessage("Material does not exist");
+            RuleFor(x => x.OrderId).Must(orderId => context.Orders.Any(order => order.Id == orderId))
+            .WithMessage("Order does not exist");
+        }
     }
 }
