@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CeilingCalc.Data.DTO_Material;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
+using WebApiDB.Data.DTO_Order;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 
@@ -15,20 +18,22 @@ namespace WebApiDB.Controllers.MaterialControllers
         /// <response code="400">Something went wrong. Possibly invalid request body.</response>
         /// <response code="500">Something went wrong.</response>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Material material)
+        public async Task<IActionResult> Post([FromBody] MaterialDTO materialDTO)
         {
+            var material = _mapper.Map<Material>(materialDTO);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (material.Texture.Length < 3 || material.Texture.Length > 50)
-                return BadRequest("Texture cannot be more than 50 and less than 3 characters");
-            if (material.Color.Length > 50 || material.Color.Length < 2)
-                return BadRequest("Color cannot be more than 50 and less than 2 characters");
-            if (material.Size < 1 || material.Size > 6)
-                return BadRequest("Size cannot be more than 50 and less than 2 characters");
-            await _materialRepository.Post(material);
-            return Ok("Material created!");
+            ValidationResult validationResult = await _validatorMaterial.ValidateAsync(material);
+
+            if (validationResult.IsValid)
+            {
+                await _materialRepository.Post(material);
+                return Ok("Material created!");
+            }
+            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            return BadRequest(errorMessages);
         }
     }
 }

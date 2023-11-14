@@ -44,6 +44,38 @@ namespace WebApiDB.Controllers.MaterialControllers
         public async Task<IActionResult> JsonPatchWithModelState(int id,
         [FromBody] JsonPatchDocument<Material> patchDoc)
         {
+            if (patchDoc.Operations[0].path.ToLower() == "id")
+                return BadRequest("id cannot be changes");
+
+            if (patchDoc.Operations[0].path.ToLower() == "texture" && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
+                return BadRequest("Texture cannot be more than 50 and less than 2 characters");
+
+            if (patchDoc.Operations[0].path.ToLower() == "color" && (patchDoc.Operations[0].value.ToString().Length > 50 || patchDoc.Operations[0].value.ToString().Length < 2))
+                return BadRequest("Color cannot be more than 50 and less than 2 characters");
+            if (patchDoc.Operations[0].path.ToLower() == "size")
+            {
+                {
+                    if (patchDoc.Operations[0].value == "")
+                        patchDoc.Operations[0].value = 0;
+                    if (!float.TryParse(patchDoc.Operations[0].value.ToString(), out float debts))
+                        return BadRequest("Wrong size! Must be a number");
+                    else if (debts < float.MinValue || debts > float.MaxValue)
+                        return BadRequest("Wrong size! Too big (small) number");
+                }
+
+            }
+            if (patchDoc.Operations[0].path.ToLower() == "price")
+            {
+                {
+                    if (patchDoc.Operations[0].value == "")
+                        patchDoc.Operations[0].value = 0;
+                    if (!float.TryParse(patchDoc.Operations[0].value.ToString(), out float debts))
+                        return BadRequest("Wrong price! Must be a number");
+                    else if (debts < float.MinValue || debts > float.MaxValue)
+                        return BadRequest("Wrong price! Too big (small) number");
+                }
+
+            }
             if (patchDoc != null)
             {
                 var material = _materialRepository.GetAsync(id).Result;

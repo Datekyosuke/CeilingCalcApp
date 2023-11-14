@@ -31,7 +31,7 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
 
         [HttpPatch]
-        public async Task<ActionResult> Patch(int id, [FromBody] DTODealer dTOdealer)
+        public async Task<ActionResult> Patch(int id, [FromBody] DealerDTOGet dTOdealer)
         {
             var dealer = _mapper.Map<Dealer>(dTOdealer);
             var oldClient = _dealerRepository.GetAsync(id).Result;
@@ -39,29 +39,29 @@ namespace WebApiDB.Controllers.DealerControllers
             if (oldClient == null)
                 return NotFound();
 
-            var validation = ValidationDealer.DealerValidation(dealer);
-            if (!validation.Item1)
+            var validationResult = _validatorDealer.Validate(dealer);
+            if (validationResult.IsValid)
             {
-                return BadRequest(validation.Item2);
+                if (dealer.FirstName == "string")
+                    dealer.FirstName = oldClient.FirstName;
+                if (dealer.LastName == "string")
+                    dealer.LastName = oldClient.LastName;
+                if (dealer.Telephone == 0)
+                    dealer.Telephone = oldClient.Telephone;
+                if (dealer.Debts == 0)
+                    dealer.Debts = oldClient.Debts;
+                if (dealer.City == "string")
+                    dealer.City = oldClient.City;
+
+
+
+
+                await _dealerRepository.Patch(oldClient, dealer);
+
+                return Ok("Dealer changed!");
             }
-
-            if (dealer.FirstName == "string")
-                dealer.FirstName = oldClient.FirstName;
-            if (dealer.LastName == "string")
-                dealer.LastName = oldClient.LastName;
-            if (dealer.Telephone == 0)
-                dealer.Telephone = oldClient.Telephone;
-            if (dealer.Debts == 0)
-                dealer.Debts = oldClient.Debts;
-            if (dealer.City == "string")
-                dealer.City = oldClient.City;
-
-
-          
-
-            await _dealerRepository.Patch(oldClient, dealer);
-
-            return Ok("Dealer changed!");
+            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            return BadRequest(errorMessages);
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using WebApiDB.Models;
 
-namespace WebApiDB.Models
+namespace WebApiDB.Data.DTO_Order
 {
-    public class DTOOrder
-    { 
+    public class OrderG
+    {
         /// <summary>
         /// ID. Auto increment
         /// </summary>
@@ -15,12 +16,11 @@ namespace WebApiDB.Models
         public int Id { get; set; }
 
         /// <summary>
-        /// Dealer id not null, must exist 
+        /// Dealer last name + first name
         /// </summary>
- 
-        
-        [JsonPropertyName("dealerId")]
-        public int DealerId { get; set; }
+
+        [JsonPropertyName("dealer")]
+        public DealerDTOGet Dealer { get; set; }
 
         /// <summary>
         /// data
@@ -38,7 +38,7 @@ namespace WebApiDB.Models
         /// only numbers, may be negative  
         /// </summary>
         [JsonPropertyName("sum")]
-        public float Sum { get; set; }
+        public float? Sum { get; set; }
 
         /// <summary>
         /// Status orders
@@ -46,6 +46,4 @@ namespace WebApiDB.Models
         [JsonPropertyName("status")]
         public string Status { get; set; }
     }
-
-
 }

@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
+using WebApiDB.Context;
+using WebApiDB.Data.DTO_Order;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
-using Microsoft.AspNetCore.Mvc;
-using WebApiDB.Context;
-using AutoMapper;
 
 namespace WebApiDB.Repository
 {
@@ -15,12 +16,14 @@ namespace WebApiDB.Repository
     {
         private readonly AplicationContext _context;
         private readonly IUriService _uriService;
+        private readonly IMapper _mapper;
 
 
-        public OrderRepository(AplicationContext context, IUriService uriService)
+        public OrderRepository(AplicationContext context, IUriService uriService, IMapper mapper)
         {
             _context = context;
             _uriService = uriService;
+            _mapper = mapper;
         }
 
         public async Task Delete(Order order)
@@ -34,27 +37,55 @@ namespace WebApiDB.Repository
             var order = await _context.Orders.Include(o => o.Dealer).Where(x => x.Id == id).FirstOrDefaultAsync();
             return order;
         }
-        public async Task<PagedResponse<List<Order>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
+        public async Task<PagedResponse<List<OrderG>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
         {
             var totalRecords = 0;
             var firstChar = propertyCamelCase[0].ToString().ToUpper();
             var property = firstChar + propertyCamelCase.Substring(1);
+
             var sortDealers =
-                        sort == "asc" ?
-                        _context.Orders
-                        .Select(x => x)
-                        .Include(x => x.Dealer)
-                        .OrderBy(x => EF.Property<object>(x, property)) :
+                         sort == "asc" ?
+                         _context.Orders
+                         .Include(x => x.Dealer)
+                         .Select(x => new OrderG
+                         {
+                             Id = x.Id,
+                             DateOrder = x.DateOrder,
+                             OperatorId = x.OperatorId,
+                             Sum = x.Sum,
+                             Status = x.Status,
+                             Dealer = _mapper.Map<DealerDTOGet>(x.Dealer),
+                         })
+                        .AsQueryable()
+                        .OrderBy(x => EF.Property<object>(x, property)):
 
                         sort == "desc" ?
                         _context.Orders
-                       .Select(x => x)
-                       .Include(x => x.Dealer)
+                        .Include(x => x.Dealer)
+                         .Select(x => new OrderG
+                         {
+                             Id = x.Id,
+                             DateOrder = x.DateOrder,
+                             OperatorId = x.OperatorId,
+                             Sum = x.Sum,
+                             Status = x.Status,
+                             Dealer = _mapper.Map<DealerDTOGet>(x.Dealer),
+                         }).
+                         AsQueryable()
                        .OrderByDescending(x => EF.Property<object>(x, property)) :
 
                         _context.Orders
                         .Include(x => x.Dealer)
-                        .Select(x => x);
+                         .Select(x => new OrderG
+                         {
+                             Id = x.Id,
+                             DateOrder = x.DateOrder,
+                             OperatorId = x.OperatorId,
+                             Sum = x.Sum,
+                             Status = x.Status,
+                             Dealer = _mapper.Map<DealerDTOGet>(x.Dealer),
+                         }).
+                         AsQueryable();
 
 
 
@@ -71,7 +102,7 @@ namespace WebApiDB.Repository
                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                         .Take(validFilter.PageSize)
                         .ToList();
-                return PaginationHelper.CreatePagedReponse<Order>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
+                return PaginationHelper.CreatePagedReponse<OrderG>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
             }
             totalRecords = sortDealers.Count();
             var sortedEntities = sortDealers
@@ -79,7 +110,7 @@ namespace WebApiDB.Repository
                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                        .Take(validFilter.PageSize)
                        .ToList();
-            return PaginationHelper.CreatePagedReponse<Order>(sortedEntities, validFilter, totalRecords, _uriService, route);
+            return PaginationHelper.CreatePagedReponse<OrderG>(sortedEntities, validFilter, totalRecords, _uriService, route);
 
 
         }
@@ -98,7 +129,7 @@ namespace WebApiDB.Repository
 
         public async Task Post(Order order)
         {
-            order.Dealer = _context.Dealers.FirstOrDefault(x => x.DealerId == order.DealerId);
+            order.Dealer = _context.Dealers.FirstOrDefault(x => x.Id == order.Id);
              _context.Add(order);
             await _context.SaveChangesAsync();
         }

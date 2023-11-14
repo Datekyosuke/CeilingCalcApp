@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace WebApiDB.Models
 {
-    public class Dealer
+    public class DealerDTOGet
     {
         /// <summary>
         /// ID. Auto increment
@@ -45,11 +45,9 @@ namespace WebApiDB.Models
         [JsonPropertyName("city")]
         public string City { get; set; }
 
-        public virtual ICollection<Order>? Orders { get; set; }
-
-        public class DealerValidator : AbstractValidator<Dealer>
+        public class DTODealerValidator : AbstractValidator<DealerDTOGet>
         {
-            public DealerValidator()
+            public DTODealerValidator()
             {
                 RuleLevelCascadeMode = CascadeMode.Stop;
                 RuleFor(x => x.FirstName).Must(c => c.All(Char.IsLetter)).WithMessage("Invalid character in {PropertyName}").MaximumLength(50).WithMessage("{PropertyName} maximum lenght 50 character");
@@ -57,9 +55,9 @@ namespace WebApiDB.Models
                 RuleFor(x => x.Telephone).NotNull().InclusiveBetween(10000000000, 99999999999).WithMessage("Invalid {PropertyName}. Must contain 11 digits!");
                 RuleFor(x => x.Debts).InclusiveBetween(float.MinValue, float.MaxValue).WithMessage("Wrong {PropertyName}! Too big (small) number");
                 RuleFor(x => x.City).NotNull().WithMessage("{PropertyName} is requered!").Length(2, 50).WithMessage("{PropertyName} more 2 and less 50 character");
+
             }
         }
-
 
     }
 }

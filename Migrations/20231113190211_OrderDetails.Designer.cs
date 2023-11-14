@@ -8,23 +8,59 @@ using WebApiDB.Context;
 
 #nullable disable
 
-namespace WebApiDB.Migrations
+namespace CeilingCalc.Migrations
 {
     [DbContext(typeof(AplicationContext))]
-    [Migration("20231025181912_ChangeOrder3")]
-    partial class ChangeOrder3
+    [Migration("20231113190211_OrderDetails")]
+    partial class OrderDetails
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("CeilingCalc.Models.OrderDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
+
+                    b.Property<float>("Count")
+                        .HasColumnType("float")
+                        .HasAnnotation("Relational:JsonPropertyName", "count");
+
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("int")
+                        .HasAnnotation("Relational:JsonPropertyName", "materialId");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int")
+                        .HasAnnotation("Relational:JsonPropertyName", "orderId");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("float")
+                        .HasAnnotation("Relational:JsonPropertyName", "price");
+
+                    b.Property<float>("Sum")
+                        .HasColumnType("float")
+                        .HasAnnotation("Relational:JsonPropertyName", "sum");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MaterialId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderDetails");
+                });
 
             modelBuilder.Entity("WebApiDB.Models.Dealer", b =>
                 {
-                    b.Property<int>("DealerId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("Relational:JsonPropertyName", "id");
@@ -52,7 +88,7 @@ namespace WebApiDB.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Relational:JsonPropertyName", "telephone");
 
-                    b.HasKey("DealerId");
+                    b.HasKey("Id");
 
                     b.ToTable("Dealers");
                 });
@@ -122,6 +158,25 @@ namespace WebApiDB.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("CeilingCalc.Models.OrderDetail", b =>
+                {
+                    b.HasOne("WebApiDB.Models.Material", "Material")
+                        .WithMany("OrderDetail")
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApiDB.Models.Order", "Order")
+                        .WithMany("OrderDetail")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("WebApiDB.Models.Order", b =>
                 {
                     b.HasOne("WebApiDB.Models.Dealer", "Dealer")
@@ -136,6 +191,16 @@ namespace WebApiDB.Migrations
             modelBuilder.Entity("WebApiDB.Models.Dealer", b =>
                 {
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("WebApiDB.Models.Material", b =>
+                {
+                    b.Navigation("OrderDetail");
+                });
+
+            modelBuilder.Entity("WebApiDB.Models.Order", b =>
+                {
+                    b.Navigation("OrderDetail");
                 });
 #pragma warning restore 612, 618
         }

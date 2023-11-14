@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
+using WebApiDB.Data.DTO_Order;
 using WebApiDB.Helpers;
 using WebApiDB.Models;
 
@@ -24,39 +27,35 @@ namespace WebApiDB.Controllers.OrderControllers
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
 
         [HttpPatch]
-        public async Task<ActionResult> Patch(int id, [FromBody] Order order)
+        public async Task<ActionResult> Patch(int id, [FromBody] OrderDTO dtoOrder)
         {
             var oldOrder = _orderRepository.GetAsync(id).Result;
 
             if (oldOrder == null)
                 return NotFound();
+            var order = _mapper.Map<Order>(dtoOrder);
 
-            // TODO : add validation order
+            ValidationResult validationResult = await _validatorOrder.ValidateAsync(order);
 
-
-            /*var validation = ValidationDealer.DealerValidation(order);
-            if (!validation.Item1)
+            if (validationResult.IsValid)
             {
-                return BadRequest(validation.Item2);
-            }*/
+                order.Id = id;
+                if (order.DealerId == 0)
+                    order.DealerId = oldOrder.Dealer.Id;
+                if (order.DateOrder == default(DateTime))
+                    order.DateOrder = oldOrder.DateOrder;
+                if (order.OperatorId == 0)
+                    order.OperatorId = oldOrder.OperatorId;
+                if (order.Sum == 0)
+                    order.Sum = oldOrder.Sum;
+                if (order.Status == "string")
+                    order.Status = oldOrder.Status;
 
-            if (order.Dealer.DealerId == 0)
-                order.Dealer.DealerId = oldOrder.Dealer.DealerId;
-            if (order.DateOrder == default(DateTime))
-                order.DateOrder = oldOrder.DateOrder;
-            if (order.OperatorId == 0)
-                order.OperatorId = oldOrder.OperatorId;
-            if (order.Sum == 0)
-                order.Sum = oldOrder.Sum;
-            if (order.Status == "string")
-                order.Status = oldOrder.Status;
-
-
-
-
-            await _orderRepository.Patch(oldOrder, order);
-
-            return Ok("Dealer changed!");
+                await _orderRepository.Patch(oldOrder, order);
+                return Ok("Order changed!");
+            }
+            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            return BadRequest(errorMessages);
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
+using WebApiDB.Models;
 using WebApiDB.Pagination;
 
 namespace WebApiDB.Controllers.DealerControllers
@@ -16,12 +18,14 @@ namespace WebApiDB.Controllers.DealerControllers
 
         private IDealerRepository _dealerRepository;
         private readonly IMapper _mapper;
+        private IValidator<Dealer> _validatorDealer;
 
 
-        public DealerController(IDealerRepository dealerRepository, IMapper mapper)
+        public DealerController(IDealerRepository dealerRepository, IMapper mapper, IValidator<Dealer> validatorDealer)
         {
             _dealerRepository = dealerRepository;
             _mapper = mapper;
+            _validatorDealer = validatorDealer;
 
         }
         /// <summary>

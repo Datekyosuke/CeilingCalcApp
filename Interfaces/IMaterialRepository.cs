@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using CeilingCalc.Data.DTO_Material;
+using Microsoft.AspNetCore.JsonPatch;
 using WebApiDB.Helpers;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
@@ -16,6 +17,6 @@ namespace WebApiDB.Interfaces
 
         public Task Patch(Material oldMaterial, Material material);
 
-        public Task<PagedResponse<List<Material>>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges, string searchString, string? route);
+        public Task<PagedResponse<List<MaterialDTO>>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges, string searchString, string? route);
     }
 }

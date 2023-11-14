@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using AutoMapper;
+using CeilingCalc.Data.DTO_Material;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using WebApiDB.Context;
+using WebApiDB.Data.DTO_Order;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
@@ -15,11 +18,13 @@ namespace WebApiDB.Repository
     {
         private readonly AplicationContext _context;
         private readonly IUriService _uriService;
+        private IMapper _mapper;
 
-        public MaterialRepository(AplicationContext context, IUriService uriService)
+        public MaterialRepository(AplicationContext context, IUriService uriService, IMapper mapper)
         {
             _context = context;
             _uriService = uriService;   
+            _mapper = mapper;
         }
 
         public async Task Delete(Material materail)
@@ -33,7 +38,7 @@ namespace WebApiDB.Repository
             var materail = await _context.Materials.FirstOrDefaultAsync(p => p.Id == id);
             return materail;
         }
-        public async Task<PagedResponse<List<Material>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
+        public async Task<PagedResponse<List<MaterialDTO>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
         {
             var totalRecords = 0;
             var firstChar = propertyCamelCase[0].ToString().ToUpper();
@@ -41,16 +46,40 @@ namespace WebApiDB.Repository
             var sortDealers =
                         sort == "asc" ?
                         _context.Materials
-                        .Select(x => x)
+                        .Select(x => new MaterialDTO
+                        {
+                            Id = x.Id,
+                            Texture = x.Texture,
+                            Color = x.Color,
+                            Size = x.Size,
+                            Price = x.Price,
+                        })
+                        .AsQueryable()
                         .OrderBy(x => EF.Property<object>(x, property)) :
 
                         sort == "desc" ?
                         _context.Materials
-                       .Select(x => x)
+                        .Select(x => new MaterialDTO
+                        {
+                            Id = x.Id,
+                            Texture = x.Texture,
+                            Color = x.Color,
+                            Size = x.Size,
+                            Price = x.Price,
+                        })
+                        .AsQueryable()
                        .OrderByDescending(x => EF.Property<object>(x, property)) :
 
                         _context.Materials
-                        .Select(x => x);
+                        .Select(x => new MaterialDTO
+                        {
+                            Id = x.Id,
+                            Texture = x.Texture,
+                            Color = x.Color,
+                            Size = x.Size,
+                            Price = x.Price,
+                        })
+                        .AsQueryable();
 
 
 
@@ -67,7 +96,7 @@ namespace WebApiDB.Repository
                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                         .Take(validFilter.PageSize)
                         .ToList();
-                return PaginationHelper.CreatePagedReponse<Material>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
+                return PaginationHelper.CreatePagedReponse<MaterialDTO>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
             }
             totalRecords = sortDealers.Count();
             var sortedEntities = sortDealers
@@ -75,7 +104,7 @@ namespace WebApiDB.Repository
                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                        .Take(validFilter.PageSize)
                        .ToList();
-            return PaginationHelper.CreatePagedReponse<Material>(sortedEntities, validFilter, totalRecords, _uriService, route);
+            return PaginationHelper.CreatePagedReponse<MaterialDTO>(sortedEntities, validFilter, totalRecords, _uriService, route);
 
 
         }

@@ -16,17 +16,18 @@ namespace WebApiDB.Controllers.DealerControllers
         /// <response code="500">Something went wrong.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] DTODealer DTOdealer)
+        public async Task<IActionResult> Post([FromBody] DealerDTOGet dealerDtoGet)
         {
-            var dealer = _mapper.Map<Dealer>(DTOdealer);
-            var validation = ValidationDealer.DealerValidation(dealer);
-            if (!validation.Item1)
+            var dealer = _mapper.Map<Dealer>(dealerDtoGet);
+            var validationResult = _validatorDealer.Validate(dealer);
+            if (validationResult.IsValid)
             {
-                return BadRequest(validation.Item2);
+
+                await _dealerRepository.Post(dealer);
+                return Ok("Dealer created!");
             }
-            
-            await _dealerRepository.Post(dealer);
-            return Ok("Dealer created!");
+            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            return BadRequest(errorMessages);
         }
 
     }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CeilingCalc.Data.DTO_Material;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Repository;
@@ -35,23 +37,23 @@ namespace WebApiDB.Controllers.MaterialControllers
 
 
         [HttpPut]
-        public async Task<ActionResult> Put(int id, [FromBody] Material material)
+        public async Task<ActionResult> Put(int id, [FromBody] MaterialDTO materialDTO)
         {
+            var material = _mapper.Map<Material>(materialDTO);
             var oldMaterial = _materialRepository.GetAsync(id).Result;
             if (oldMaterial == null)
                 return NotFound();
+            ValidationResult validationResult = await _validatorMaterial.ValidateAsync(material);
 
-            if (material.Texture.Length > 50 || material.Texture.Length < 2)
-                return BadRequest("Texture cannot be more than 50 and less than 2 characters");
-            if (material.Price > float.MaxValue || material.Price < float.MinValue)
-                return BadRequest("Wrong debts! Too big (small) number");
-            if (material.Size < 1 || material.Size > 6)
-                return BadRequest("Size should be between 1 and 6");
-
-            await _materialRepository.Put(oldMaterial, material);
+            if (validationResult.IsValid)
+            {
+                await _materialRepository.Put(oldMaterial, material);
 
 
-            return Ok("Material changed!");
+                return Ok("Material changed!");
+            }
+            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            return BadRequest(errorMessages);
         }
     }
 }

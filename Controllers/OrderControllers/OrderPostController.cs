@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApiDB.Helpers;
+﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Models;
 
 namespace WebApiDB.Controllers.OrderControllers
@@ -16,19 +16,20 @@ namespace WebApiDB.Controllers.OrderControllers
         /// <response code="500">Something went wrong.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] DTOOrder dtoOrder)
+        public async Task<IActionResult> Post([FromBody] OrderDTO dtoOrder)
         {
-            // TODO: valadation order
 
-
-            //  var validation = ValidationDealer.DealerValidation(order);
-            //if (!validation.Item1)
-            //{
-            //    return BadRequest(validation.Item2);
-            //}
             var order = _mapper.Map<Order>(dtoOrder);
-            await _orderRepository.Post(order);
-            return Ok("Oder created!");
+            ValidationResult validationResult = await _validatorOrder.ValidateAsync(order);
+
+            if (validationResult.IsValid)
+            {
+                await _orderRepository.Post(order);
+                return Ok("Oder created!");
+            }
+
+            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            return BadRequest(errorMessages);
         }
 
     }

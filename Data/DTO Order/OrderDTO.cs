@@ -1,5 +1,4 @@
-﻿using CeilingCalc.Models;
-using FluentValidation;
+﻿using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -7,8 +6,8 @@ using WebApiDB.Context;
 
 namespace WebApiDB.Models
 {
-    public class Order
-    {
+    public class OrderDTO
+    { 
         /// <summary>
         /// ID. Auto increment
         /// </summary>
@@ -20,10 +19,10 @@ namespace WebApiDB.Models
         /// <summary>
         /// Dealer id not null, must exist 
         /// </summary>
-
+ 
+        
         [JsonPropertyName("dealerId")]
         public int DealerId { get; set; }
-        public virtual Dealer Dealer { get; set; }
 
         /// <summary>
         /// data
@@ -41,21 +40,20 @@ namespace WebApiDB.Models
         /// only numbers, may be negative  
         /// </summary>
         [JsonPropertyName("sum")]
-        public float Sum { get; set; } = 0;
+        public float? Sum { get; set; }
 
         /// <summary>
         /// Status orders
         /// </summary>
         [JsonPropertyName("status")]
         public string Status { get; set; }
-
-        public virtual ICollection<OrderDetail>? OrderDetail { get; set; }
     }
 
-    public class OrderValidator : AbstractValidator<Order>
+    public class OrderDTOValidator : AbstractValidator<OrderDTO>
     {
-        public OrderValidator(AplicationContext context)
+        public OrderDTOValidator(AplicationContext context)
         {
+            RuleLevelCascadeMode = CascadeMode.Stop;
             RuleFor(x => x.DateOrder).LessThan(DateTime.Now).WithMessage("Сannot create an order in the future!");
             RuleFor(x => x.Sum).GreaterThanOrEqualTo(0).WithMessage("Order amount must be 0 or more").LessThan(float.MaxValue).WithMessage("To mach sum");
             RuleFor(x => x.Status).Length(0, 50).WithMessage("To long status!");
