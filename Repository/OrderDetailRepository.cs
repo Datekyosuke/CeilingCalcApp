@@ -96,9 +96,8 @@ namespace CeilingCalc.Repository
 
         }
 
-        public async Task JsonPatchWithModelState(OrderDetail orderDetail, JsonPatchDocument<OrderDetail> patchDoc, ModelStateDictionary modelState)
+        public async Task JsonPatchWithModelState()
         {
-            patchDoc.ApplyTo(orderDetail, modelState);
             await _context.SaveChangesAsync();
         }
 

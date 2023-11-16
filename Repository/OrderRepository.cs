@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using WebApiDB.Context;
 using WebApiDB.Data.DTO_Order;
@@ -17,7 +17,6 @@ namespace WebApiDB.Repository
         private readonly AplicationContext _context;
         private readonly IUriService _uriService;
         private readonly IMapper _mapper;
-
 
         public OrderRepository(AplicationContext context, IUriService uriService, IMapper mapper)
         {
@@ -115,10 +114,10 @@ namespace WebApiDB.Repository
 
         }
 
-        public async Task JsonPatchWithModelState(Order order, JsonPatchDocument<Order> patchDoc, ModelStateDictionary modelState)
+        public async Task JsonPatchWithModelState()
         {
-            patchDoc.ApplyTo(order, modelState);
-            await _context.SaveChangesAsync();
+
+                await _context.SaveChangesAsync();
         }
 
         public async Task Patch(Order oldOrder, Order order)

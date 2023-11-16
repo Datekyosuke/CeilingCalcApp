@@ -11,8 +11,7 @@ namespace WebApiDB.Interfaces
         public Task<Order> GetAsync(int id);
         public Task Delete(Order order);
         public Task Put(Order oldOrder, Order order);
-        public Task JsonPatchWithModelState(Order order,
-         JsonPatchDocument<Order> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelStat);
+        public Task JsonPatchWithModelState();
         public Task Post(Order order);
 
         public Task Patch(Order oldOrder, Order order);

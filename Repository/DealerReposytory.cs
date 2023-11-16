@@ -35,9 +35,8 @@ namespace WebApiDB.Repository
             return dealer;
         }
 
-        public async Task JsonPatchWithModelState(Dealer dealer, JsonPatchDocument<Dealer> patchDoc, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelState)
+        public async Task JsonPatchWithModelState()
         {
-            patchDoc.ApplyTo(dealer, modelState);
             await _context.SaveChangesAsync();
         }
 

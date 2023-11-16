@@ -1,7 +1,4 @@
 ﻿using AutoMapper;
-using CeilingCalc.Data.DTO_OrderDetail;
-using CeilingCalc.Interfaces;
-using CeilingCalc.Models;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.JsonPatch;
@@ -11,25 +8,26 @@ using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
-using WebApiDB.Repository;
 
 namespace CeilingCalc.Controllers
 {
-    [Route("/api/OrderDetailController")]
+    /// <summary>
+    /// Controller for working with order
+    /// </summary>
+    
+    [Route("/api/OrderController")]
     [ApiController]
-    public class OrderDetailController : Controller
+    public class OrderController : Controller
     {
-        private IOrderDetailRepository _orderDetailRepository;
+        private IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
-        private IValidator<OrderDetail> _validatorOrderDetail;
+        private IValidator<Order> _validatorOrder;
 
-
-        public OrderDetailController(IOrderDetailRepository orderDetailRepository, IMapper mapper, IValidator<OrderDetail> validatorOrderDetail)
+        public OrderController(IOrderRepository orderRepository, IMapper mapper, IValidator<Order> validatorOrder)
         {
-            _orderDetailRepository = orderDetailRepository;
+            _orderRepository = orderRepository;
             _mapper = mapper;
-            _validatorOrderDetail = validatorOrderDetail;
-
+            _validatorOrder = validatorOrder;
         }
 
         /// <summary>
@@ -42,7 +40,7 @@ namespace CeilingCalc.Controllers
         /// Properties can take Dealer field values:
         /// 
         ///     "id": can't be changed, integer
-        ///     "dillerFullName": "string"
+        ///     "dillerId": intege, requered, must be exist
         ///     "dateOrder": "date", regured, auto time
         ///     "OperatorId": id who added the order, integer
         ///     "Sum": full sum this order, float
@@ -69,11 +67,9 @@ namespace CeilingCalc.Controllers
             var expression = orderable.Property;
             var sort = orderable.Sort;
             var trimSearchString = searchString?.Trim();
-            var pagedReponse = _orderDetailRepository.GetAllAsync(validFilter, expression, sort, ranges, trimSearchString, route).Result;
+            var pagedReponse = _orderRepository.GetAllAsync(validFilter, expression, sort, ranges, trimSearchString, route).Result;
             return Ok(pagedReponse);
         }
-
-
 
         /// <summary>
         /// Returns order by Id
@@ -89,43 +85,13 @@ namespace CeilingCalc.Controllers
         [ProducesResponseType(500)]
         public IActionResult Get(int id)
         {
-            var orderDetail = _mapper.Map<OrderDetailDTO>(_orderDetailRepository.GetAsync(id).Result);
-
-            if (orderDetail == null)
+            var order = _mapper.Map<OrderG>(_orderRepository.GetAsync(id).Result);
+            if (order == null)
             {
                 return NotFound();
             }
-
-            return Ok(new Response<OrderDetailDTO>(orderDetail));
+            return Ok(new Response<OrderG>(order));
         }
-
-        /// <summary>
-        /// Create new order detail
-        /// </summary>
-        /// <param name="dealer">All fields of the order, except id. ID is generated automatically, leave 0.</param>
-        /// <returns>New order</returns>
-        /// <response code="200">Order created</response>
-        /// <response code="400">Something went wrong. Possibly invalid request body.</response>
-        /// <response code="500">Something went wrong.</response>
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] OrderDetailDTO orderDetailDTO)
-        {
-
-            var orderDetail = _mapper.Map<OrderDetail>(orderDetailDTO);
-            ValidationResult validationResult = await _validatorOrderDetail.ValidateAsync(orderDetail);
-
-            if (validationResult.IsValid)
-            {
-                await _orderDetailRepository.Post(orderDetail);
-                return Ok("OrderDetail created!");
-            }
-
-            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
-            return BadRequest(errorMessages);
-        }
-
 
         /// <summary>
         /// Removes order by id
@@ -138,16 +104,15 @@ namespace CeilingCalc.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var orderDetail = _orderDetailRepository.GetAsync(id).Result;
+            var order = _orderRepository.GetAsync(id).Result;
 
-            if (orderDetail != null)
+            if (order != null)
             {
-                await _orderDetailRepository.Delete(orderDetail);
+                await _orderRepository.Delete(order);
             }
             else return NotFound();
             return Ok("Order deleted!");
         }
-
 
         /// <summary>
         /// Making changes to one order record of a specific ID.
@@ -166,75 +131,36 @@ namespace CeilingCalc.Controllers
         /// <response code="404">There is no order for this id</response>
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
         [HttpPatch]
-        public async Task<ActionResult> Patch(int id, [FromBody] OrderDetailDTO orderDetailDTO)
+        public async Task<ActionResult> Patch(int id, [FromBody] OrderDTO dtoOrder)
         {
-            var oldOrderDetail = _orderDetailRepository.GetAsync(id).Result;
+            var oldOrder = _orderRepository.GetAsync(id).Result;
 
-            if (oldOrderDetail == null)
+            if (oldOrder == null)
                 return NotFound();
-            var orderDetail = _mapper.Map<OrderDetail>(orderDetailDTO);
+            var order = _mapper.Map<Order>(dtoOrder);
 
-            ValidationResult validationResult = await _validatorOrderDetail.ValidateAsync(orderDetail);
+            ValidationResult validationResult = await _validatorOrder.ValidateAsync(order);
 
             if (validationResult.IsValid)
             {
-                orderDetail.Id = id;
-                if (orderDetail.OrderId == 0)
-                    orderDetail.OrderId = oldOrderDetail.Order.Id;
-                if (orderDetail.MaterialId == 0)
-                    orderDetail.MaterialId = oldOrderDetail.Material.Id;
-                if (orderDetail.Count == 0)
-                    orderDetail.Count = oldOrderDetail.Count;
-                if (orderDetail.Sum == 0)
-                    orderDetail.Sum = oldOrderDetail.Sum;
-                if (orderDetail.Price == 0)
-                    orderDetail.Price = oldOrderDetail.Price;
+                order.Id = id;
+                if (order.DealerId == 0)
+                    order.DealerId = oldOrder.Dealer.Id;
+                if (order.DateOrder == default)
+                    order.DateOrder = oldOrder.DateOrder;
+                if (order.OperatorId == 0)
+                    order.OperatorId = oldOrder.OperatorId;
+                if (order.Sum == 0)
+                    order.Sum = oldOrder.Sum;
+                if (order.Status == "string")
+                    order.Status = oldOrder.Status;
 
-                await _orderDetailRepository.Patch(oldOrderDetail, orderDetail);
-                return Ok("Order detail changed!");
+                await _orderRepository.Patch(oldOrder, order);
+                return Ok("Order changed!");
             }
             var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
             return BadRequest(errorMessages);
         }
-
-        /// <summary>
-        /// Making changes to one oder record of a specific ID
-        /// </summary>
-        /// <remarks>
-        /// 
-        ///  Warning! Unfilled fields will be assigned a default value, as in the scheme
-        /// 
-        /// Properties can take Order field values:
-        /// 
-        ///     
-        ///     
-        /// </remarks>
-        /// <param name="id">Order ID</param>
-        /// <param name="order"></param>
-        /// <response code="200">Order changed</response>
-        /// <response code="400">Something went wrong. Possibly invalid request body.</response>
-        /// <response code="404">There is no order for this id</response>
-        /// <response code="500">Something went wrong. Possibly invalid request body.</response>
-        [HttpPut]
-        public async Task<ActionResult> Put(int id, [FromBody] OrderDetailDTO orderDetailDTO)
-        {
-            var oldOrderDetail = _orderDetailRepository.GetAsync(id).Result;
-            if (oldOrderDetail == null)
-                return NotFound();
-            var order = _mapper.Map<OrderDetail>(orderDetailDTO);
-
-            ValidationResult validationResult = await _validatorOrderDetail.ValidateAsync(order);
-
-            if (validationResult.IsValid)
-            {
-                await _orderDetailRepository.Put(oldOrderDetail, order);
-                return Ok("Order detail changed!");
-            }
-            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
-            return BadRequest(errorMessages);
-        }
-
-
 
         /// <summary>
         /// Making changes to one or more dealer fields
@@ -272,28 +198,93 @@ namespace CeilingCalc.Controllers
         /// <response code="500">Something went wrong. Possibly invalid request body.</response>
         [HttpPatch("PatchJson")]
         public async Task<IActionResult> JsonPatchWithModelState(int id,
-        [FromBody] JsonPatchDocument<OrderDetail> patchDoc)
-        {  
+        [FromBody] JsonPatchDocument<Order> patchDoc)
+        {
 
             if (patchDoc != null)
             {
-                var orderDetail = _orderDetailRepository.GetAsync(id).Result;
-                patchDoc.ApplyTo(orderDetail);
-                ValidationResult validationResult = await _validatorOrderDetail.ValidateAsync(orderDetail);
+                var order = _orderRepository.GetAsync(id).Result;
+                patchDoc.ApplyTo(order);
+                ValidationResult validationResult = await _validatorOrder.ValidateAsync(order);
 
                 if (validationResult.IsValid)
                 {
-                    await _orderDetailRepository.JsonPatchWithModelState();
-                    return new ObjectResult(orderDetail);
+                    await _orderRepository.JsonPatchWithModelState();
+                    return new ObjectResult(order);
                 }
 
                 var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
                 return BadRequest(errorMessages);
+
+
             }
             else
             {
                 return BadRequest(ModelState);
             }
+        }
+
+        /// <summary>
+        /// Create new order
+        /// </summary>
+        /// <param name="dealer">All fields of the order, except id. ID is generated automatically, leave 0.</param>
+        /// <returns>New order</returns>
+        /// <response code="200">Order created</response>
+        /// <response code="400">Something went wrong. Possibly invalid request body.</response>
+        /// <response code="500">Something went wrong.</response>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Post([FromBody] OrderDTO dtoOrder)
+        {
+
+            var order = _mapper.Map<Order>(dtoOrder);
+            ValidationResult validationResult = await _validatorOrder.ValidateAsync(order);
+
+            if (validationResult.IsValid)
+            {
+                await _orderRepository.Post(order);
+                return Ok("Oder created!");
+            }
+
+            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            return BadRequest(errorMessages);
+        }
+
+        /// <summary>
+        /// Making changes to one oder record of a specific ID
+        /// </summary>
+        /// <remarks>
+        /// 
+        ///  Warning! Unfilled fields will be assigned a default value, as in the scheme
+        /// 
+        /// Properties can take Order field values:
+        /// 
+        ///     
+        ///     
+        /// </remarks>
+        /// <param name="id">Order ID</param>
+        /// <param name="order"></param>
+        /// <response code="200">Order changed</response>
+        /// <response code="400">Something went wrong. Possibly invalid request body.</response>
+        /// <response code="404">There is no order for this id</response>
+        /// <response code="500">Something went wrong. Possibly invalid request body.</response>
+        [HttpPut]
+        public async Task<ActionResult> Put(int id, [FromBody] OrderDTO dtoOrder)
+        {
+            var oldOrder = _orderRepository.GetAsync(id).Result;
+            if (oldOrder == null)
+                return NotFound();
+            var order = _mapper.Map<Order>(dtoOrder);
+
+            ValidationResult validationResult = await _validatorOrder.ValidateAsync(order);
+
+            if (validationResult.IsValid)
+            {
+                await _orderRepository.Put(oldOrder, order);
+                return Ok("Order changed!");
+            }
+            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            return BadRequest(errorMessages);
         }
     }
 }

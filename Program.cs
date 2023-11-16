@@ -57,7 +57,7 @@ builder.Services.AddSwaggerGen(options =>
     }
 
     );
-    var filePath = Path.Combine(System.AppContext.BaseDirectory, "WebApiDB.xml");
+    var filePath = Path.Combine(System.AppContext.BaseDirectory, "CeilingCalc.xml");
     options.IncludeXmlComments(filePath);
 });
 builder.Services.AddCors(options =>

@@ -109,9 +109,8 @@ namespace WebApiDB.Repository
 
         }
 
-        public async Task JsonPatchWithModelState(Material material, JsonPatchDocument<Material> patchDoc, ModelStateDictionary modelState)
+        public async Task JsonPatchWithModelState()
         {
-            patchDoc.ApplyTo(material, modelState);
             await _context.SaveChangesAsync();
         }
 
