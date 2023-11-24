@@ -14,6 +14,10 @@ using FluentValidation;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using CeilingCalc.Interfaces;
 using CeilingCalc.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using CeilingCalc.Autorization;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -36,9 +40,11 @@ builder.Services.AddTransient<IDealerRepository, DealerReposytory>();
 builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();
 builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 builder.Services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
+#region Swagger Configuration
 builder.Services.AddSwaggerGen(options =>
 {
     options.DescribeAllParametersInCamelCase();
@@ -54,12 +60,37 @@ builder.Services.AddSwaggerGen(options =>
             Url = new Uri("https://t.me/DateKyosuke")
         }
 
-    }
+    });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+    });
 
-    );
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                          new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            new string[] {}
+                    }
+                });
+
     var filePath = Path.Combine(System.AppContext.BaseDirectory, "CeilingCalc.xml");
     options.IncludeXmlComments(filePath);
 });
+#endregion
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -105,6 +136,24 @@ builder.Services.Configure<ApiBehaviorOptions>(o =>
         return new BadRequestObjectResult(error);
     };
 });
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])) //Configuration["JwtToken:SecretKey"]
+    };
+});
 
 var app = builder.Build();
 
@@ -116,12 +165,11 @@ if (app.Environment.IsDevelopment())
     
 }
 
-
 app.UseHttpsRedirection();
 
 app.UseCors(MyAllowSpecificOrigins);
 
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

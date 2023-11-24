@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using WebApiDB.Helpers;
@@ -16,6 +17,7 @@ namespace CeilingCalc.Controllers
     /// </summary>
     [Route("/api/DealerController")]
     [ApiController]
+
     public class DealerController : Controller
     {
 
@@ -59,6 +61,7 @@ namespace CeilingCalc.Controllers
         /// <returns>Page list dealers</returns>
         /// <response code="200">Dealers retrieved</response>
         ///  <response code="400">Wrong request body</response>
+        [AllowAnonymous]
         [HttpGet()]
         public virtual IActionResult GetAll([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges, [FromQuery] string? searchString)
         {
@@ -84,6 +87,7 @@ namespace CeilingCalc.Controllers
         [ProducesResponseType(typeof(Dealer), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
+        [AllowAnonymous]
         public IActionResult Get(int id)
         {
             var dealer = _dealerRepository.GetAsync(id).Result;

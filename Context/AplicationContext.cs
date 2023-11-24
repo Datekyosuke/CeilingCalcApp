@@ -15,6 +15,7 @@ namespace WebApiDB.Context
         public DbSet<Material> Materials { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Operator> Operators { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,6 +31,10 @@ namespace WebApiDB.Context
                 .HasOne(u => u.Material)
                 .WithMany(c => c.OrderDetail)
                 .HasForeignKey(u => u.MaterialId);
+            modelBuilder.Entity<Order>()
+               .HasOne(u => u.Operator)
+               .WithMany(c => c.Orders)
+               .HasForeignKey(u => u.OperatorId);
         }
     }
 

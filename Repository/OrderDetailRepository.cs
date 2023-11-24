@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
 using CeilingCalc.Interfaces;
 using CeilingCalc.Models;
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using WebApiDB.Context;
-using WebApiDB.Data.DTO_Order;
 using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
-using WebApiDB.Models;
 using WebApiDB.Pagination;
 
 namespace CeilingCalc.Repository

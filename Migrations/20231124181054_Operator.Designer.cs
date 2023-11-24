@@ -11,8 +11,8 @@ using WebApiDB.Context;
 namespace CeilingCalc.Migrations
 {
     [DbContext(typeof(AplicationContext))]
-    [Migration("20231113190211_OrderDetails")]
-    partial class OrderDetails
+    [Migration("20231124181054_Operator")]
+    partial class Operator
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
