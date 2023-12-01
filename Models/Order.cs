@@ -35,7 +35,9 @@ namespace WebApiDB.Models
         /// Operator id not null, must exist 
         /// </summary>
         [JsonPropertyName("operatorId")]
-        public int OperatorId { get; set; } = 1;
+        public int OperatorId { get; set; }
+
+        public virtual Operator Operator { get; set; }
 
         /// <summary>
         /// only numbers, may be negative  
