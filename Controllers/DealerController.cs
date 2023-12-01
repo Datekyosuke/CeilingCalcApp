@@ -17,7 +17,7 @@ namespace CeilingCalc.Controllers
     /// </summary>
     [Route("/api/DealerController")]
     [ApiController]
-
+    [Authorize]
     public class DealerController : Controller
     {
 
@@ -108,6 +108,8 @@ namespace CeilingCalc.Controllers
         /// <response code="200">Dealer removed</response>
         /// <response code="404">Dealer not found</response>
         /// <response code="500">Oops! Can't remove your Dealer right now</response>
+        /// <response code="401">Non autorise</response>
+        [ProducesResponseType(401)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

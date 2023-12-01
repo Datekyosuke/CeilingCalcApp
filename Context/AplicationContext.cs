@@ -1,16 +1,19 @@
-﻿using CeilingCalc.Models;
+﻿using CeilingCalc.Autorization;
+using CeilingCalc.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 using WebApiDB.Models;
 
 namespace WebApiDB.Context
 {
-    public class AplicationContext : DbContext
+    public class AplicationContext : IdentityDbContext<ApplicationUser, IdentityRole<long>, long>
     {
         public AplicationContext(DbContextOptions<AplicationContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            
         }
+
         public DbSet<Dealer> Dealers { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -19,6 +22,8 @@ namespace WebApiDB.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Order>()
                 .HasOne(u => u.Dealer)
                 .WithMany(c => c.Orders)
