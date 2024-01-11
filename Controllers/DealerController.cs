@@ -290,18 +290,22 @@ namespace CeilingCalc.Controllers
             var dealer = _mapper.Map<Dealer>(dTOdealer);
             var oldClient = _dealerRepository.GetAsync(id).Result;
 
-            if (oldClient == null)
-                return NotFound();
-
-            var validationResult = _validatorDealer.Validate(dealer);
-
-            if (validationResult.IsValid)
+            if (oldClient != null)
             {
-                await _dealerRepository.Put(oldClient, dealer);
-                return Ok("Dealer changed!");
+                
+
+                var validationResult = _validatorDealer.Validate(dealer);
+
+                if (validationResult.IsValid)
+                {
+                    await _dealerRepository.Put(oldClient, dealer);
+                    return Ok("Dealer changed!");
+                }
+                var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+                return BadRequest(errorMessages);
             }
-            var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
-            return BadRequest(errorMessages);
+            else return NotFound();
+            
         }
     }
 }
