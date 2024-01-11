@@ -14,6 +14,6 @@ namespace CeilingCalc.Interfaces
 
         public Task Patch(OrderDetail oldOrderDetail, OrderDetail orderDetail);
 
-        public Task<PagedResponse<List<OrderDetail>>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges, string searchString, string? route);
+        public Task<PagedResponse<List<OrderDetail>>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges, string searchString);
     }
 }

@@ -14,6 +14,6 @@ namespace WebApiDB.Interfaces
 
         public Task Patch(Dealer oldClient, Dealer dealer);
 
-        public Task<PagedResponse<List<Dealer>>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges, string searchString, string? route);
+        public Task<PagedResponse<List<Dealer>>> GetAllAsync(PaginationFilter validFilter, string expression, string sort, NumericRanges ranges, string searchString);
     }
 }

@@ -38,7 +38,7 @@ namespace WebApiDB.Models
         /// </summary>
         [JsonPropertyName("debts")]
         public float Debts { get; set; }
-        
+
         /// <summary>
         /// City of residence
         /// </summary>
@@ -59,7 +59,5 @@ namespace WebApiDB.Models
                 RuleFor(x => x.City).NotNull().WithMessage("{PropertyName} is requered!").Length(2, 50).WithMessage("{PropertyName} more 2 and less 50 character");
             }
         }
-
-
     }
 }

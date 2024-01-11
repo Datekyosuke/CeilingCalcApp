@@ -19,9 +19,9 @@ namespace CeilingCalc.Controllers
     [ApiController]
     public class OrderController : Controller
     {
-        private IOrderRepository _orderRepository;
+        private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
-        private IValidator<Order> _validatorOrder;
+        private readonly IValidator<Order> _validatorOrder;
 
         public OrderController(IOrderRepository orderRepository, IMapper mapper, IValidator<Order> validatorOrder)
         {
@@ -67,7 +67,7 @@ namespace CeilingCalc.Controllers
             var expression = orderable.Property;
             var sort = orderable.Sort;
             var trimSearchString = searchString?.Trim();
-            var pagedReponse = _orderRepository.GetAllAsync(validFilter, expression, sort, ranges, trimSearchString, route).Result;
+            var pagedReponse = _orderRepository.GetAllAsync(validFilter, expression, sort, ranges, trimSearchString).Result;
             return Ok(pagedReponse);
         }
 

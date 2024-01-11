@@ -69,7 +69,7 @@ namespace CeilingCalc.Controllers
             var expression = orderable.Property;
             var sort = orderable.Sort;
             var trimSearchString = searchString?.Trim();
-            var pagedReponse = _orderDetailRepository.GetAllAsync(validFilter, expression, sort, ranges, trimSearchString, route).Result;
+            var pagedReponse = _orderDetailRepository.GetAllAsync(validFilter, expression, sort, ranges, trimSearchString).Result;
             return Ok(pagedReponse);
         }
 

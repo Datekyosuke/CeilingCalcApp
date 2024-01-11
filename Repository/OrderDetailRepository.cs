@@ -34,7 +34,7 @@ namespace CeilingCalc.Repository
             var orderDetail = await _context.OrderDetails.Include(o => o.Material).Include(d => d.Order).Where(x => x.Id == id).FirstOrDefaultAsync();
             return orderDetail;
         }
-        public async Task<PagedResponse<List<OrderDetail>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
+        public async Task<PagedResponse<List<OrderDetail>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString)
         {
             var totalRecords = 0;
             var firstChar = propertyCamelCase[0].ToString().ToUpper();
@@ -78,7 +78,7 @@ namespace CeilingCalc.Repository
                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                         .Take(validFilter.PageSize)
                         .ToList();
-                return PaginationHelper.CreatePagedReponse<OrderDetail>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
+                return PaginationHelper.CreatePagedReponse<OrderDetail>(sortedSearchEntities, validFilter, totalRecords, _uriService);
             }
             totalRecords = sortDealers.Count();
             var sortedEntities = sortDealers
@@ -86,7 +86,7 @@ namespace CeilingCalc.Repository
                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                        .Take(validFilter.PageSize)
                        .ToList();
-            return PaginationHelper.CreatePagedReponse<OrderDetail>(sortedEntities, validFilter, totalRecords, _uriService, route);
+            return PaginationHelper.CreatePagedReponse<OrderDetail>(sortedEntities, validFilter, totalRecords, _uriService);
 
 
         }

@@ -8,7 +8,6 @@ using WebApiDB.Helpers;
 using WebApiDB.Interfaces;
 using WebApiDB.Models;
 using WebApiDB.Pagination;
-using WebApiDB.Repository;
 
 namespace CeilingCalc.Controllers
 {
@@ -66,12 +65,11 @@ namespace CeilingCalc.Controllers
         public virtual IActionResult GetAll([FromQuery] PaginationFilter filter, [FromQuery] Orderable orderable, [FromQuery] NumericRanges ranges, [FromQuery] string? searchString)
         {
             if (ranges.Max < ranges.Min) return BadRequest("Maximum must be greater than or equal to the minimum");
-            var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var expression = orderable.Property;
             var sort = orderable.Sort;
             var trimSearchString = searchString?.Trim();
-            var pagedReponse = _dealerRepository.GetAllAsync(validFilter, expression, sort, ranges, trimSearchString, route).Result;
+            var pagedReponse = _dealerRepository.GetAllAsync(validFilter, expression, sort, ranges, trimSearchString).Result;
             return Ok(pagedReponse);
         }
 
@@ -245,6 +243,7 @@ namespace CeilingCalc.Controllers
         /// <response code="400">Something went wrong. Possibly invalid request body.</response>
         /// <response code="500">Something went wrong.</response>
         [HttpPost]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] DealerDTOGet dealerDtoGet)
         {

@@ -56,7 +56,7 @@ namespace WebApiDB.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PagedResponse<List<Dealer>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString, string? route)
+        public async Task<PagedResponse<List<Dealer>>> GetAllAsync(PaginationFilter validFilter, string propertyCamelCase, string sort, NumericRanges ranges, string searchString)
         {
             var totalRecords = 0;
             var firstChar = propertyCamelCase[0].ToString().ToUpper();
@@ -90,7 +90,7 @@ namespace WebApiDB.Repository
                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                         .Take(validFilter.PageSize)
                         .ToList();
-                return PaginationHelper.CreatePagedReponse<Dealer>(sortedSearchEntities, validFilter, totalRecords, _uriService, route);
+                return PaginationHelper.CreatePagedReponse<Dealer>(sortedSearchEntities, validFilter, totalRecords, _uriService);
             }
             totalRecords = sortDealers.Count();
             var sortedEntities = sortDealers
@@ -98,7 +98,7 @@ namespace WebApiDB.Repository
                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                        .Take(validFilter.PageSize)
                        .ToList();
-            return PaginationHelper.CreatePagedReponse<Dealer>(sortedEntities, validFilter, totalRecords, _uriService, route);
+            return PaginationHelper.CreatePagedReponse<Dealer>(sortedEntities, validFilter, totalRecords, _uriService);
 
 
         }
