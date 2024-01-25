@@ -98,9 +98,11 @@ builder.Services.AddCors(options =>
                       policy =>
                       {
                           policy.WithOrigins("https://localhost:7021/swagger",
-                                              "http://localhost:3000",
-                                              "http://localhost:8000").WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-                                              .WithHeaders("Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With");
+                                             "https://localhost:80/swagger",
+                                             "https://localhost:5000/swagger",
+                                             "http://localhost:3000",
+                                             "http://localhost:8000").WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+                                             .WithHeaders("Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With");
                       });
 });
 builder.Services.AddHttpContextAccessor();
@@ -162,15 +164,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<long>>()
     .AddEntityFrameworkStores<AplicationContext>()
     .AddUserManager<UserManager<ApplicationUser>>()
     .AddSignInManager<SignInManager<ApplicationUser>>();
+
 var app = builder.Build();
 
-//// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
-//{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-
-//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
