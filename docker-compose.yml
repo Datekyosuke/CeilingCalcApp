@@ -1,0 +1,35 @@
+version: '3.4'
+
+networks:
+  dev:
+    driver: bridge
+
+services:
+  webapi:
+    image: datekyosuke/ceilingcalc
+    restart: always
+    ports:
+      - '5555:5000'
+    networks:
+      - dev
+    depends_on:
+      - postgresdb
+
+  postgresdb:
+    image: postgres
+    container_name: postgresdb
+    environment:
+      POSTGRES_USER: DateKyosuke
+      POSTGRES_PASSWORD: m2jl2aoe
+      POSTGRES_DB: CeilingDB
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5433:5432"
+    networks:
+      - dev
+    restart: always
+volumes:
+ postgres:
+  

@@ -29,7 +29,7 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("PostgreSQL");
+var connectionString = builder.Configuration.GetConnectionString("PGDBConection");
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -166,6 +166,16 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<long>>()
     .AddSignInManager<SignInManager<ApplicationUser>>();
 
 var app = builder.Build();
+using(var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<AplicationContext>();
+    if(context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();
