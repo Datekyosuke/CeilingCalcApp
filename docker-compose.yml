@@ -9,7 +9,7 @@ services:
     image: datekyosuke/ceilingcalc
     restart: always
     ports:
-      - '5555:5000'
+      - '80:5000'
     networks:
       - dev
     depends_on:
